@@ -15,4 +15,258 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
   <style>
-    *, *::before,
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0A0A0A;
+      color: #F5EFE5;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    a { color: inherit; text-decoration: none; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; border-bottom: 0.5px solid #2A2A2A; background: #0A0A0A; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 500; letter-spacing: 3px; color: #C9A55C; }
+    .nav-links { display: flex; gap: 26px; font-size: 11px; color: #8A7548; letter-spacing: 1.5px; }
+    .nav-links a { transition: color 0.2s; }
+    .nav-links a:hover { color: #C9A55C; }
+    @media (max-width: 640px) { .nav { padding: 16px 20px; } .nav-links { display: none; } }
+    .hero { background: #0A0A0A; padding: 90px 24px 72px; text-align: center; }
+    .logo-circle { width: 130px; height: 130px; border-radius: 50%; border: 1.5px solid #C9A55C; margin: 0 auto 32px; display: flex; align-items: center; justify-content: center; background: #0A0A0A; overflow: hidden; }
+    .logo-placeholder { font-family: 'Cormorant Garamond', serif; font-size: 64px; color: #C9A55C; font-weight: 500; line-height: 1; }
+    .logo-img { width: 100%; height: 100%; object-fit: cover; }
+    .eyebrow { font-size: 11px; letter-spacing: 4px; color: #8A7548; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 6vw, 50px); font-weight: 400; margin: 0 0 20px; line-height: 1.1; color: #F5EFE5; max-width: 650px; margin-left: auto; margin-right: auto; letter-spacing: 0.5px; }
+    .hero-sub { font-size: 15px; color: #B8A985; max-width: 500px; margin: 0 auto 16px; line-height: 1.8; }
+    .hero-region { font-size: 12px; color: #C9A55C; letter-spacing: 2.5px; margin-bottom: 36px; }
+    .btn-primary { display: inline-block; background: #C9A55C; color: #0A0A0A; padding: 15px 36px; border-radius: 2px; font-weight: 500; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; transition: all 0.2s; }
+    .btn-primary:hover { background: #D9B66C; transform: translateY(-1px); }
+    .ornament { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 44px; opacity: 0.5; }
+    .ornament-line { width: 40px; height: 1px; background: #C9A55C; }
+    .ornament-diamond { color: #C9A55C; font-size: 8px; }
+    .seals { display: flex; justify-content: center; flex-wrap: wrap; gap: 22px; padding: 24px 24px; background: #050505; color: #8A7548; font-size: 10px; letter-spacing: 2.5px; border-top: 0.5px solid #1F1F1F; border-bottom: 0.5px solid #1F1F1F; }
+    .seals .diamond { color: #C9A55C; }
+    section { padding: 72px 24px; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-eyebrow { font-size: 10px; letter-spacing: 4px; color: #8A7548; margin-bottom: 14px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 34px); font-weight: 400; margin: 0 0 16px; color: #F5EFE5; }
+    .cuts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 1000px; margin: 0 auto; }
+    .cut-card { background: #141414; padding: 32px 22px; border: 0.5px solid #2A2A2A; text-align: center; transition: all 0.3s; }
+    .cut-card:hover { border-color: #C9A55C; transform: translateY(-2px); }
+    .cut-numeral { font-family: 'Cormorant Garamond', serif; font-size: 12px; color: #C9A55C; letter-spacing: 3px; margin-bottom: 16px; }
+    .cut-name { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 24px; color: #F5EFE5; margin-bottom: 12px; }
+    .cut-divider { width: 24px; height: 1px; background: #C9A55C; margin: 0 auto 14px; opacity: 0.5; }
+    .cut-desc { font-size: 12px; color: #B8A985; line-height: 1.7; }
+    .cuts-footer { text-align: center; margin-top: 36px; font-size: 12px; color: #8A7548; letter-spacing: 1px; }
+    .cuts-footer .accent { color: #C9A55C; }
+    .rabbi-section { background: #050505; border-top: 0.5px solid #1F1F1F; border-bottom: 0.5px solid #1F1F1F; padding: 84px 24px; }
+    .rabbi-content { max-width: 760px; margin: 0 auto; text-align: center; }
+    .rabbi-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 34px); font-weight: 400; margin: 0 0 8px; color: #C9A55C; }
+    .rabbi-title { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #8A7548; font-size: 15px; margin-bottom: 32px; }
+    .rabbi-photo-placeholder { width: 120px; height: 120px; border-radius: 50%; border: 1px solid #C9A55C; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; color: #C9A55C; font-size: 36px; }
+    .rabbi-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 1px solid #C9A55C; margin: 0 auto 24px; display: block; }
+    .rabbi-bio p { font-size: 14px; color: #D4C9A8; line-height: 1.9; margin: 0 0 18px; }
+    .rabbi-bio strong { color: #C9A55C; font-weight: 500; }
+    .rabbi-bio em { font-style: italic; }
+    .rabbi-quote { font-size: 15px; color: #F5EFE5; line-height: 1.8; margin: 32px 0 0; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+    .btn-ghost { display: inline-block; color: #C9A55C; padding: 11px 26px; border: 0.5px solid #C9A55C; border-radius: 2px; font-size: 11px; letter-spacing: 2.5px; margin-top: 36px; transition: all 0.2s; }
+    .btn-ghost:hover { background: #C9A55C; color: #0A0A0A; }
+    .niqur { text-align: center; }
+    .niqur p { font-size: 15px; color: #B8A985; max-width: 580px; margin: 0 auto 20px; line-height: 1.9; }
+    .niqur .gold-italic { color: #C9A55C; font-style: italic; }
+    .niqur .emphasis { color: #F5EFE5; }
+    .pillars-section { background: #050505; border-top: 0.5px solid #1F1F1F; }
+    .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; max-width: 900px; margin: 0 auto; }
+    .pillar { text-align: center; }
+    .pillar-icon { width: 60px; height: 60px; border: 0.5px solid #C9A55C; border-radius: 50%; color: #C9A55C; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 24px; }
+    .pillar h3 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; margin: 0 0 10px; color: #F5EFE5; }
+    .pillar p { font-size: 12px; color: #8A7548; line-height: 1.7; margin: 0; max-width: 210px; margin-left: auto; margin-right: auto; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 1000px; margin: 0 auto; }
+    .step { background: #141414; padding: 24px; border: 0.5px solid #2A2A2A; }
+    .step-num { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #C9A55C; margin-bottom: 12px; line-height: 1; }
+    .step-title { font-weight: 500; font-size: 13px; margin-bottom: 8px; color: #F5EFE5; letter-spacing: 0.5px; }
+    .step-desc { font-size: 11px; color: #8A7548; line-height: 1.6; }
+    .cta { background: #050505; padding: 88px 24px; text-align: center; border-top: 0.5px solid #1F1F1F; }
+    .cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 5vw, 36px); font-weight: 400; margin: 0 0 16px; color: #F5EFE5; }
+    .cta-sub { font-size: 13px; color: #B8A985; margin: 0 0 36px; letter-spacing: 0.5px; }
+    .footer-meta { margin-top: 32px; font-size: 10px; color: #8A7548; letter-spacing: 3px; }
+    .whatsapp-float { position: fixed; bottom: 24px; right: 24px; background: #25D366; color: white; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); z-index: 50; font-size: 28px; transition: transform 0.2s; }
+    .whatsapp-float:hover { transform: scale(1.08); }
+    @media (max-width: 640px) { section { padding: 56px 20px; } .hero { padding: 60px 20px 56px; } .seals { gap: 14px; font-size: 9px; padding: 18px; } .rabbi-section { padding: 64px 20px; } .cta { padding: 64px 20px; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="#" class="nav-logo">PAMPA MEATS</a>
+    <div class="nav-links">
+      <a href="#cuts">CUTS</a>
+      <a href="#rabbi">RABBI</a>
+      <a href="#niqur">NIQUR</a>
+      <a href="#shipping">SHIPPING</a>
+      <a href="#order">ORDER</a>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="logo-circle">
+      <div class="logo-placeholder">P</div>
+    </div>
+    <div class="eyebrow">ARGENTINA · GLATT KOSHER · BEIT YOSEF</div>
+    <h1>Authentic hindquarter<br>kosher beef.</h1>
+    <p class="hero-sub">Premium Angus cuts from the Argentine Pampas, supervised by <em>Chacham</em> Yitzchak Nehmad <em>Shlit"a</em> — reviving the art of <em>Niqur</em> for the kosher table.</p>
+    <div class="hero-region">NOW DELIVERING IN NEW YORK &amp; NEW JERSEY</div>
+    <a href="#order" class="btn-primary"><i class="ti ti-brand-whatsapp" style="vertical-align: -2px; margin-right: 8px;"></i>Order on WhatsApp</a>
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond">◆</div>
+      <div class="ornament-line"></div>
+    </div>
+  </section>
+  <div class="seals">
+    <span>GLATT KOSHER</span>
+    <span class="diamond">◆</span>
+    <span>BEIT YOSEF</span>
+    <span class="diamond">◆</span>
+    <span>HINDQUARTER · NIQUR</span>
+    <span class="diamond">◆</span>
+    <span>PASTURE RAISED</span>
+    <span class="diamond">◆</span>
+    <span>ARGENTINE ANGUS</span>
+  </div>
+  <section id="cuts">
+    <div class="section-header">
+      <div class="section-eyebrow">THE CUTS</div>
+      <h2 class="section-title">Four crown cuts</h2>
+      <div class="ornament" style="margin-top: 16px;">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond">◆</div>
+        <div class="ornament-line"></div>
+      </div>
+    </div>
+    <div class="cuts-grid">
+      <div class="cut-card">
+        <div class="cut-numeral">— I —</div>
+        <div class="cut-name">Picanha</div>
+        <div class="cut-divider"></div>
+        <div class="cut-desc">The South American crown jewel. Fat cap that defines flavor.</div>
+      </div>
+      <div class="cut-card">
+        <div class="cut-numeral">— II —</div>
+        <div class="cut-name">Top Sirloin</div>
+        <div class="cut-divider"></div>
+        <div class="cut-desc">Lean, robust, versatile. The everyday champion.</div>
+      </div>
+      <div class="cut-card">
+        <div class="cut-numeral">— III —</div>
+        <div class="cut-name">Striploin</div>
+        <div class="cut-divider"></div>
+        <div class="cut-desc">The classic steakhouse cut. Bold, balanced, unmistakable.</div>
+      </div>
+      <div class="cut-card">
+        <div class="cut-numeral">— IV —</div>
+        <div class="cut-name">Tenderloin</div>
+        <div class="cut-divider"></div>
+        <div class="cut-desc">Filet mignon. The most tender cut on the animal.</div>
+      </div>
+    </div>
+    <div class="cuts-footer">FROZEN · PRICING BY QUOTE · <span class="accent">WHATSAPP TO ORDER</span></div>
+  </section>
+  <section id="rabbi" class="rabbi-section">
+    <div class="rabbi-content">
+      <div class="section-eyebrow">RABBINICAL SUPERVISION</div>
+      <div class="rabbi-photo-placeholder"><i class="ti ti-user"></i></div>
+      <h2 class="rabbi-name">Chacham Yitzchak R. Nehmad</h2>
+      <div class="rabbi-title">Shlit"a · Buenos Aires</div>
+      <div class="ornament" style="margin-bottom: 32px;">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond">◆</div>
+        <div class="ornament-line"></div>
+      </div>
+      <div class="rabbi-bio">
+        <p>Born in Buenos Aires in 1952, Rabbi Nehmad descends from a distinguished line of <em>Shojatim</em> from <strong>Aram Tzoba (Halab)</strong> — his grandfather, Chacham Yitzchak Nehmad, was among the first <em>Shojatim</em> of Buenos Aires.</p>
+        <p>He studied for four years at the renowned <strong>Yeshivat Porat Yosef</strong> in Jerusalem under <em>Chacham</em> Shalom Cohen <em>zt"l</em>, receiving <em>Semijá</em> as <em>Shojet</em> and <em>Bodek</em> from Rabbi Nissim Azran.</p>
+        <p>For nearly 50 years he has led <em>Shejitá</em> operations in Argentina, including the export program to the United States under <strong>Neve Tzión</strong>, the certification body directed by <em>Chacham</em> Shalom Cohen <em>zt"l</em>.</p>
+        <p class="rabbi-quote">Today, his team personally supervises every cut that leaves our facility.</p>
+      </div>
+      <a href="#" class="btn-ghost">READ FULL BIOGRAPHY →</a>
+    </div>
+  </section>
+  <section id="niqur" class="niqur">
+    <div class="section-eyebrow">THE ART OF NIQUR</div>
+    <h2 class="section-title">Reviving a biblical tradition</h2>
+    <div class="ornament" style="margin-bottom: 32px;">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond">◆</div>
+      <div class="ornament-line"></div>
+    </div>
+    <p>For thousands of years, the hindquarter was reserved only for those willing to master <span class="gold-italic">Niqur</span> — the meticulous removal of the sciatic nerve and forbidden fats according to <em>Halajá</em>.</p>
+    <p>Few do it today. Almost none for export. <span class="emphasis">We do — so the kosher table doesn't have to settle for less.</span></p>
+  </section>
+  <section id="shipping" class="pillars-section">
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon"><i class="ti ti-plant"></i></div>
+        <h3>Pasture raised</h3>
+        <p>Angus cattle grass-fed on the open Pampas. No feedlots, no shortcuts.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="ti ti-snowflake"></i></div>
+        <h3>Cold-chain delivery</h3>
+        <p>Flash-frozen at source. Delivered frozen across NY &amp; NJ. Never thawed in transit.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="ti ti-certificate"></i></div>
+        <h3>Beit Yosef Glatt</h3>
+        <p>Highest Sephardic kashrut standard, accepted by all communities.</p>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="section-header">
+      <div class="section-eyebrow">HOW IT WORKS</div>
+      <h2 class="section-title">Simple. Personal. Premium.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Message us</div>
+        <div class="step-desc">WhatsApp your cuts and quantities</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Receive quote</div>
+        <div class="step-desc">Same-day pricing, transparent terms</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Pay &amp; confirm</div>
+        <div class="step-desc">Wire, Zelle or credit card</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Frozen delivery</div>
+        <div class="step-desc">Cold-chain across NY &amp; NJ</div>
+      </div>
+    </div>
+  </section>
+  <section id="order" class="cta">
+    <div class="section-eyebrow">SET YOUR TABLE</div>
+    <h2>The finest cuts await.</h2>
+    <p class="cta-sub">Serving the kosher tables of New York &amp; New Jersey. We typically reply within 30 minutes.</p>
+    <a href="https://wa.me/1XXXXXXXXXX" class="btn-primary"><i class="ti ti-brand-whatsapp" style="vertical-align: -2px; margin-right: 10px;"></i>+1 (XXX) XXX-XXXX</a>
+    <div class="ornament" style="margin-top: 56px;">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond">◆</div>
+      <div class="ornament-line"></div>
+    </div>
+    <div class="footer-meta">PAMPA MEATS · PREMIUM BEEF CUTS · NEW YORK &amp; NEW JERSEY · 2026</div>
+  </section>
+  <a href="https://wa.me/1XXXXXXXXXX" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="ti ti-brand-whatsapp"></i>
+  </a>
+</body>
+</html>
