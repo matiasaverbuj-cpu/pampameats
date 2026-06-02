@@ -107,6 +107,39 @@
     .footer-meta { margin-top: 32px; font-size: 10px; color: #8A7548; letter-spacing: 3px; }
     .whatsapp-float { position: fixed; bottom: 24px; right: 24px; background: #25D366; color: white; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); z-index: 50; font-size: 28px; transition: transform 0.2s; }
     .whatsapp-float:hover { transform: scale(1.08); }
+
+    /* ---- Cut Finder Quiz (namespaced cf-) ---- */
+    .cf-intro { text-align: center; font-size: 14px; color: #B8A985; max-width: 460px; margin: -24px auto 40px; font-weight: 300; line-height: 1.8; }
+    .cf-card { background: #0F0F0F; border: 0.5px solid #2A2A2A; max-width: 720px; margin: 0 auto; padding: 40px 36px; }
+    .cf-q { margin-bottom: 30px; }
+    .cf-qlabel { display: flex; align-items: center; gap: 12px; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: #F5EFE5; margin-bottom: 18px; }
+    .cf-qnum { flex-shrink: 0; width: 30px; height: 30px; border: 0.5px solid #C9A55C; border-radius: 50%; color: #C9A55C; font-family: 'Cormorant Garamond', serif; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+    .cf-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .cf-opt { display: flex; align-items: center; gap: 9px; background: transparent; border: 0.5px solid #2A2A2A; color: #B8A985; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 13px; text-align: left; cursor: pointer; transition: all 0.2s; border-radius: 2px; }
+    .cf-opt i { color: #C9A55C; font-size: 17px; opacity: 0.7; transition: all 0.2s; }
+    .cf-opt:hover { border-color: #C9A55C; color: #F5EFE5; }
+    .cf-opt:hover i { opacity: 1; }
+    .cf-opt.cf-sel { background: #C9A55C; border-color: #C9A55C; color: #0A0A0A; font-weight: 500; }
+    .cf-opt.cf-sel i { color: #0A0A0A; opacity: 1; }
+    .cf-actions { text-align: center; margin-top: 8px; }
+    .cf-reveal { background: #C9A55C; color: #0A0A0A; border: none; padding: 15px 40px; border-radius: 2px; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .cf-reveal:hover { background: #D9B66C; }
+    .cf-reveal:disabled { background: transparent; border: 0.5px solid #2A2A2A; color: #8A7548; cursor: not-allowed; }
+    .cf-hint { font-size: 11px; color: #8A7548; font-style: italic; margin-top: 14px; min-height: 14px; letter-spacing: 0.5px; }
+    .cf-result { display: none; text-align: center; }
+    .cf-result.cf-show { display: block; }
+    .cf-result-divider { display: flex; justify-content: center; align-items: center; gap: 16px; margin: 36px 0 28px; }
+    .cf-result-divider .l { width: 50px; height: 1px; background: #C9A55C; opacity: 0.5; }
+    .cf-result-divider .d { color: #C9A55C; font-size: 8px; }
+    .cf-res-icon { width: 72px; height: 72px; border-radius: 50%; border: 0.5px solid #C9A55C; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #C9A55C; font-size: 30px; }
+    .cf-res-eyebrow { font-size: 10px; letter-spacing: 4px; color: #8A7548; margin-bottom: 10px; }
+    .cf-res-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 40px); font-weight: 500; color: #F5EFE5; margin: 0 0 6px; }
+    .cf-res-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #C9A55C; font-size: 17px; margin-bottom: 18px; }
+    .cf-res-desc { font-size: 14px; color: #B8A985; line-height: 1.8; max-width: 460px; margin: 0 auto 28px; font-weight: 300; }
+    .cf-restart { display: block; margin: 24px auto 0; background: none; border: none; color: #8A7548; font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 1px; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+    .cf-restart:hover { color: #C9A55C; }
+    @media (max-width: 640px) { .cf-card { padding: 28px 20px; } }
+
     @media (max-width: 640px) { section { padding: 56px 20px; } .hero { padding: 60px 20px 56px; } .seals { gap: 14px; font-size: 9px; padding: 18px; } .rabbi-section { padding: 64px 20px; } .cta { padding: 64px 20px; } .origin { padding: 64px 20px; } }
   </style>
 </head>
@@ -116,6 +149,7 @@
     <div class="nav-links">
       <a href="#origin">ORIGIN</a>
       <a href="#cuts">CUTS</a>
+      <a href="#guide">GUIDE</a>
       <a href="#rabbi">RABBI</a>
       <a href="#shipping">SHIPPING</a>
       <a href="#order">ORDER</a>
@@ -237,6 +271,59 @@
     </div>
     <div class="cuts-footer">FROZEN &middot; PRICING BY QUOTE &middot; <span class="accent">WHATSAPP TO ORDER</span></div>
   </section>
+  <section id="guide">
+    <div class="section-header">
+      <div class="section-eyebrow">CUT GUIDE</div>
+      <h2 class="section-title">Which cut is right for you?</h2>
+      <div class="ornament" style="margin-top: 16px;">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond">◆</div>
+        <div class="ornament-line"></div>
+      </div>
+    </div>
+    <p class="cf-intro">Answer three quick questions and we'll match you with the cut made for your table.</p>
+    <div class="cf-card">
+      <div class="cf-q" data-q="q1">
+        <div class="cf-qlabel"><span class="cf-qnum">I</span> What's the occasion?</div>
+        <div class="cf-opts">
+          <button class="cf-opt" data-v="grill"><i class="ti ti-flame"></i> Grill / asado</button>
+          <button class="cf-opt" data-v="everyday"><i class="ti ti-tools-kitchen-2"></i> Everyday dinner</button>
+          <button class="cf-opt" data-v="special"><i class="ti ti-star"></i> Something special</button>
+        </div>
+      </div>
+      <div class="cf-q" data-q="q2">
+        <div class="cf-qlabel"><span class="cf-qnum">II</span> What texture do you love?</div>
+        <div class="cf-opts">
+          <button class="cf-opt" data-v="melt"><i class="ti ti-droplet"></i> Melt-in-your-mouth</button>
+          <button class="cf-opt" data-v="firm"><i class="ti ti-grill"></i> Firm with a good bite</button>
+          <button class="cf-opt" data-v="balanced"><i class="ti ti-scale"></i> Perfectly balanced</button>
+        </div>
+      </div>
+      <div class="cf-q" data-q="q3">
+        <div class="cf-qlabel"><span class="cf-qnum">III</span> What matters most in flavor?</div>
+        <div class="cf-opts">
+          <button class="cf-opt" data-v="bold"><i class="ti ti-flame"></i> Bold &amp; juicy</button>
+          <button class="cf-opt" data-v="subtle"><i class="ti ti-diamond"></i> Subtle &amp; elegant</button>
+          <button class="cf-opt" data-v="classic"><i class="ti ti-award"></i> Classic &amp; balanced</button>
+          <button class="cf-opt" data-v="lean"><i class="ti ti-leaf"></i> Lean &amp; versatile</button>
+        </div>
+      </div>
+      <div class="cf-actions">
+        <button class="cf-reveal" id="cfReveal" disabled>Reveal my cut</button>
+        <div class="cf-hint" id="cfHint">Answer all three to reveal your match</div>
+      </div>
+      <div class="cf-result" id="cfResult">
+        <div class="cf-result-divider"><span class="l"></span><span class="d">◆</span><span class="l"></span></div>
+        <div class="cf-res-icon"><i id="cfIcon" class="ti ti-flame"></i></div>
+        <div class="cf-res-eyebrow">YOUR CUT</div>
+        <div class="cf-res-name" id="cfName">Picanha</div>
+        <div class="cf-res-tag" id="cfTag">Best on the grill</div>
+        <p class="cf-res-desc" id="cfDesc"></p>
+        <a class="btn-primary" id="cfOrder" href="https://tally.so/r/VL4xKa" target="_blank" rel="noopener"><i class="ti ti-shopping-cart" style="vertical-align:-2px; margin-right:8px;"></i>Order <span id="cfOrderCut">Picanha</span></a>
+        <button class="cf-restart" id="cfRestart">Start over</button>
+      </div>
+    </div>
+  </section>
   <section id="rabbi" class="rabbi-section">
     <div class="rabbi-content">
       <div class="section-eyebrow">RABBINICAL SUPERVISION</div>
@@ -308,7 +395,9 @@
     <div class="section-eyebrow">SET YOUR TABLE</div>
     <h2>The finest cuts await.</h2>
     <p class="cta-sub">Serving the kosher tables of New York &amp; New Jersey. We typically reply within 30 minutes.</p>
-<a href="https://tally.so/r/VL4xKa" class="btn-primary" target="_blank" rel="noopener"><i class="ti ti-shopping-cart" style="vertical-align: -2px; margin-right: 10px;"></i>ORDER NOW</a>      <div class="ornament-line"></div>
+<a href="https://tally.so/r/VL4xKa" class="btn-primary" target="_blank" rel="noopener"><i class="ti ti-shopping-cart" style="vertical-align: -2px; margin-right: 10px;"></i>ORDER NOW</a>
+    <div class="ornament">
+      <div class="ornament-line"></div>
       <div class="ornament-diamond">◆</div>
       <div class="ornament-line"></div>
     </div>
@@ -317,5 +406,53 @@
   <a href="https://wa.me/1XXXXXXXXXX" class="whatsapp-float" aria-label="WhatsApp">
     <i class="ti ti-brand-whatsapp"></i>
   </a>
+  <script>
+  (function(){
+    var CUTS={
+      picanha:{name:"Picanha",tag:"Best on the grill",icon:"ti-flame",desc:"The crown of the Argentine asado. A signature fat cap keeps every bite juicy and full of flavor \u2014 born for the open flame."},
+      topsirloin:{name:"Top Sirloin",tag:"The versatile workhorse",icon:"ti-tools-kitchen-2",desc:"Lean and honest, with a firm texture and clean beef flavor. Equally at home on the grill, the pan, or the oven."},
+      striploin:{name:"Striploin",tag:"The balanced classic",icon:"ti-award",desc:"The classic steak. A perfect balance of tenderness, juiciness, and depth of flavor \u2014 the all-rounder that never disappoints."},
+      tenderloin:{name:"Tenderloin",tag:"Reserved for special moments",icon:"ti-diamond",desc:"The most tender of all. Buttery, melt-in-your-mouth, and refined \u2014 for the occasion that deserves the very best."}
+    };
+    var MAP={
+      q1:{grill:{picanha:2,striploin:1},everyday:{topsirloin:2,striploin:1},special:{tenderloin:2,striploin:1}},
+      q2:{melt:{tenderloin:2},firm:{picanha:1,topsirloin:2},balanced:{striploin:2}},
+      q3:{bold:{picanha:2},subtle:{tenderloin:2},classic:{striploin:2},lean:{topsirloin:2}}
+    };
+    var TIE=["picanha","striploin","tenderloin","topsirloin"];
+    var state={q1:null,q2:null,q3:null};
+    var rev=document.getElementById("cfReveal"), hint=document.getElementById("cfHint"), res=document.getElementById("cfResult");
+    document.querySelectorAll("#guide .cf-q").forEach(function(g){
+      var k=g.getAttribute("data-q");
+      g.querySelectorAll(".cf-opt").forEach(function(b){
+        b.addEventListener("click",function(){
+          g.querySelectorAll(".cf-opt").forEach(function(x){x.classList.remove("cf-sel");});
+          b.classList.add("cf-sel"); state[k]=b.getAttribute("data-v");
+          var ready=state.q1&&state.q2&&state.q3;
+          rev.disabled=!ready; hint.textContent=ready?"":"Answer all three to reveal your match";
+        });
+      });
+    });
+    rev.addEventListener("click",function(){
+      var s={picanha:0,topsirloin:0,striploin:0,tenderloin:0};
+      ["q1","q2","q3"].forEach(function(q){var a=MAP[q][state[q]]||{};for(var c in a){s[c]+=a[c];}});
+      var w=TIE[0],best=-1; TIE.forEach(function(c){if(s[c]>best){best=s[c];w=c;}});
+      var cut=CUTS[w];
+      document.getElementById("cfName").textContent=cut.name;
+      document.getElementById("cfTag").textContent=cut.tag;
+      document.getElementById("cfDesc").textContent=cut.desc;
+      document.getElementById("cfOrderCut").textContent=cut.name;
+      document.getElementById("cfIcon").className="ti "+cut.icon;
+      res.classList.add("cf-show");
+      setTimeout(function(){res.scrollIntoView({behavior:"smooth",block:"center"});},80);
+    });
+    document.getElementById("cfRestart").addEventListener("click",function(){
+      state={q1:null,q2:null,q3:null};
+      document.querySelectorAll("#guide .cf-opt").forEach(function(x){x.classList.remove("cf-sel");});
+      res.classList.remove("cf-show"); rev.disabled=true; hint.textContent="Answer all three to reveal your match";
+      document.getElementById("guide").scrollIntoView({behavior:"smooth"});
+    });
+  })();
+  </script>
 </body>
 </html>
