@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New York Strip Recipes &mdash; Pampa Meats</title>
+<meta name="description" content="Recipes for Pampa Meats New York Strip (Bife Angosto) — premium Argentine Angus, kosher. Reverse sear, grill and smoker.">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0A0A0A; --gold:#C9A55C; --cream:#F5EFE5; --muted:#8A7548; --text:#B8A985;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:680px;margin:0 auto;padding:0 28px}
+  header{text-align:center;padding:54px 0 26px}
+  .brand{font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.42em;font-size:13px;text-transform:uppercase;color:var(--gold);padding-left:.42em;}
+  .roman{color:var(--muted);letter-spacing:.3em;font-size:12px;margin:30px 0 10px;}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:500;color:var(--cream);font-size:54px;line-height:1.05;letter-spacing:.01em;}
+  .altname{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:20px;margin-top:6px;}
+  .sub{color:var(--text);font-size:14px;margin-top:14px;font-weight:300;}
+  .divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:38px 0;color:var(--gold);}
+  .divider .line{height:1px;width:64px;background:linear-gradient(to right,transparent,var(--gold));}
+  .divider .line.r{background:linear-gradient(to left,transparent,var(--gold));}
+  .divider .dia{font-size:9px;opacity:.85}
+  .recipe{border:1px solid rgba(201,165,92,.22);border-radius:3px;padding:34px 30px;margin:28px 0;background:rgba(201,165,92,.02);}
+  .recipe h2{font-family:'Cormorant Garamond',serif;font-weight:500;color:var(--cream);font-size:32px;line-height:1.1;}
+  .meta{color:var(--gold);font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-top:10px;font-weight:500;}
+  .label{color:var(--muted);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;margin:26px 0 12px;}
+  .ingredients{list-style:none}
+  .ingredients li{padding:7px 0 7px 20px;position:relative;color:var(--text);font-size:15px;border-bottom:1px solid rgba(201,165,92,.08);}
+  .ingredients li:before{content:'\25C6';position:absolute;left:0;top:8px;color:var(--gold);font-size:8px;}
+  .method{list-style:none;counter-reset:step}
+  .method li{counter-increment:step;position:relative;padding:0 0 18px 44px;font-size:15px;color:var(--text);}
+  .method li:before{content:counter(step,upper-roman);position:absolute;left:0;top:0;width:30px;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;text-align:right;}
+  .method li:last-child{padding-bottom:0}
+  .temps{border:1px solid rgba(201,165,92,.22);border-radius:3px;padding:24px 30px;margin:28px 0;}
+  .temps h3{font-family:'Cormorant Garamond',serif;color:var(--cream);font-weight:500;font-size:22px;margin-bottom:8px;}
+  .temprow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(201,165,92,.08);font-size:14px;}
+  .temprow:last-child{border-bottom:none}
+  .temprow .t{color:var(--gold);font-weight:500;}
+  .closing{text-align:center;padding:18px 0 64px}
+  .note{color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;line-height:1.5;max-width:420px;margin:0 auto;}
+  .home{display:inline-block;margin-top:30px;color:var(--gold);text-decoration:none;font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:500;border:1px solid rgba(201,165,92,.4);padding:13px 30px;border-radius:2px;transition:all .25s ease;}
+  .home:hover{background:var(--gold);color:var(--black)}
+  footer{text-align:center;padding:26px 0 40px;border-top:1px solid rgba(201,165,92,.1);}
+  .footbrand{font-weight:600;letter-spacing:.34em;font-size:10px;text-transform:uppercase;color:var(--muted);}
+  @media(max-width:520px){h1{font-size:42px}.recipe{padding:28px 22px}.recipe h2{font-size:27px}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Pampa Meats</div>
+      <div class="roman">&mdash; III &mdash;</div>
+      <h1>New York Strip</h1>
+      <div class="altname">Bife Angosto</div>
+      <p class="sub">Premium Angus, from the pampa of Argentina.</p>
+    </header>
+    <div class="divider"><span class="line"></span><span class="dia">&#9670;</span><span class="line r"></span></div>
+    <article class="recipe">
+      <h2>Reverse-Seared New York Strip</h2>
+      <div class="meta">Serves 2 &nbsp;&middot;&nbsp; 35 Min &nbsp;&middot;&nbsp; Cast Iron</div>
+      <div class="label">Ingredients</div>
+      <ul class="ingredients">
+        <li>2 New York Strip steaks, 1.5-in thick</li>
+        <li>Coarse salt &amp; cracked pepper</li>
+        <li>Olive oil</li>
+      </ul>
+      <div class="label">Method</div>
+      <ol class="method">
+        <li>Heat oven to 250&deg;F / 120&deg;C. Season generously and set on a rack.</li>
+        <li>Roast until the center reaches 115&deg;F / 46&deg;C, 20&ndash;25 min.</li>
+        <li>Rest while a cast-iron pan heats until smoking.</li>
+        <li>Sear in oil 60&ndash;90 sec per side, plus the fat edge, until deeply crusted.</li>
+        <li>Pull at 130&deg;F / 54&deg;C. Rest 5 min before slicing.</li>
+      </ol>
+    </article>
+
+    <article class="recipe">
+      <h2>Grilled New York Strip</h2>
+      <div class="meta">Serves 2 &nbsp;&middot;&nbsp; 15 Min &nbsp;&middot;&nbsp; Grill</div>
+      <div class="label">Ingredients</div>
+      <ul class="ingredients">
+        <li>2 New York Strip steaks, 1.25-in thick</li>
+        <li>Coarse sea salt</li>
+        <li>Olive oil</li>
+      </ul>
+      <div class="label">Method</div>
+      <ol class="method">
+        <li>Rest at room temperature 30 min. Pat dry, oil lightly, salt well.</li>
+        <li>Grill over high heat 3&ndash;4 min until well-marked.</li>
+        <li>Flip, render the fat edge against the grates, cook 3&ndash;4 min more.</li>
+        <li>Pull at 130&deg;F / 54&deg;C for medium-rare.</li>
+        <li>Rest 5 min; slice against the grain.</li>
+      </ol>
+    </article>
+
+    <article class="recipe">
+      <h2>Smoked New York Strip</h2>
+      <div class="meta">Serves 2&ndash;4 &nbsp;&middot;&nbsp; 1.5 Hr &nbsp;&middot;&nbsp; Smoker</div>
+      <div class="label">Ingredients</div>
+      <ul class="ingredients">
+        <li>New York Strip steaks, 1.5-in thick</li>
+        <li>Coarse salt &amp; pepper</li>
+        <li>Wood (oak or hickory)</li>
+      </ul>
+      <div class="label">Method</div>
+      <ol class="method">
+        <li>Set the smoker to 225&deg;F / 107&deg;C. Season the steaks.</li>
+        <li>Smoke until the center reaches 115&deg;F / 46&deg;C, about 60&ndash;75 min.</li>
+        <li>Rest 10 min while you heat a grill or pan screaming hot.</li>
+        <li>Sear hard 60 sec per side for a crust.</li>
+        <li>Pull at 130&deg;F / 54&deg;C. Rest and slice.</li>
+      </ol>
+    </article>
+
+    <div class="temps">
+      <h3>Internal Temperature Guide</h3>
+        <div class="temprow"><span>Rare</span><span class="t">120&deg;F / 49&deg;C</span></div>
+        <div class="temprow"><span>Medium-Rare</span><span class="t">130&deg;F / 54&deg;C</span></div>
+        <div class="temprow"><span>Medium</span><span class="t">140&deg;F / 60&deg;C</span></div>
+        <div class="temprow"><span>Medium-Well</span><span class="t">150&deg;F / 66&deg;C</span></div>
+    </div>
+    <div class="divider"><span class="line"></span><span class="dia">&#9670;</span><span class="line r"></span></div>
+    <div class="closing">
+      <p class="note">Cooked simply, the way the pampa intended &mdash; let the beef speak for itself.</p>
+      <a class="home" href="/">Pampa Meats</a>
+    </div>
+  </div>
+  <footer><div class="footbrand">Pampa Meats &nbsp;&middot;&nbsp; Kosher Angus</div></footer>
+</body>
+</html>
