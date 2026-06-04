@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Picanha Recipes — Pampa Meats</title>
+<meta name="description" content="Recipes for Pampa Meats Picanha — premium Angus, kosher, from the pampa of Argentina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0A0A0A;
+    --gold:#C9A55C;
+    --cream:#F5EFE5;
+    --muted:#8A7548;
+    --text:#B8A985;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--black);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-weight:300;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 28px}
+
+  /* Header */
+  header{text-align:center;padding:54px 0 26px}
+  .brand{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    letter-spacing:.42em;
+    font-size:13px;
+    text-transform:uppercase;
+    color:var(--gold);
+    padding-left:.42em;
+  }
+  .roman{
+    color:var(--muted);
+    letter-spacing:.3em;
+    font-size:12px;
+    margin:30px 0 10px;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:500;
+    color:var(--cream);
+    font-size:54px;
+    line-height:1.05;
+    letter-spacing:.01em;
+  }
+  .sub{
+    color:var(--text);
+    font-size:14px;
+    margin-top:14px;
+    font-weight:300;
+  }
+
+  /* Divider */
+  .divider{
+    display:flex;align-items:center;justify-content:center;
+    gap:14px;margin:38px 0;color:var(--gold);
+  }
+  .divider .line{height:1px;width:64px;background:linear-gradient(to right,transparent,var(--gold));}
+  .divider .line.r{background:linear-gradient(to left,transparent,var(--gold));}
+  .divider .dia{font-size:9px;opacity:.85}
+
+  /* Recipe card */
+  .recipe{
+    border:1px solid rgba(201,165,92,.22);
+    border-radius:3px;
+    padding:34px 30px;
+    margin:28px 0;
+    background:rgba(201,165,92,.02);
+  }
+  .recipe h2{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:500;
+    color:var(--cream);
+    font-size:32px;
+    line-height:1.1;
+  }
+  .meta{
+    color:var(--gold);
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-top:10px;
+    font-weight:500;
+  }
+  .label{
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    font-weight:600;
+    margin:26px 0 12px;
+  }
+  .ingredients{list-style:none}
+  .ingredients li{
+    padding:7px 0 7px 20px;
+    position:relative;
+    color:var(--text);
+    font-size:15px;
+    border-bottom:1px solid rgba(201,165,92,.08);
+  }
+  .ingredients li:before{
+    content:'◆';
+    position:absolute;left:0;top:8px;
+    color:var(--gold);
+    font-size:8px;
+  }
+  .method{list-style:none;counter-reset:step}
+  .method li{
+    counter-increment:step;
+    position:relative;
+    padding:0 0 18px 44px;
+    font-size:15px;
+    color:var(--text);
+  }
+  .method li:before{
+    content:counter(step,upper-roman);
+    position:absolute;left:0;top:0;
+    width:30px;
+    color:var(--gold);
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;
+    font-weight:600;
+    text-align:right;
+  }
+  .method li:last-child{padding-bottom:0}
+
+  /* QR / CTA footer */
+  .closing{text-align:center;padding:18px 0 64px}
+  .note{
+    color:var(--muted);
+    font-size:13px;
+    font-style:italic;
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px;
+    line-height:1.5;
+    max-width:420px;
+    margin:0 auto;
+  }
+  .home{
+    display:inline-block;
+    margin-top:30px;
+    color:var(--gold);
+    text-decoration:none;
+    font-size:11px;
+    letter-spacing:.26em;
+    text-transform:uppercase;
+    font-weight:500;
+    border:1px solid rgba(201,165,92,.4);
+    padding:13px 30px;
+    border-radius:2px;
+    transition:all .25s ease;
+  }
+  .home:hover{background:var(--gold);color:var(--black)}
+  footer{
+    text-align:center;
+    padding:26px 0 40px;
+    border-top:1px solid rgba(201,165,92,.1);
+  }
+  .footbrand{
+    font-weight:600;letter-spacing:.34em;font-size:10px;
+    text-transform:uppercase;color:var(--muted);
+  }
+  @media(max-width:520px){
+    h1{font-size:42px}
+    .recipe{padding:28px 22px}
+    .recipe h2{font-size:27px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="brand">Pampa Meats</div>
+      <div class="roman">— I —</div>
+      <h1>Picanha</h1>
+      <p class="sub">Premium Angus, from the pampa of Argentina.</p>
+    </header>
+
+    <div class="divider">
+      <span class="line"></span><span class="dia">◆</span><span class="line r"></span>
+    </div>
+
+    <!-- Recipe 1 — the card recipe -->
+    <article class="recipe">
+      <h2>Picanha al Asador</h2>
+      <div class="meta">Serves 4–6 &nbsp;·&nbsp; 25 Min &nbsp;·&nbsp; Medium-Rare</div>
+
+      <div class="label">Ingredients</div>
+      <ul class="ingredients">
+        <li>1 Pampa Meats Picanha (~2.5 lb)</li>
+        <li>Coarse sea salt</li>
+        <li>Chimichurri, to serve (optional)</li>
+      </ul>
+
+      <div class="label">Method</div>
+      <ol class="method">
+        <li>Rest at room temperature 30–40 min. Pat dry.</li>
+        <li>Score the fat cap in a crosshatch, ¼-in deep — not into the meat.</li>
+        <li>Salt generously on every side with coarse salt.</li>
+        <li>Sear fat-side down on high heat until golden, 6–8 min.</li>
+        <li>Turn and cook to medium-rare, 130°F / 54°C internal.</li>
+        <li>Rest 10 min. Slice against the grain; serve with chimichurri.</li>
+      </ol>
+    </article>
+
+    <!-- Recipe 2 -->
+    <article class="recipe">
+      <h2>Whole Roasted Picanha</h2>
+      <div class="meta">Serves 4–6 &nbsp;·&nbsp; 45 Min &nbsp;·&nbsp; Oven</div>
+
+      <div class="label">Ingredients</div>
+      <ul class="ingredients">
+        <li>1 Pampa Meats Picanha (~2.5 lb)</li>
+        <li>Coarse sea salt &amp; cracked black pepper</li>
+        <li>2 cloves garlic, halved</li>
+        <li>Fresh rosemary or thyme (optional)</li>
+      </ul>
+
+      <div class="label">Method</div>
+      <ol class="method">
+        <li>Heat oven to 425°F / 220°C. Rest the meat 30 min at room temperature.</li>
+        <li>Score the fat cap, rub all over with garlic, salt and pepper.</li>
+        <li>Sear fat-side down in a hot, oven-safe pan until deeply golden, 5 min.</li>
+        <li>Transfer fat-side up to the oven. Roast 20–25 min to 130°F / 54°C for medium-rare.</li>
+        <li>Rest 12–15 min, tented loosely.</li>
+        <li>Slice against the grain into thick steaks.</li>
+      </ol>
+    </article>
+
+    <!-- Recipe 3 -->
+    <article class="recipe">
+      <h2>Picanha Skewers</h2>
+      <div class="meta">Serves 4–6 &nbsp;·&nbsp; 20 Min &nbsp;·&nbsp; Grill</div>
+
+      <div class="label">Ingredients</div>
+      <ul class="ingredients">
+        <li>1 Pampa Meats Picanha (~2.5 lb)</li>
+        <li>Coarse sea salt</li>
+        <li>Long metal skewers</li>
+      </ul>
+
+      <div class="label">Method</div>
+      <ol class="method">
+        <li>Cut the picanha with the grain into 1½-in thick slices, fat cap on.</li>
+        <li>Bend each slice into a C and thread onto skewers, fat facing out.</li>
+        <li>Salt generously with coarse salt.</li>
+        <li>Grill over high heat, turning, until the fat crisps and the edges char, 10–12 min.</li>
+        <li>Rest 5 min off the heat.</li>
+        <li>Slice the seared outer layer off each skewer; return the rest to the grill and repeat.</li>
+      </ol>
+    </article>
+
+    <div class="divider">
+      <span class="line"></span><span class="dia">◆</span><span class="line r"></span>
+    </div>
+
+    <div class="closing">
+      <p class="note">Cooked simply, the way the pampa intended — let the beef speak for itself.</p>
+      <a class="home" href="/">Pampa Meats</a>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footbrand">Pampa Meats &nbsp;·&nbsp; Kosher Angus</div>
+  </footer>
+</body>
+</html>
