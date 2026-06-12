@@ -11,18 +11,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root{ --black:#0A0A0A; --panel:#111111; --line:#2A2A2A; --gold:#C9A55C; --gold2:#D9B66C;
-         --cream:#F5EFE5; --muted:#8A7548; --text:#B8A985; }
+  :root{ --black:#000000; --panel:#111111; --line:#2A2A2A; --gold:#C9A55C; --cream:#F5EFE5; --muted:#8A7548; --text:#B8A985; }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;
-       -webkit-font-smoothing:antialiased;line-height:1.6;padding:0 0 60px}
+  body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;line-height:1.6;padding:0 0 60px}
   .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-         padding:26px 0 22px;border-bottom:0.5px solid var(--line);margin-bottom:26px}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:26px 0 20px;border-bottom:0.5px solid var(--line);margin-bottom:24px}
   .brand{display:flex;align-items:center;gap:14px}
   .brand img{height:46px;width:auto}
   .brand .t{font-family:'Cormorant Garamond',serif;letter-spacing:3px;font-size:20px;color:var(--gold);font-weight:500}
   .brand .s{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .filters{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+  .presets{display:flex;gap:6px}
+  .pbtn{background:var(--panel);color:var(--text);border:0.5px solid var(--line);border-radius:5px;padding:7px 13px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .15s}
+  .pbtn:hover{border-color:var(--gold);color:var(--cream)}
+  .pbtn.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500}
+  .range{display:flex;align-items:center;gap:8px}
+  .range label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .range input[type=date]{background:var(--panel);color:var(--cream);border:0.5px solid var(--line);border-radius:5px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;color-scheme:dark;cursor:pointer}
+  .range input[type=date]:hover{border-color:var(--gold)}
   .upd{font-size:11px;color:var(--muted);letter-spacing:1px}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
   .kpi{background:var(--panel);border:0.5px solid var(--line);border-radius:6px;padding:18px 20px;position:relative;overflow:hidden}
@@ -61,10 +67,22 @@
         <img src="/logo.png" alt="Pampa Meats">
         <div><div class="t">PAMPA MEATS</div><div class="s">Orders Dashboard</div></div>
       </div>
-      <div class="upd" id="upd">Loading…</div>
+      <div class="filters">
+        <div class="presets">
+          <button class="pbtn on" data-r="all">All</button>
+          <button class="pbtn" data-r="today">Today</button>
+          <button class="pbtn" data-r="7">7 days</button>
+          <button class="pbtn" data-r="30">30 days</button>
+        </div>
+        <div class="range">
+          <label for="fromD">From</label><input type="date" id="fromD">
+          <label for="toD">To</label><input type="date" id="toD">
+        </div>
+        <div class="upd" id="upd">Loading&hellip;</div>
+      </div>
     </header>
     <div id="content">
-      <div class="state"><div class="spin"></div><div>Loading live orders…</div></div>
+      <div class="state"><div class="spin"></div><div>Loading live orders&hellip;</div></div>
     </div>
     <div class="foot">Pampa Meats &middot; Premium Argentine Angus &middot; Live order data</div>
     <div class="ornament"><span class="line"></span><span class="d">&#9670;</span><span class="line"></span></div>
@@ -76,8 +94,12 @@ const CUTS=[["picanha","Picanha","#C9A55C"],["topSirloin","Top Sirloin","#B5894A
 const STATUS_COLORS={"New":["#1e3a5f","#9ec5ff"],"Quoted":["#5c4a1e","#ffd98a"],
   "Paid":["#1e4d2b","#8af0a8"],"Shipped":["#2a2a5c","#b4b8ff"],"Delivered":["#14402b","#7df0c0"],
   "No status":["#2A2A2A","#8A7548"]};
+let ALL=[];
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function fmtDay(d){const x=new Date(d);if(isNaN(x))return"";return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");}
+function todayKey(){return fmtDay(new Date());}
+function shiftKey(days){const x=new Date();x.setDate(x.getDate()-days);return fmtDay(x);}
 
 async function load(){
   let data;
@@ -87,7 +109,32 @@ async function load(){
     if(data.reason==='missing_token') return showSetup();
     return showError("Live data not available yet ("+esc(data.reason||'unknown')+").");
   }
-  render(data.orders||[]);
+  ALL=data.orders||[];
+  applyFilter();
+}
+
+function setPresetActive(r){
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.toggle('on',b.getAttribute('data-r')===r));
+}
+function applyPreset(r){
+  const f=document.getElementById('fromD'), t=document.getElementById('toD');
+  if(r==='all'){ f.value=''; t.value=''; }
+  else if(r==='today'){ f.value=todayKey(); t.value=todayKey(); }
+  else { f.value=shiftKey(parseInt(r,10)-1); t.value=todayKey(); }
+  setPresetActive(r);
+  applyFilter();
+}
+function applyFilter(){
+  const f=document.getElementById('fromD').value, t=document.getElementById('toD').value;
+  let list=ALL.slice();
+  if(f) list=list.filter(o=>fmtDay(o.date)>=f);
+  if(t) list=list.filter(o=>fmtDay(o.date)<=t);
+  render(list);
+}
+function initFilters(){
+  document.querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>applyPreset(b.getAttribute('data-r')));
+  document.getElementById('fromD').onchange=()=>{setPresetActive('');applyFilter();};
+  document.getElementById('toD').onchange=()=>{setPresetActive('');applyFilter();};
 }
 
 function showSetup(){
@@ -98,7 +145,7 @@ function showSetup(){
 }
 function showError(msg){
   document.getElementById('content').innerHTML='<div class="state"><div class="big">Hold on</div><div>'+esc(msg)+'</div></div>';
-  document.getElementById('upd').textContent='Retrying…';
+  document.getElementById('upd').textContent='Retrying&hellip;';
   setTimeout(load,15000);
 }
 
@@ -118,7 +165,7 @@ function render(orders){
   '</div>';
 
   html+='<div class="grid2">'+
-    '<div class="card"><h3>Packages by cut</h3><div class="ch">Demand across all orders</div><div class="chartbox"><canvas id="cutsChart"></canvas></div></div>'+
+    '<div class="card"><h3>Packages by cut</h3><div class="ch">Demand in this view</div><div class="chartbox"><canvas id="cutsChart"></canvas></div></div>'+
     '<div class="card"><h3>Pipeline by status</h3><div class="ch">Where orders stand</div><div class="chartbox"><canvas id="statusChart"></canvas></div></div>'+
   '</div>';
 
@@ -132,13 +179,13 @@ function render(orders){
       `<td class="num">${o.nyStrip||"·"}</td><td class="num">${o.tenderloin||"·"}</td>`+
       `<td class="num tot">${o.units||"·"}</td><td>${esc(o.zone||"")}</td><td>${ds}</td></tr>`;
   }).join("");
-  html+='<div class="card"><h3>Orders</h3><div class="ch">'+orders.length+' total</div><div style="overflow-x:auto"><table>'+
+  html+='<div class="card"><h3>Orders</h3><div class="ch">'+orders.length+' in this view</div><div style="overflow-x:auto"><table>'+
     '<thead><tr><th>Customer</th><th>Status</th><th>Pic</th><th>Top</th><th>NY</th><th>Ten/Filet</th><th>Pkgs</th><th>Zone</th><th>Date</th></tr></thead><tbody>'+
-    trs+
+    (trs||'<tr><td colspan="9" style="text-align:center;color:#8A7548;padding:24px">No orders in this range.</td></tr>')+
     '<tr class="totrow"><td>TOTAL</td><td></td>'+
       `<td class="num">${cutTotals.picanha}</td><td class="num">${cutTotals.topSirloin}</td>`+
       `<td class="num">${cutTotals.nyStrip}</td><td class="num">${cutTotals.tenderloin}</td>`+
-      `<td class="num">${totalPkgs}</td><td></td><td></td></tr>'+
+      `<td class="num">${totalPkgs}</td><td></td><td></td></tr>`+
     '</tbody></table></div></div>';
 
   document.getElementById('content').innerHTML=html;
@@ -152,10 +199,11 @@ function render(orders){
 
   const sl=Object.keys(byStatus), sd=sl.map(k=>byStatus[k]);
   new Chart(document.getElementById('statusChart'),{type:'doughnut',
-    data:{labels:sl,datasets:[{data:sd,backgroundColor:['#C9A55C','#6F5630','#B5894A','#8A6D3B','#4d4030','#2A2A2A'],borderColor:'#111',borderWidth:2}]},
+    data:{labels:sl,datasets:[{data:sd,backgroundColor:["#C9A55C","#6F5630","#B5894A","#8A6D3B","#4d4030","#2A2A2A"],borderColor:'#111',borderWidth:2}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}}}}});
 }
 
+initFilters();
 load();
 setInterval(load, 120000);
 </script>
