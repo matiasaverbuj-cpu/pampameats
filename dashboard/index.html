@@ -165,6 +165,8 @@ function render(orders){
   const totalPkgs=orders.reduce((s,o)=>s+(o.units||0),0);
   const withProd=orders.filter(o=>o.units>0).length;
   const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);
+  const totalPaid=orders.reduce((s,o)=>s+(o.amountPaid||0),0);
+  const totalDue=orders.reduce((s,o)=>s+(o.balance||0),0);
   const byStatus={}; orders.forEach(o=>{const s=o.status||"No status";byStatus[s]=(byStatus[s]||0)+1;});
   const kpi=(l,v,sub)=>`<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div>${sub?`<div class="sub">${sub}</div>`:""}</div>`;
   let html='<div class="kpis">'+
@@ -172,6 +174,8 @@ function render(orders){
     kpi("Total packages",totalPkgs,"all 4 cuts")+
     kpi("Active cuts",CUTS.filter(([k])=>cutTotals[k]>0).length+"/4","with demand")+
     kpi("Invoiced","$"+totalRev.toLocaleString(),"order totals")+
+    kpi("Collected","$"+totalPaid.toLocaleString(),"paid")+
+    kpi("Outstanding","$"+totalDue.toLocaleString(),"balance due")+
   '</div>';
   html+='<div class="grid2">'+
     '<div class="card"><h3>Packages by cut</h3><div class="ch">Demand in this view</div><div class="chartbox"><canvas id="cutsChart"></canvas></div></div>'+
