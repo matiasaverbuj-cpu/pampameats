@@ -46,7 +46,10 @@ export default async function handler(req, res) {
         units: Number(f['Units (packages)']) || 0,
         zone: f['Zone'] || '',
         total: Number(f['Order Total']) || 0,
-        date: f['Order Date'] || rec.createdTime
+        date: f['Order Date'] || rec.createdTime,
+        amountPaid: Number(f['Amount Paid']) || 0,
+        balance: Number(f['Balance']) || 0,
+        payStatus: f['Payment Status'] || ''
       };
     });
 
