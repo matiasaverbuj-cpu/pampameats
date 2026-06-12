@@ -20,15 +20,16 @@
   .brand img{height:46px;width:auto}
   .brand .t{font-family:'Cormorant Garamond',serif;letter-spacing:3px;font-size:20px;color:var(--gold);font-weight:500}
   .brand .s{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:2px}
-  .filters{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+  .filters{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
   .presets{display:flex;gap:6px}
   .pbtn{background:var(--panel);color:var(--text);border:0.5px solid var(--line);border-radius:5px;padding:7px 13px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .15s}
   .pbtn:hover{border-color:var(--gold);color:var(--cream)}
   .pbtn.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500}
+  .slc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
   .range{display:flex;align-items:center;gap:8px}
   .range label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
-  .range input[type=date]{background:var(--panel);color:var(--cream);border:0.5px solid var(--line);border-radius:5px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;color-scheme:dark;cursor:pointer}
-  .range input[type=date]:hover{border-color:var(--gold)}
+  input[type=date],select.slc{background:var(--panel);color:var(--cream);border:0.5px solid var(--line);border-radius:5px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;color-scheme:dark;cursor:pointer}
+  input[type=date]:hover,select.slc:hover{border-color:var(--gold)}
   .upd{font-size:11px;color:var(--muted);letter-spacing:1px}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
   .kpi{background:var(--panel);border:0.5px solid var(--line);border-radius:6px;padding:18px 20px;position:relative;overflow:hidden}
@@ -74,9 +75,10 @@
           <button class="pbtn" data-r="7">7 days</button>
           <button class="pbtn" data-r="30">30 days</button>
         </div>
-        <div class="range">
-          <label for="fromD">From</label><input type="date" id="fromD">
-          <label for="toD">To</label><input type="date" id="toD">
+        <div class="slc-row">
+          <div class="range"><label for="fromD">From</label><input type="date" id="fromD"><label for="toD">To</label><input type="date" id="toD"></div>
+          <select id="statusF" class="slc"><option value="all">All statuses</option></select>
+          <select id="custF" class="slc"><option value="all">All customers</option></select>
         </div>
         <div class="upd" id="upd">Loading&hellip;</div>
       </div>
@@ -87,20 +89,17 @@
     <div class="foot">Pampa Meats &middot; Premium Argentine Angus &middot; Live order data</div>
     <div class="ornament"><span class="line"></span><span class="d">&#9670;</span><span class="line"></span></div>
   </div>
-
 <script>
 const CUTS=[["picanha","Picanha","#C9A55C"],["topSirloin","Top Sirloin","#B5894A"],
-  ["nyStrip","New York Strip","#8A6D3B"],["tenderloin","Tenderloin / Filet Mignon","#6F5630"]];
+["nyStrip","New York Strip","#8A6D3B"],["tenderloin","Tenderloin / Filet Mignon","#6F5630"]];
 const STATUS_COLORS={"New":["#1e3a5f","#9ec5ff"],"Quoted":["#5c4a1e","#ffd98a"],
-  "Paid":["#1e4d2b","#8af0a8"],"Shipped":["#2a2a5c","#b4b8ff"],"Delivered":["#14402b","#7df0c0"],
-  "No status":["#2A2A2A","#8A7548"]};
+"Paid":["#1e4d2b","#8af0a8"],"Shipped":["#2a2a5c","#b4b8ff"],"Delivered":["#14402b","#7df0c0"],
+"No status":["#2A2A2A","#8A7548"]};
 let ALL=[];
-
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function fmtDay(d){const x=new Date(d);if(isNaN(x))return"";return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");}
 function todayKey(){return fmtDay(new Date());}
 function shiftKey(days){const x=new Date();x.setDate(x.getDate()-days);return fmtDay(x);}
-
 async function load(){
   let data;
   try{ const r=await fetch('/api/orders',{cache:'no-store'}); data=await r.json(); }
@@ -110,9 +109,9 @@ async function load(){
     return showError("Live data not available yet ("+esc(data.reason||'unknown')+").");
   }
   ALL=data.orders||[];
+  buildSlicers();
   applyFilter();
 }
-
 function setPresetActive(r){
   document.querySelectorAll('.pbtn').forEach(b=>b.classList.toggle('on',b.getAttribute('data-r')===r));
 }
@@ -124,11 +123,25 @@ function applyPreset(r){
   setPresetActive(r);
   applyFilter();
 }
+function buildSlicers(){
+  const sF=document.getElementById('statusF'), cF=document.getElementById('custF');
+  const sCur=sF.value, cCur=cF.value;
+  const statuses=[...new Set(ALL.map(o=>o.status||'No status'))].sort();
+  const custs=[...new Set(ALL.map(o=>o.name).filter(Boolean))].sort();
+  sF.innerHTML='<option value="all">All statuses</option>'+statuses.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('');
+  cF.innerHTML='<option value="all">All customers</option>'+custs.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join('');
+  if([...sF.options].some(o=>o.value===sCur)) sF.value=sCur;
+  if([...cF.options].some(o=>o.value===cCur)) cF.value=cCur;
+  sF.onchange=applyFilter; cF.onchange=applyFilter;
+}
 function applyFilter(){
   const f=document.getElementById('fromD').value, t=document.getElementById('toD').value;
+  const st=document.getElementById('statusF').value, cu=document.getElementById('custF').value;
   let list=ALL.slice();
   if(f) list=list.filter(o=>fmtDay(o.date)>=f);
   if(t) list=list.filter(o=>fmtDay(o.date)<=t);
+  if(st!=='all') list=list.filter(o=>(o.status||'No status')===st);
+  if(cu!=='all') list=list.filter(o=>o.name===cu);
   render(list);
 }
 function initFilters(){
@@ -136,7 +149,6 @@ function initFilters(){
   document.getElementById('fromD').onchange=()=>{setPresetActive('');applyFilter();};
   document.getElementById('toD').onchange=()=>{setPresetActive('');applyFilter();};
 }
-
 function showSetup(){
   document.getElementById('content').innerHTML=
     '<div class="state"><div class="big">Almost ready</div>'+
@@ -148,14 +160,12 @@ function showError(msg){
   document.getElementById('upd').textContent='Retrying&hellip;';
   setTimeout(load,15000);
 }
-
 function render(orders){
   const cutTotals={}; CUTS.forEach(([k])=>cutTotals[k]=orders.reduce((s,o)=>s+(o[k]||0),0));
   const totalPkgs=orders.reduce((s,o)=>s+(o.units||0),0);
   const withProd=orders.filter(o=>o.units>0).length;
   const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);
   const byStatus={}; orders.forEach(o=>{const s=o.status||"No status";byStatus[s]=(byStatus[s]||0)+1;});
-
   const kpi=(l,v,sub)=>`<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div>${sub?`<div class="sub">${sub}</div>`:""}</div>`;
   let html='<div class="kpis">'+
     kpi("Orders",orders.length,withProd+" with product")+
@@ -163,12 +173,10 @@ function render(orders){
     kpi("Active cuts",CUTS.filter(([k])=>cutTotals[k]>0).length+"/4","with demand")+
     kpi("Invoiced","$"+totalRev.toLocaleString(),"order totals")+
   '</div>';
-
   html+='<div class="grid2">'+
     '<div class="card"><h3>Packages by cut</h3><div class="ch">Demand in this view</div><div class="chartbox"><canvas id="cutsChart"></canvas></div></div>'+
     '<div class="card"><h3>Pipeline by status</h3><div class="ch">Where orders stand</div><div class="chartbox"><canvas id="statusChart"></canvas></div></div>'+
   '</div>';
-
   const sorted=orders.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
   const trs=sorted.map(o=>{
     const sc=STATUS_COLORS[o.status||"No status"]||STATUS_COLORS["No status"];
@@ -181,28 +189,24 @@ function render(orders){
   }).join("");
   html+='<div class="card"><h3>Orders</h3><div class="ch">'+orders.length+' in this view</div><div style="overflow-x:auto"><table>'+
     '<thead><tr><th>Customer</th><th>Status</th><th>Pic</th><th>Top</th><th>NY</th><th>Ten/Filet</th><th>Pkgs</th><th>Zone</th><th>Date</th></tr></thead><tbody>'+
-    (trs||'<tr><td colspan="9" style="text-align:center;color:#8A7548;padding:24px">No orders in this range.</td></tr>')+
+    (trs||'<tr><td colspan="9" style="text-align:center;color:#8A7548;padding:24px">No orders match these filters.</td></tr>')+
     '<tr class="totrow"><td>TOTAL</td><td></td>'+
       `<td class="num">${cutTotals.picanha}</td><td class="num">${cutTotals.topSirloin}</td>`+
       `<td class="num">${cutTotals.nyStrip}</td><td class="num">${cutTotals.tenderloin}</td>`+
       `<td class="num">${totalPkgs}</td><td></td><td></td></tr>`+
     '</tbody></table></div></div>';
-
   document.getElementById('content').innerHTML=html;
   document.getElementById('upd').textContent='Updated '+new Date().toLocaleString();
-
   Chart.defaults.color='#8A7548'; Chart.defaults.font.family='Inter';
   new Chart(document.getElementById('cutsChart'),{type:'bar',
     data:{labels:CUTS.map(c=>c[1]),datasets:[{data:CUTS.map(c=>cutTotals[c[0]]),backgroundColor:CUTS.map(c=>c[2]),borderRadius:4}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
       scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#1c1c1c'}}}}});
-
   const sl=Object.keys(byStatus), sd=sl.map(k=>byStatus[k]);
   new Chart(document.getElementById('statusChart'),{type:'doughnut',
     data:{labels:sl,datasets:[{data:sd,backgroundColor:["#C9A55C","#6F5630","#B5894A","#8A6D3B","#4d4030","#2A2A2A"],borderColor:'#111',borderWidth:2}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}}}}});
 }
-
 initFilters();
 load();
 setInterval(load, 120000);
