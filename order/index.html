@@ -92,7 +92,19 @@
     .confirm-recap { font-size:12px; color:#8A7548; margin:18px 0 26px; letter-spacing:.5px; }
     .confirm-card .btn-ghost { display:inline-block; color:#C9A55C; padding:11px 26px; border:0.5px solid #C9A55C; border-radius:2px; font-size:11px; letter-spacing:2.5px; transition:all .2s; }
     .confirm-card .btn-ghost:hover { background:#C9A55C; color:#0A0A0A; }
+    .hp { position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden; }
+    .badge-pop { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#0A0A0A; background:#C9A55C; padding:3px 9px; border-radius:2px; }
+    .trust-line { text-align:center; margin:18px auto 0; font-size:12px; color:#8A7548; }
+    .trust-line a { color:#C9A55C; border-bottom:0.5px solid #C9A55C; }
+    .mobilebar { display:none; }
     @media (max-width:640px){ .nav{padding:16px 20px;} .fields{grid-template-columns:1fr;} .head{padding:48px 20px 8px;} }
+    @media (max-width:640px){
+      .mobilebar { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:150; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; background:#0A0A0A; border-top:0.5px solid #2A2A2A; }
+      .mobilebar .mb-info { font-size:12px; color:#B8A985; }
+      .mobilebar .mb-info b { color:#C9A55C; font-family:'Cormorant Garamond',serif; font-size:18px; }
+      .mobilebar .mb-btn { flex:0 0 auto; background:#C9A55C; color:#0A0A0A; border:none; padding:13px 22px; border-radius:2px; font-weight:500; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; }
+      body { padding-bottom:74px; }
+    }
   </style>
 </head>
 <body>
@@ -142,6 +154,7 @@
           <input id="email" type="email" autocomplete="email" placeholder="you@email.com">
           <span class="err">Please enter a valid email.</span>
         </div>
+        <div class="hp" aria-hidden="true"><label>Company (leave this blank)<input id="company" type="text" tabindex="-1" autocomplete="off"></label></div>
       </div>
     </section>
 
@@ -162,6 +175,10 @@
           <input id="address" type="text" autocomplete="street-address" placeholder="Street, city, ZIP">
         </div>
         <div class="field full">
+          <label>Preferred delivery date <span style="text-transform:none;letter-spacing:0;color:#6E6E6E">(optional)</span></label>
+          <input id="deliveryDate" type="date">
+        </div>
+        <div class="field full">
           <label>Notes</label>
           <textarea id="notes" placeholder="Delivery preferences, timing, anything we should know..."></textarea>
         </div>
@@ -176,6 +193,8 @@
       <div class="sum-note">Approx. weight: <span id="sum-weight">0 lb</span> &middot; Pricing by quote &middot; You&rsquo;ll receive a quote before paying.</div>
     </div>
 
+    <div class="trust-line">Every cut supervised by <a href="/rabbi">Rabbi Yitzchak R. Nehmad</a> &middot; Glatt Kosher, Beit Yosef</div>
+
     <div class="submit-wrap">
       <button class="btn-submit" id="submitBtn"><i class="ti ti-send"></i> Request my quote</button>
       <div class="form-msg" id="formMsg"></div>
@@ -185,6 +204,12 @@
   <div class="footer">
     <div class="fine">All weights are approximate &mdash; each cut is hand-trimmed, so the exact weight varies slightly. Final pricing is confirmed by quote before any payment.</div>
     <div class="meta">PAMPA MEATS &middot; PREMIUM BEEF CUTS &middot; NEW YORK &amp; NEW JERSEY &middot; 2026</div>
+  </div>
+
+  <!-- MOBILE STICKY CTA -->
+  <div class="mobilebar" id="mobilebar">
+    <div class="mb-info"><b id="mb-pkgs">0</b> packages selected</div>
+    <button class="mb-btn" id="mbBtn">Request quote</button>
   </div>
 
   <!-- CONFIRMATION -->
@@ -201,7 +226,7 @@
   <script>
   (function(){
     var CUTS=[
-      {key:'picanha',    name:'Picanha',                    es:'Tapa de Cuadril', lb:2.5, img:'/picanha.png'},
+      {key:'picanha',    name:'Picanha',                    es:'Tapa de Cuadril', lb:2.5, img:'/picanha.png', pop:true},
       {key:'topSirloin', name:'Top Sirloin',                es:'Cuadril',         lb:5,   img:'/top-sirloin.png'},
       {key:'nyStrip',    name:'New York Strip',             es:'Bife Angosto',    lb:6.5, img:'/striploin.png'},
       {key:'tenderloin', name:'Tenderloin / Filet Mignon',  es:'Lomo',            lb:2.5, img:'/tenderloin.png'}
@@ -218,6 +243,7 @@
         '<div class="cut-body">'+
           '<div class="cut-name serif">'+c.name+'</div>'+
           '<div class="cut-es serif">'+c.es+'</div>'+
+          (c.pop?'<div class="badge-pop">Most popular</div>':'')+
           '<div class="cut-weight">Package &middot; ~'+c.lb+' lb each</div>'+
           '<div class="stepper">'+
             '<button type="button" data-k="'+c.key+'" data-d="-1" aria-label="Decrease">&minus;</button>'+
@@ -242,7 +268,33 @@
       document.getElementById('sum-lines').innerHTML = lines || '<div class="sum-empty">No cuts selected yet.</div>';
       document.getElementById('sum-pkgs').textContent=pkgs;
       document.getElementById('sum-weight').textContent=(Math.round(lb*10)/10)+' lb';
+      var mb=document.getElementById('mb-pkgs'); if(mb) mb.textContent=pkgs;
+      saveDraft();
     }
+
+    var DRAFT_KEY='pampaOrderDraft';
+    function saveDraft(){
+      try{
+        var d={qty:qty, state:state,
+          name:document.getElementById('name').value,
+          phone:document.getElementById('phone').value,
+          email:document.getElementById('email').value,
+          address:document.getElementById('address').value,
+          deliveryDate:document.getElementById('deliveryDate').value,
+          notes:document.getElementById('notes').value};
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+      }catch(e){}
+    }
+    function loadDraft(){
+      try{
+        var raw=localStorage.getItem(DRAFT_KEY); if(!raw) return;
+        var d=JSON.parse(raw); if(!d) return;
+        if(d.qty){ ['picanha','topSirloin','nyStrip','tenderloin'].forEach(function(k){ if(typeof d.qty[k]==='number') qty[k]=d.qty[k]; }); }
+        ['name','phone','email','address','deliveryDate','notes'].forEach(function(id){ if(d[id]) document.getElementById(id).value=d[id]; });
+        if(d.state){ var p=document.querySelector('.state-pill[data-state="'+d.state+'"]'); if(p){ p.classList.add('sel'); state=d.state; } }
+      }catch(e){}
+    }
+    function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(e){} }
 
     grid.addEventListener('click',function(e){
       var b=e.target.closest('button'); if(!b) return;
@@ -256,12 +308,17 @@
         document.querySelectorAll('.state-pill').forEach(function(x){x.classList.remove('sel');});
         p.classList.add('sel'); state=p.getAttribute('data-state');
         document.getElementById('f-state').classList.remove('invalid');
+        saveDraft();
       });
     });
 
     function clearErr(id){ document.getElementById(id).classList.remove('invalid'); }
     ['name','phone','email'].forEach(function(id){
       document.getElementById(id).addEventListener('input',function(){ clearErr('f-'+id); });
+    });
+    ['name','phone','email','address','deliveryDate','notes'].forEach(function(id){
+      var el=document.getElementById(id);
+      el.addEventListener('input',saveDraft); el.addEventListener('change',saveDraft);
     });
 
     var btn=document.getElementById('submitBtn'), msg=document.getElementById('formMsg');
@@ -272,7 +329,9 @@
       var phone=document.getElementById('phone').value.trim();
       var email=document.getElementById('email').value.trim();
       var address=document.getElementById('address').value.trim();
+      var deliveryDate=document.getElementById('deliveryDate').value;
       var notes=document.getElementById('notes').value.trim();
+      var hp=document.getElementById('company').value;
       var totalPkgs=qty.picanha+qty.topSirloin+qty.nyStrip+qty.tenderloin;
 
       var bad=false;
@@ -287,13 +346,15 @@
       try{
         var r=await fetch('/api/order-create',{
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({name:name,phone:phone,email:email,address:address,state:state,notes:notes,qty:qty})
+          body:JSON.stringify({name:name,phone:phone,email:email,address:address,deliveryDate:deliveryDate,state:state,notes:notes,hp:hp,qty:qty})
         });
         var data=await r.json();
         if(data && data.ok){
           var lb=0; CUTS.forEach(function(c){ lb+=qty[c.key]*c.lb; });
+          var ref = (data.id && data.id.indexOf('rec')===0) ? ('PM-'+data.id.slice(-5).toUpperCase()) : '';
           document.getElementById('cName').textContent=name.split(' ')[0]||'friend';
-          document.getElementById('cRecap').textContent=totalPkgs+' package'+(totalPkgs>1?'s':'')+' · ~'+(Math.round(lb*10)/10)+' lb · '+state;
+          document.getElementById('cRecap').textContent=(ref?('Order '+ref+'  ·  '):'')+totalPkgs+' package'+(totalPkgs>1?'s':'')+' · ~'+(Math.round(lb*10)/10)+' lb · '+state;
+          clearDraft();
           document.getElementById('confirm').classList.add('show');
         } else {
           msg.className='form-msg error';
@@ -307,6 +368,8 @@
       }
     });
 
+    var mbBtn=document.getElementById('mbBtn'); if(mbBtn) mbBtn.addEventListener('click',function(){ btn.click(); });
+    loadDraft();
     render();
   })();
   </script>
