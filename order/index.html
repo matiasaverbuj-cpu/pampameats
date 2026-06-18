@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Place your Pampa Meats order — premium Argentine Angus kosher beef, delivered frozen across New York & New Jersey. Glatt Kosher, Beit Yosef.">
+  <meta name="theme-color" content="#000000">
+  <meta name="robots" content="noindex">
+  <title>Pampa Meats — Place Your Order</title>
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin:0; font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:#000000; color:#F5EFE5; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    .serif { font-family:'Cormorant Garamond',Georgia,serif; }
+    .nav { display:flex; justify-content:space-between; align-items:center; padding:18px 32px; border-bottom:0.5px solid #2A2A2A; background:#000; position:sticky; top:0; z-index:100; }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:500; letter-spacing:3px; color:#C9A55C; }
+    .nav-back { font-size:11px; letter-spacing:1.5px; color:#8A7548; transition:color .2s; }
+    .nav-back:hover { color:#C9A55C; }
+    .wrap { max-width:980px; margin:0 auto; padding:0 24px; }
+    .head { text-align:center; padding:64px 24px 8px; }
+    .head img { max-width:260px; width:62%; height:auto; margin:0 auto 28px; display:block; }
+    .eyebrow { font-size:10px; letter-spacing:4px; color:#8A7548; margin-bottom:14px; }
+    .head h1 { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:clamp(30px,5vw,44px); margin:0 0 14px; color:#F5EFE5; }
+    .head p { font-size:14px; color:#B8A985; max-width:520px; margin:0 auto; line-height:1.8; }
+    .seals { display:flex; justify-content:center; flex-wrap:wrap; gap:18px; padding:22px 24px; margin-top:28px; background:#050505; color:#8A7548; font-size:10px; letter-spacing:2.2px; border-top:0.5px solid #1F1F1F; border-bottom:0.5px solid #1F1F1F; }
+    .seals .d { color:#C9A55C; }
+    .step { padding:48px 0 8px; }
+    .step-label { display:flex; align-items:center; gap:12px; margin-bottom:26px; }
+    .step-num { flex-shrink:0; width:30px; height:30px; border:0.5px solid #C9A55C; border-radius:50%; color:#C9A55C; font-family:'Cormorant Garamond',serif; font-size:14px; display:flex; align-items:center; justify-content:center; }
+    .step-title { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:500; color:#F5EFE5; }
+    .cuts { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+    .cut { background:#0F0F0F; border:0.5px solid #2A2A2A; transition:border-color .3s; display:flex; flex-direction:column; }
+    .cut.has-qty { border-color:#C9A55C; }
+    .cut-frame { padding:14px; }
+    .cut-photo { aspect-ratio:4/3; background:#fff; border:1px solid #C9A55C; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .cut-photo img { max-width:88%; max-height:88%; object-fit:contain; }
+    .cut-body { padding:6px 20px 22px; text-align:center; border-top:0.5px solid #1F1F1F; flex:1; display:flex; flex-direction:column; }
+    .cut-name { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:21px; color:#F5EFE5; margin-top:16px; }
+    .cut-es { font-family:'Cormorant Garamond',serif; font-style:italic; color:#8A7548; font-size:13px; margin-top:2px; }
+    .cut-weight { font-size:11px; color:#B8A985; letter-spacing:.5px; margin-top:10px; }
+    .stepper { display:flex; align-items:center; justify-content:center; gap:0; margin-top:18px; border:0.5px solid #2A2A2A; border-radius:3px; overflow:hidden; align-self:center; }
+    .stepper button { width:42px; height:40px; background:transparent; border:none; color:#C9A55C; font-size:20px; cursor:pointer; transition:background .15s; line-height:1; }
+    .stepper button:hover { background:#1a1a1a; }
+    .stepper .qty { min-width:46px; text-align:center; font-size:16px; color:#F5EFE5; font-weight:500; border-left:0.5px solid #2A2A2A; border-right:0.5px solid #2A2A2A; height:40px; line-height:40px; }
+    .cuts-note { text-align:center; margin-top:18px; font-size:11px; color:#6E6E6E; font-style:italic; letter-spacing:.3px; }
+    .fields { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .field { display:flex; flex-direction:column; }
+    .field.full { grid-column:1 / -1; }
+    .field label { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#8A7548; margin-bottom:8px; }
+    .field label .req { color:#C9A55C; }
+    .field input, .field textarea { background:#0F0F0F; border:0.5px solid #2A2A2A; border-radius:3px; color:#F5EFE5; font-family:'Inter',sans-serif; font-size:14px; padding:13px 15px; transition:border-color .2s; }
+    .field input:focus, .field textarea:focus { outline:none; border-color:#C9A55C; }
+    .field textarea { resize:vertical; min-height:84px; }
+    .field .err { color:#E2A0A0; font-size:11px; margin-top:6px; min-height:14px; display:none; }
+    .field.invalid input { border-color:#7a3a3a; }
+    .field.invalid .err { display:block; }
+    .states { display:flex; gap:12px; }
+    .state-pill { flex:1; background:#0F0F0F; border:0.5px solid #2A2A2A; border-radius:3px; color:#B8A985; padding:14px; font-size:14px; cursor:pointer; text-align:center; transition:all .2s; font-family:'Inter',sans-serif; }
+    .state-pill:hover { border-color:#C9A55C; color:#F5EFE5; }
+    .state-pill.sel { background:#C9A55C; border-color:#C9A55C; color:#0A0A0A; font-weight:500; }
+    .summary { background:#050505; border:0.5px solid #2A2A2A; border-radius:4px; padding:26px 28px; margin:40px 0 0; }
+    .summary h3 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:500; margin:0 0 18px; color:#F5EFE5; }
+    .sum-row { display:flex; justify-content:space-between; font-size:13px; color:#B8A985; padding:8px 0; border-bottom:0.5px solid #161616; }
+    .sum-row .es { color:#8A7548; font-style:italic; font-size:11px; }
+    .sum-empty { color:#8A7548; font-size:13px; font-style:italic; padding:6px 0; }
+    .sum-tot { display:flex; justify-content:space-between; margin-top:16px; padding-top:14px; border-top:1px solid #2A2A2A; }
+    .sum-tot .label { color:#F5EFE5; font-size:13px; letter-spacing:.5px; }
+    .sum-tot .val { color:#C9A55C; font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:600; }
+    .sum-note { font-size:11px; color:#8A7548; margin-top:14px; letter-spacing:.5px; }
+    .submit-wrap { text-align:center; padding:36px 0 12px; }
+    .btn-submit { display:inline-flex; align-items:center; gap:10px; background:#C9A55C; color:#0A0A0A; border:none; padding:16px 44px; border-radius:2px; font-family:'Inter',sans-serif; font-weight:500; font-size:13px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+    .btn-submit:hover { background:#D9B66C; transform:translateY(-1px); }
+    .btn-submit:disabled { background:#2a2a2a; color:#777; cursor:not-allowed; transform:none; }
+    .form-msg { min-height:18px; margin-top:16px; font-size:12px; letter-spacing:.5px; }
+    .form-msg.error { color:#E2A0A0; }
+    .footer { text-align:center; padding:48px 24px 56px; border-top:0.5px solid #1F1F1F; margin-top:48px; color:#8A7548; }
+    .footer .meta { font-size:10px; letter-spacing:3px; }
+    .footer .fine { font-size:11px; color:#6E6E6E; font-style:italic; max-width:560px; margin:0 auto 18px; line-height:1.7; }
+    /* confirmation */
+    .confirm { position:fixed; inset:0; background:rgba(0,0,0,.92); display:none; align-items:center; justify-content:center; padding:24px; z-index:200; }
+    .confirm.show { display:flex; }
+    .confirm-card { max-width:520px; width:100%; background:#0F0F0F; border:0.5px solid #2A2A2A; border-radius:6px; padding:48px 40px; text-align:center; }
+    .confirm-icon { width:74px; height:74px; border-radius:50%; border:0.5px solid #C9A55C; display:flex; align-items:center; justify-content:center; margin:0 auto 24px; color:#C9A55C; font-size:34px; }
+    .confirm-card h2 { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:30px; margin:0 0 14px; color:#F5EFE5; }
+    .confirm-card p { font-size:14px; color:#B8A985; line-height:1.8; margin:0 0 10px; }
+    .confirm-recap { font-size:12px; color:#8A7548; margin:18px 0 26px; letter-spacing:.5px; }
+    .confirm-card .btn-ghost { display:inline-block; color:#C9A55C; padding:11px 26px; border:0.5px solid #C9A55C; border-radius:2px; font-size:11px; letter-spacing:2.5px; transition:all .2s; }
+    .confirm-card .btn-ghost:hover { background:#C9A55C; color:#0A0A0A; }
+    @media (max-width:640px){ .nav{padding:16px 20px;} .fields{grid-template-columns:1fr;} .head{padding:48px 20px 8px;} }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo">PAMPA MEATS</a>
+    <a href="/" class="nav-back">&larr; BACK TO SITE</a>
+  </nav>
+
+  <div class="head">
+    <img src="/logo.png" alt="Pampa Meats">
+    <div class="eyebrow">PLACE YOUR ORDER</div>
+    <h1 class="serif">Build your order</h1>
+    <p>Premium Argentine Angus, Glatt Kosher Beit Yosef. Choose your cuts and we&rsquo;ll send a quote &mdash; we typically reply within 30 minutes.</p>
+  </div>
+
+  <div class="seals">
+    <span>GLATT KOSHER</span><span class="d">&#9670;</span>
+    <span>BEIT YOSEF</span><span class="d">&#9670;</span>
+    <span>COLD-CHAIN DELIVERY</span><span class="d">&#9670;</span>
+    <span>REPLY IN ~30 MIN</span>
+  </div>
+
+  <div class="wrap">
+    <!-- STEP 1 -->
+    <section class="step">
+      <div class="step-label"><span class="step-num serif">I</span><span class="step-title serif">Select your cuts</span></div>
+      <div class="cuts" id="cuts"></div>
+      <div class="cuts-note">Images show representative cuts &mdash; actual size, shape and marbling will vary naturally. All weights are approximate.</div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step">
+      <div class="step-label"><span class="step-num serif">II</span><span class="step-title serif">Your details</span></div>
+      <div class="fields">
+        <div class="field" id="f-name">
+          <label>Full name <span class="req">*</span></label>
+          <input id="name" type="text" autocomplete="name" placeholder="Your name">
+          <span class="err">Please enter your name.</span>
+        </div>
+        <div class="field" id="f-phone">
+          <label>Phone <span class="req">*</span></label>
+          <input id="phone" type="tel" autocomplete="tel" placeholder="+1 ...">
+          <span class="err">Please enter a phone number.</span>
+        </div>
+        <div class="field full" id="f-email">
+          <label>Email</label>
+          <input id="email" type="email" autocomplete="email" placeholder="you@email.com">
+          <span class="err">Please enter a valid email.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step">
+      <div class="step-label"><span class="step-num serif">III</span><span class="step-title serif">Delivery</span></div>
+      <div class="fields">
+        <div class="field full" id="f-state">
+          <label>Delivery state <span class="req">*</span></label>
+          <div class="states">
+            <button type="button" class="state-pill" data-state="NY">New York (NY)</button>
+            <button type="button" class="state-pill" data-state="NJ">New Jersey (NJ)</button>
+          </div>
+          <span class="err">Please choose a delivery state.</span>
+        </div>
+        <div class="field full">
+          <label>Delivery address</label>
+          <input id="address" type="text" autocomplete="street-address" placeholder="Street, city, ZIP">
+        </div>
+        <div class="field full">
+          <label>Notes</label>
+          <textarea id="notes" placeholder="Delivery preferences, timing, anything we should know..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <div class="summary">
+      <h3 class="serif">Order summary</h3>
+      <div id="sum-lines"><div class="sum-empty">No cuts selected yet.</div></div>
+      <div class="sum-tot"><span class="label">Total packages</span><span class="val" id="sum-pkgs">0</span></div>
+      <div class="sum-note">Approx. weight: <span id="sum-weight">0 lb</span> &middot; Pricing by quote &middot; You&rsquo;ll receive a quote before paying.</div>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="btn-submit" id="submitBtn"><i class="ti ti-send"></i> Request my quote</button>
+      <div class="form-msg" id="formMsg"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="fine">All weights are approximate &mdash; each cut is hand-trimmed, so the exact weight varies slightly. Final pricing is confirmed by quote before any payment.</div>
+    <div class="meta">PAMPA MEATS &middot; PREMIUM BEEF CUTS &middot; NEW YORK &amp; NEW JERSEY &middot; 2026</div>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="confirm" id="confirm">
+    <div class="confirm-card">
+      <div class="confirm-icon"><i class="ti ti-check"></i></div>
+      <h2 class="serif">Order received</h2>
+      <p>Thank you, <span id="cName">friend</span>. Your request is in &mdash; we&rsquo;ll send your quote within ~30 minutes by phone or email.</p>
+      <div class="confirm-recap" id="cRecap"></div>
+      <a href="/" class="btn-ghost">BACK TO SITE</a>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var CUTS=[
+      {key:'picanha',    name:'Picanha',                    es:'Tapa de Cuadril', lb:2.5, img:'/picanha.png'},
+      {key:'topSirloin', name:'Top Sirloin',                es:'Cuadril',         lb:5,   img:'/top-sirloin.png'},
+      {key:'nyStrip',    name:'New York Strip',             es:'Bife Angosto',    lb:6.5, img:'/striploin.png'},
+      {key:'tenderloin', name:'Tenderloin / Filet Mignon',  es:'Lomo',            lb:2.5, img:'/tenderloin.png'}
+    ];
+    var qty={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+    var state=null;
+
+    var grid=document.getElementById('cuts');
+    CUTS.forEach(function(c){
+      var card=document.createElement('div');
+      card.className='cut'; card.id='cut-'+c.key;
+      card.innerHTML=
+        '<div class="cut-frame"><div class="cut-photo"><img src="'+c.img+'" alt="'+c.name+'"></div></div>'+
+        '<div class="cut-body">'+
+          '<div class="cut-name serif">'+c.name+'</div>'+
+          '<div class="cut-es serif">'+c.es+'</div>'+
+          '<div class="cut-weight">Package &middot; ~'+c.lb+' lb each</div>'+
+          '<div class="stepper">'+
+            '<button type="button" data-k="'+c.key+'" data-d="-1" aria-label="Decrease">&minus;</button>'+
+            '<span class="qty" id="q-'+c.key+'">0</span>'+
+            '<button type="button" data-k="'+c.key+'" data-d="1" aria-label="Increase">+</button>'+
+          '</div>'+
+        '</div>';
+      grid.appendChild(card);
+    });
+
+    function render(){
+      var lines='', pkgs=0, lb=0;
+      CUTS.forEach(function(c){
+        var q=qty[c.key];
+        document.getElementById('q-'+c.key).textContent=q;
+        document.getElementById('cut-'+c.key).classList.toggle('has-qty', q>0);
+        if(q>0){
+          pkgs+=q; lb+=q*c.lb;
+          lines+='<div class="sum-row"><span>'+c.name+' <span class="es">'+c.es+'</span> &times; '+q+'</span><span>~'+(q*c.lb)+' lb</span></div>';
+        }
+      });
+      document.getElementById('sum-lines').innerHTML = lines || '<div class="sum-empty">No cuts selected yet.</div>';
+      document.getElementById('sum-pkgs').textContent=pkgs;
+      document.getElementById('sum-weight').textContent=(Math.round(lb*10)/10)+' lb';
+    }
+
+    grid.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      var k=b.getAttribute('data-k'), d=parseInt(b.getAttribute('data-d'),10);
+      qty[k]=Math.max(0,Math.min(99,qty[k]+d));
+      render();
+    });
+
+    document.querySelectorAll('.state-pill').forEach(function(p){
+      p.addEventListener('click',function(){
+        document.querySelectorAll('.state-pill').forEach(function(x){x.classList.remove('sel');});
+        p.classList.add('sel'); state=p.getAttribute('data-state');
+        document.getElementById('f-state').classList.remove('invalid');
+      });
+    });
+
+    function clearErr(id){ document.getElementById(id).classList.remove('invalid'); }
+    ['name','phone','email'].forEach(function(id){
+      document.getElementById(id).addEventListener('input',function(){ clearErr('f-'+id); });
+    });
+
+    var btn=document.getElementById('submitBtn'), msg=document.getElementById('formMsg');
+
+    btn.addEventListener('click', async function(){
+      msg.className='form-msg'; msg.textContent='';
+      var name=document.getElementById('name').value.trim();
+      var phone=document.getElementById('phone').value.trim();
+      var email=document.getElementById('email').value.trim();
+      var address=document.getElementById('address').value.trim();
+      var notes=document.getElementById('notes').value.trim();
+      var totalPkgs=qty.picanha+qty.topSirloin+qty.nyStrip+qty.tenderloin;
+
+      var bad=false;
+      if(!name){ document.getElementById('f-name').classList.add('invalid'); bad=true; }
+      if(!phone){ document.getElementById('f-phone').classList.add('invalid'); bad=true; }
+      if(email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ document.getElementById('f-email').classList.add('invalid'); bad=true; }
+      if(!state){ document.getElementById('f-state').classList.add('invalid'); bad=true; }
+      if(totalPkgs<=0){ msg.className='form-msg error'; msg.textContent='Please add at least one cut to your order.'; bad=true; }
+      if(bad){ if(!msg.textContent){ msg.className='form-msg error'; msg.textContent='Please complete the highlighted fields.'; } return; }
+
+      btn.disabled=true; var old=btn.innerHTML; btn.innerHTML='<i class="ti ti-loader-2"></i> Sending...';
+      try{
+        var r=await fetch('/api/order-create',{
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({name:name,phone:phone,email:email,address:address,state:state,notes:notes,qty:qty})
+        });
+        var data=await r.json();
+        if(data && data.ok){
+          var lb=0; CUTS.forEach(function(c){ lb+=qty[c.key]*c.lb; });
+          document.getElementById('cName').textContent=name.split(' ')[0]||'friend';
+          document.getElementById('cRecap').textContent=totalPkgs+' package'+(totalPkgs>1?'s':'')+' · ~'+(Math.round(lb*10)/10)+' lb · '+state;
+          document.getElementById('confirm').classList.add('show');
+        } else {
+          msg.className='form-msg error';
+          msg.textContent='Something went wrong sending your order. Please try again, or contact us directly.';
+          btn.disabled=false; btn.innerHTML=old;
+        }
+      }catch(err){
+        msg.className='form-msg error';
+        msg.textContent='Network error. Please check your connection and try again.';
+        btn.disabled=false; btn.innerHTML=old;
+      }
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>
