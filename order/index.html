@@ -92,6 +92,10 @@
     .confirm-recap { font-size:12px; color:#8A7548; margin:18px 0 26px; letter-spacing:.5px; }
     .confirm-card .btn-ghost { display:inline-block; color:#C9A55C; padding:11px 26px; border:0.5px solid #C9A55C; border-radius:2px; font-size:11px; letter-spacing:2.5px; transition:all .2s; }
     .confirm-card .btn-ghost:hover { background:#C9A55C; color:#0A0A0A; }
+    .confirm-steps { text-align:left; max-width:380px; margin:4px auto 26px; }
+    .confirm-steps .cstep { display:flex; align-items:flex-start; gap:12px; font-size:13px; color:#B8A985; line-height:1.5; padding:8px 0; border-top:0.5px solid #1a1a1a; }
+    .confirm-steps .cstep:first-child { border-top:none; }
+    .confirm-steps .cnum { flex-shrink:0; width:24px; height:24px; border-radius:50%; border:0.5px solid #C9A55C; color:#C9A55C; font-size:13px; display:flex; align-items:center; justify-content:center; margin-top:1px; }
     .hp { position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden; }
     .badge-pop { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#0A0A0A; background:#C9A55C; padding:3px 9px; border-radius:2px; }
     .trust-line { text-align:center; margin:18px auto 0; font-size:12px; color:#8A7548; }
@@ -219,6 +223,11 @@
       <h2 class="serif">Order received</h2>
       <p>Thank you, <span id="cName">friend</span>. Your request is in &mdash; we&rsquo;ll send your quote within ~30 minutes by phone or email.</p>
       <div class="confirm-recap" id="cRecap"></div>
+      <div class="confirm-steps">
+        <div class="cstep"><span class="cnum serif">1</span> We review your order and send your quote &mdash; usually within 30 minutes.</div>
+        <div class="cstep"><span class="cnum serif">2</span> You confirm and pay (Wire, Zelle or credit card).</div>
+        <div class="cstep"><span class="cnum serif">3</span> We deliver frozen, cold-chain, across NY &amp; NJ.</div>
+      </div>
       <a href="/" class="btn-ghost">BACK TO SITE</a>
     </div>
   </div>
