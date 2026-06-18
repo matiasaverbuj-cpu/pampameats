@@ -2,12 +2,17 @@
 // Protects /dashboard and /api/orders with HTTP Basic Auth.
 // Password is read from the DASH_PASS env var (set it in Vercel). Username can be anything.
 // SECURITY: if DASH_PASS is not set, access is DENIED by default (never open).
+// EXCEPTION: /api/order-create is PUBLIC (the order form must POST to it without a password).
 
 export const config = {
   matcher: ['/dashboard', '/dashboard/(.*)', '/api/(.*)']
 };
 
 export default function middleware(req) {
+  // Public endpoint: the customer order form posts here. Never gate it.
+  const pathname = new URL(req.url).pathname;
+  if (pathname === '/api/order-create') return;
+
   const pass = process.env.DASH_PASS;
   const auth = req.headers.get('authorization') || '';
 
