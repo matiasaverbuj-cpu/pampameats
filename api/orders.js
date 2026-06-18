@@ -39,6 +39,9 @@ export default async function handler(req, res) {
         id: rec.id,
         name: f['Name'] || '',
         status: f['Status'] || '',
+        phone: f['Phone'] || '',
+        email: f['Email'] || '',
+        address: f['Address'] || '',
         picanha: Number(f['Picanha']) || 0,
         topSirloin: Number(f['Top Sirloin']) || 0,
         nyStrip: Number(f['Striploin']) || 0,
@@ -55,6 +58,6 @@ export default async function handler(req, res) {
 
     res.status(200).json({ ok: true, count: orders.length, orders });
   } catch (e) {
-    res.status(200).json({ ok: false, reason: String(e), orders: [] });
+    res.status(200).json({ ok: false, reason: String(e) });
   }
 }
