@@ -20,12 +20,17 @@ export default async function handler(req, res) {
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
   body = body || {};
 
+  // Honeypot: real users never fill the hidden 'hp' field. Bots do.
+  // Pretend success so the bot moves on, but write nothing.
+  if (String(body.hp || '').trim()) { res.status(200).json({ ok: true, id: 'skipped' }); return; }
+
   const clean = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
   const name = clean(body.name, 120);
   const phone = clean(body.phone, 40);
   const email = clean(body.email, 120);
   const address = clean(body.address, 300);
   const stateRaw = clean(body.state, 8).toUpperCase();
+  const deliveryDate = clean(body.deliveryDate, 30);
   const notes = clean(body.notes, 2000);
 
   const q = body.qty || {};
@@ -52,6 +57,7 @@ export default async function handler(req, res) {
   if (email) fields['Email'] = email;
   if (stateName) fields['Delivery State'] = stateName;
   if (zone) fields['Zone'] = zone;
+  if (deliveryDate) fields['Delivery Date'] = deliveryDate;
 
   try {
     const r = await fetch(`https://api.airtable.com/v0/${BASE}/${TABLE}`, {
