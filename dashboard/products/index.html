@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Products</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+.wrap{max-width:920px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 20px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:11px 12px;border-bottom:1px solid #C9A55C}
+td{padding:11px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985}
+td.cut{color:#F5EFE5;font-weight:600}
+td.sku{color:#C9A55C;font-family:monospace;font-size:12px}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+.upc-pend{color:#6E6347;font-style:italic;font-size:11px}
+.loading{color:#8A7548;font-size:13px;padding:24px;text-align:center}
+.note{margin-top:14px;font-size:11px;color:#6E6347;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Products</span></div>
+<a class="back" href="/dashboard">&larr; Backend</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">MAESTRO DE PRODUCTOS</div>
+<h1 class="serif">Products</h1>
+<p>Cortes con SKU, item# y lote del proveedor, y peso de caja/paquete de referencia.</p>
+</div>
+<div class="card">
+<table>
+<thead><tr><th>Corte</th><th>Alt (ES)</th><th>SKU</th><th>UPC</th><th>Item #</th><th>Lote</th><th class="r">Caja lb</th><th class="r">Paq lb</th></tr></thead>
+<tbody id="rows"><tr><td colspan="8" class="loading">Cargando…</td></tr></tbody>
+</table>
+</div>
+<div class="note">El UPC se asigna con códigos GS1 reales (registrados). Item# y lote provienen del Bill of Lading del proveedor. Pesos de caja: referencia; el peso real varía por envío.</div>
+</div>
+<script>
+(function(){
+fetch('/api/products').then(function(r){return r.json();}).then(function(d){
+var tb=document.getElementById('rows');
+if(!d||!d.ok){ tb.innerHTML='<tr><td colspan="8" class="loading">No se pudo cargar ('+((d&&d.reason)||'error')+').</td></tr>'; return; }
+var ps=d.products||[];
+if(!ps.length){ tb.innerHTML='<tr><td colspan="8" class="loading">Sin productos.</td></tr>'; return; }
+tb.innerHTML=ps.map(function(p){
+return '<tr><td class="cut">'+p.cut+'</td><td>'+(p.alt||'')+'</td>'+
+'<td class="sku">'+(p.sku||'')+'</td>'+
+'<td>'+(p.upc?p.upc:'<span class="upc-pend">a asignar</span>')+'</td>'+
+'<td>'+(p.item||'')+'</td><td>'+(p.lot||'')+'</td>'+
+'<td class="r">'+(p.caseLb||'')+'</td><td class="r">'+(p.pkgLb||'')+'</td></tr>';
+}).join('');
+}).catch(function(){ document.getElementById('rows').innerHTML='<tr><td colspan="8" class="loading">Error de conexión.</td></tr>'; });
+})();
+</script>
+</body>
+</html>
