@@ -64,6 +64,7 @@
 .hubnav .hb:hover{border-color:var(--gold);color:var(--gold)}
 .hubnav .hb.gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500}
 .hubnav .hb.soon{opacity:.5;cursor:default}
+.pill.adv:hover{outline:1px solid var(--gold);outline-offset:1px}
 </style>
 </head>
 <body>
@@ -108,6 +109,16 @@ const STATUS_COLORS={"New":["#1e3a5f","#9ec5ff"],"Quoted":["#5c4a1e","#ffd98a"],
 "Paid":["#1e4d2b","#8af0a8"],"Shipped":["#2a2a5c","#b4b8ff"],"Delivered":["#14402b","#7df0c0"],
 "No status":["#2A2A2A","#8A7548"]};
 let ALL=[];
+const STATUS_FLOW=["New","Quoted","Paid","Shipped","Delivered"];
+function advanceStatus(id,cur){
+  const i=STATUS_FLOW.indexOf(cur); const next=STATUS_FLOW[i+1];
+  if(!next){ alert("Ya esta en el ultimo estado ("+(cur||"sin estado")+")."); return; }
+  if(!confirm("Avanzar a \""+next+"\"?")) return;
+  fetch("/api/order-update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:id,status:next})})
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ load(); } else alert("No se pudo actualizar ("+((d&&d.reason)||"error")+")."); })
+    .catch(function(){ alert("Error de conexion."); });
+}
+document.addEventListener("click",function(e){ var p=e.target.closest&&e.target.closest(".pill.adv"); if(p){ advanceStatus(p.getAttribute("data-oid"), p.getAttribute("data-ost")); } });
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function fmtDay(d){const x=new Date(d);if(isNaN(x))return"";return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");}
 function todayKey(){return fmtDay(new Date());}
@@ -198,7 +209,7 @@ function render(orders){
     const sc=STATUS_COLORS[o.status||"No status"]||STATUS_COLORS["No status"];
     const d=new Date(o.date); const ds=isNaN(d)?"":(d.getMonth()+1)+"/"+d.getDate();
     return `<tr><td class="name">${esc(o.name||"—")}</td>`+
-      `<td><span class="pill" style="background:${sc[0]};color:${sc[1]}">${esc(o.status||"No status")}</span></td>`+
+      `<td><span class="pill adv" data-oid="${esc(o.id)}" data-ost="${esc(o.status||'')}" style="background:${sc[0]};color:${sc[1]};cursor:pointer" title="Click para avanzar el estado">${esc(o.status||"No status")} &rsaquo;</span></td>`+
       `<td class="num">${o.picanha||"·"}</td><td class="num">${o.topSirloin||"·"}</td>`+
       `<td class="num">${o.nyStrip||"·"}</td><td class="num">${o.tenderloin||"·"}</td>`+
       `<td class="num tot">${o.units||"·"}</td><td>${esc(o.zone||"")}</td><td>${ds}</td></tr>`;
