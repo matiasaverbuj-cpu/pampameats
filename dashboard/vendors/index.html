@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,27 +56,27 @@ input,textarea,button{font-family:inherit}
 </div>
 <div class="wrap">
 <div class="hd">
-<div class="eyebrow">PROVEEDORES</div>
+<div class="eyebrow">SUPPLIERS</div>
 <h1 class="serif">Vendors</h1>
-<p>Proveedores para las órdenes de compra. Dados de alta acá quedan disponibles para los PO.</p>
+<p>Suppliers for purchase orders. Added here, they become available for POs.</p>
 </div>
 
 <div id="banner" class="banner"></div>
 
 <div class="card">
-<div class="clabel"><i class="ti ti-truck"></i> Proveedores <span id="vcount" style="color:#6E6347;text-transform:none;letter-spacing:0"></span></div>
-<div id="list"><div class="loading">Cargando…</div></div>
+<div class="clabel"><i class="ti ti-truck"></i> Suppliers <span id="vcount" style="color:#6E6347;text-transform:none;letter-spacing:0"></span></div>
+<div id="list"><div class="loading">Loading…</div></div>
 </div>
 
 <div class="card">
-<div class="clabel"><i class="ti ti-plus"></i> Nuevo proveedor</div>
-<div class="field"><label>Nombre *</label><input id="v-name" type="text" placeholder="Ej: Aharon — Rosenblatt"></div>
+<div class="clabel"><i class="ti ti-plus"></i> New supplier</div>
+<div class="field"><label>Name *</label><input id="v-name" type="text" placeholder="e.g. Aharon — Rosenblatt"></div>
 <div class="row2">
-<div class="field"><label>Email</label><input id="v-email" type="email" placeholder="email del proveedor"></div>
-<div class="field"><label>Teléfono</label><input id="v-phone" type="tel" placeholder="+1 ..."></div>
+<div class="field"><label>Email</label><input id="v-email" type="email" placeholder="supplier email"></div>
+<div class="field"><label>Phone</label><input id="v-phone" type="tel" placeholder="+1 ..."></div>
 </div>
-<div class="field"><label>Notas</label><textarea id="v-notes" placeholder="Cortes, condiciones, depósito, etc."></textarea></div>
-<button class="btn" id="v-save">Agregar proveedor</button>
+<div class="field"><label>Notes</label><textarea id="v-notes" placeholder="Cuts, terms, warehouse, etc."></textarea></div>
+<button class="btn" id="v-save">Add supplier</button>
 </div>
 </div>
 
@@ -87,15 +87,15 @@ function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.textCo
 
 function render(vendors){
 var el=$('list');
-if(!vendors.length){ el.innerHTML='<div class="loading">Todavía no hay proveedores. Agregá el primero abajo.</div>'; $('vcount').textContent=''; return; }
+if(!vendors.length){ el.innerHTML='<div class="loading">No suppliers yet. Add the first one below.</div>'; $('vcount').textContent=''; return; }
 el.innerHTML='';
 vendors.forEach(function(v){
 var row=document.createElement('div'); row.className='vrow';
 var initials=(v.name||'?').trim().charAt(0).toUpperCase();
 var sub=[]; if(v.email) sub.push(v.email); if(v.phone) sub.push(v.phone);
 row.innerHTML='<div class="vi">'+initials+'</div>'+
-'<div class="vmeta"><div class="vname">'+(v.name||'(sin nombre)')+'</div>'+
-'<div class="vsub">'+(sub.join(' · ')||'sin contacto')+(v.notes?(' — '+v.notes):'')+'</div></div>';
+'<div class="vmeta"><div class="vname">'+(v.name||'(no name)')+'</div>'+
+'<div class="vsub">'+(sub.join(' · ')||'no contact')+(v.notes?(' — '+v.notes):'')+'</div></div>';
 el.appendChild(row);
 });
 $('vcount').textContent='('+vendors.length+')';
@@ -104,21 +104,21 @@ $('vcount').textContent='('+vendors.length+')';
 function load(){
 fetch('/api/vendors').then(function(r){return r.json();}).then(function(d){
 if(d&&d.ok){ render(d.vendors||[]); }
-else { $('list').innerHTML='<div class="loading">No se pudo cargar ('+((d&&d.reason)||'error')+').</div>'; }
-}).catch(function(){ $('list').innerHTML='<div class="loading">Error de conexión.</div>'; });
+else { $('list').innerHTML='<div class="loading">Could not load ('+((d&&d.reason)||'error')+').</div>'; }
+}).catch(function(){ $('list').innerHTML='<div class="loading">Connection error.</div>'; });
 }
 
 $('v-save').addEventListener('click',function(){
 var name=$('v-name').value.trim();
-if(!name){ banner('err','Falta el nombre del proveedor.'); return; }
+if(!name){ banner('err','Supplier name is required.'); return; }
 $('v-save').disabled=true;
 fetch('/api/vendors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
 name:name, email:$('v-email').value.trim(), phone:$('v-phone').value.trim(), notes:$('v-notes').value.trim()
 })}).then(function(r){return r.json();}).then(function(d){
 $('v-save').disabled=false;
-if(d&&d.ok){ banner('ok','Proveedor agregado ✓'); ['v-name','v-email','v-phone','v-notes'].forEach(function(id){$(id).value='';}); load(); }
-else { banner('err','No se pudo guardar ('+((d&&d.reason)||'error')+').'); }
-}).catch(function(){ $('v-save').disabled=false; banner('err','Error de conexión.'); });
+if(d&&d.ok){ banner('ok','Supplier added ✓'); ['v-name','v-email','v-phone','v-notes'].forEach(function(id){$(id).value='';}); load(); }
+else { banner('err','Could not save ('+((d&&d.reason)||'error')+').'); }
+}).catch(function(){ $('v-save').disabled=false; banner('err','Connection error.'); });
 });
 
 load();
