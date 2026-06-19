@@ -72,7 +72,7 @@
     <header>
       <div class="brand">
         <img src="/logo.png" alt="Pampa Meats">
-        <div><div class="t">PAMPA MEATS</div><div class="s">Backend · Centro de Operaciones</div></div>
+        <div><div class="t">PAMPA MEATS</div><div class="s">Backend · Operations Center</div></div>
       </div>
       <div class="filters">
         <div class="presets">
@@ -90,9 +90,9 @@
       </div>
     </header>
 <div class="hubnav">
-<a class="hb gold" href="/dashboard/po">+ Place PO (compras)</a>
-<a class="hb" href="/dashboard/intake">Cargar pedido / SO</a>
-<a class="hb" href="/dashboard/quote">Cotizar / Factura</a>
+<a class="hb gold" href="/dashboard/po">+ Place PO</a>
+<a class="hb" href="/dashboard/intake">New order / SO</a>
+<a class="hb" href="/dashboard/quote">Quote / Invoice</a>
 <a class="hb soon">Invoices &amp; BL · pronto</a>
 <a class="hb" href="/dashboard/vendors">Vendors</a>
 <a class="hb" href="/dashboard/products">Products</a>
@@ -113,11 +113,11 @@ let ALL=[];
 const STATUS_FLOW=["New","Quoted","Paid","Shipped","Delivered"];
 function advanceStatus(id,cur){
   const i=STATUS_FLOW.indexOf(cur); const next=STATUS_FLOW[i+1];
-  if(!next){ alert("Ya esta en el ultimo estado ("+(cur||"sin estado")+")."); return; }
-  if(!confirm("Avanzar a \""+next+"\"?")) return;
+  if(!next){ alert("Already at the last status ("+(cur||"no status")+")."); return; }
+  if(!confirm("Advance to \""+next+"\"?")) return;
   fetch("/api/order-update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:id,status:next})})
-    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ load(); } else alert("No se pudo actualizar ("+((d&&d.reason)||"error")+")."); })
-    .catch(function(){ alert("Error de conexion."); });
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ load(); } else alert("Could not update ("+((d&&d.reason)||"error")+")."); })
+    .catch(function(){ alert("Connection error."); });
 }
 document.addEventListener("click",function(e){ var p=e.target.closest&&e.target.closest(".pill.adv"); if(p){ advanceStatus(p.getAttribute("data-oid"), p.getAttribute("data-ost")); } });
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
