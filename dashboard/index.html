@@ -59,6 +59,11 @@
   .foot{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:30px}
   .ornament{display:flex;justify-content:center;align-items:center;gap:12px;opacity:.5;margin:8px 0 0}
   .ornament .line{width:36px;height:1px;background:var(--gold)} .ornament .d{color:var(--gold);font-size:7px}
+.hubnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.hubnav .hb{background:var(--panel);border:0.5px solid var(--line);border-radius:6px;padding:11px 16px;font-size:12px;letter-spacing:1px;color:var(--cream);text-decoration:none;transition:all .15s}
+.hubnav .hb:hover{border-color:var(--gold);color:var(--gold)}
+.hubnav .hb.gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500}
+.hubnav .hb.soon{opacity:.5;cursor:default}
 </style>
 </head>
 <body>
@@ -83,6 +88,13 @@
         <div class="upd" id="upd">Loading&hellip;</div>
       </div>
     </header>
+<div class="hubnav">
+<a class="hb gold" href="/dashboard/po">+ Place PO (compras)</a>
+<a class="hb" href="/dashboard/intake">Cargar pedido / SO</a>
+<a class="hb" href="/dashboard/quote">Cotizar / Factura</a>
+<a class="hb soon">Invoices &amp; BL · pronto</a>
+<a class="hb soon">Vendors · pronto</a>
+</div>
     <div id="content">
       <div class="state"><div class="spin"></div><div>Loading live orders&hellip;</div></div>
     </div>
