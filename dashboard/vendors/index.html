@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Vendors</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+input,textarea,button{font-family:inherit}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+.wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 20px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:18px;margin-bottom:14px}
+.clabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;color:#8A7548;text-transform:uppercase;margin-bottom:14px}
+.clabel i{color:#C9A55C;font-size:15px}
+.vrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:0.5px solid #1E1E1E}
+.vrow:first-of-type{border-top:none}
+.vrow .vi{width:38px;height:38px;border-radius:50%;background:#1A1A1A;border:0.5px solid #2E2E2E;color:#C9A55C;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.vrow .vmeta{flex:1;min-width:0}
+.vrow .vname{font-size:15px;font-weight:600;color:#F5EFE5}
+.vrow .vsub{font-size:12px;color:#8A7548;margin-top:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:11px;letter-spacing:1px;color:#9A8F76;margin-bottom:6px;text-transform:uppercase}
+.field input,.field textarea{width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:12px 13px;font-size:15px}
+.field textarea{resize:vertical;min-height:50px}
+.btn{background:#C9A55C;color:#1A1208;border:none;border-radius:8px;padding:13px 22px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.banner{display:none;border-radius:8px;padding:11px 14px;margin-bottom:14px;font-size:13px}
+.banner.err{display:block;background:#1f0f0e;border:0.5px solid #5C2B27;color:#E9A8A2}
+.banner.ok{display:block;background:#0E1812;border:0.5px solid #1F5A38;color:#9FE1CB}
+.loading{color:#8A7548;font-size:13px;padding:14px 0}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Vendors</span></div>
+<a class="back" href="/dashboard">&larr; Backend</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">PROVEEDORES</div>
+<h1 class="serif">Vendors</h1>
+<p>Proveedores para las órdenes de compra. Dados de alta acá quedan disponibles para los PO.</p>
+</div>
+
+<div id="banner" class="banner"></div>
+
+<div class="card">
+<div class="clabel"><i class="ti ti-truck"></i> Proveedores <span id="vcount" style="color:#6E6347;text-transform:none;letter-spacing:0"></span></div>
+<div id="list"><div class="loading">Cargando…</div></div>
+</div>
+
+<div class="card">
+<div class="clabel"><i class="ti ti-plus"></i> Nuevo proveedor</div>
+<div class="field"><label>Nombre *</label><input id="v-name" type="text" placeholder="Ej: Aharon — Rosenblatt"></div>
+<div class="row2">
+<div class="field"><label>Email</label><input id="v-email" type="email" placeholder="email del proveedor"></div>
+<div class="field"><label>Teléfono</label><input id="v-phone" type="tel" placeholder="+1 ..."></div>
+</div>
+<div class="field"><label>Notas</label><textarea id="v-notes" placeholder="Cortes, condiciones, depósito, etc."></textarea></div>
+<button class="btn" id="v-save">Agregar proveedor</button>
+</div>
+</div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.textContent=msg; window.scrollTo({top:0,behavior:'smooth'}); }
+
+function render(vendors){
+var el=$('list');
+if(!vendors.length){ el.innerHTML='<div class="loading">Todavía no hay proveedores. Agregá el primero abajo.</div>'; $('vcount').textContent=''; return; }
+el.innerHTML='';
+vendors.forEach(function(v){
+var row=document.createElement('div'); row.className='vrow';
+var initials=(v.name||'?').trim().charAt(0).toUpperCase();
+var sub=[]; if(v.email) sub.push(v.email); if(v.phone) sub.push(v.phone);
+row.innerHTML='<div class="vi">'+initials+'</div>'+
+'<div class="vmeta"><div class="vname">'+(v.name||'(sin nombre)')+'</div>'+
+'<div class="vsub">'+(sub.join(' · ')||'sin contacto')+(v.notes?(' — '+v.notes):'')+'</div></div>';
+el.appendChild(row);
+});
+$('vcount').textContent='('+vendors.length+')';
+}
+
+function load(){
+fetch('/api/vendors').then(function(r){return r.json();}).then(function(d){
+if(d&&d.ok){ render(d.vendors||[]); }
+else { $('list').innerHTML='<div class="loading">No se pudo cargar ('+((d&&d.reason)||'error')+').</div>'; }
+}).catch(function(){ $('list').innerHTML='<div class="loading">Error de conexión.</div>'; });
+}
+
+$('v-save').addEventListener('click',function(){
+var name=$('v-name').value.trim();
+if(!name){ banner('err','Falta el nombre del proveedor.'); return; }
+$('v-save').disabled=true;
+fetch('/api/vendors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+name:name, email:$('v-email').value.trim(), phone:$('v-phone').value.trim(), notes:$('v-notes').value.trim()
+})}).then(function(r){return r.json();}).then(function(d){
+$('v-save').disabled=false;
+if(d&&d.ok){ banner('ok','Proveedor agregado ✓'); ['v-name','v-email','v-phone','v-notes'].forEach(function(id){$(id).value='';}); load(); }
+else { banner('err','No se pudo guardar ('+((d&&d.reason)||'error')+').'); }
+}).catch(function(){ $('v-save').disabled=false; banner('err','Error de conexión.'); });
+});
+
+load();
+})();
+</script>
+</body>
+</html>
