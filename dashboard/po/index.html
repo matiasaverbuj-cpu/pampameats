@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Orden de compra</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif}
+  a{color:inherit;text-decoration:none}
+  input,textarea,button{font-family:inherit}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+  .top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+  .top .brand span{color:#6E6347;font-weight:400}
+  .top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 160px}
+  .hd{margin:4px 0 20px}
+  .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+  .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+  .hd p{margin:0;font-size:13px;color:#9A8F76}
+  .card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:18px;margin-bottom:14px}
+  .clabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;color:#8A7548;text-transform:uppercase;margin-bottom:14px}
+  .clabel i{color:#C9A55C;font-size:15px}
+  .muted{font-size:13px;color:#7C7259}
+  /* order rows */
+  .orow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:0.5px solid #1E1E1E;cursor:pointer}
+  .orow:first-of-type{border-top:none}
+  .orow .chk{width:22px;height:22px;border-radius:6px;border:1.5px solid #3A3A3A;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#1A1208;font-size:14px}
+  .orow.on .chk{background:#C9A55C;border-color:#C9A55C}
+  .orow .oinfo{flex:1;min-width:0}
+  .orow .oname{font-size:14px;font-weight:600;color:#F5EFE5}
+  .orow .ocuts{font-size:12px;color:#8A7548;margin-top:2px}
+  .pill{font-size:10px;padding:3px 9px;border-radius:20px;border:0.5px solid #2E2E2E;color:#B8A985;white-space:nowrap}
+  /* totals */
+  .tot{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+  .tcell{background:#161616;border:0.5px solid #262626;border-radius:8px;padding:12px 8px;text-align:center}
+  .tcell .n{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#C9A55C;line-height:1}
+  .tcell .l{font-size:10px;color:#8A7548;margin-top:5px;letter-spacing:.3px}
+  .tsum{margin-top:12px;display:flex;justify-content:space-between;font-size:13px;color:#9A8F76}
+  .tsum b{color:#F5EFE5}
+  .field label{display:block;font-size:11px;letter-spacing:1px;color:#9A8F76;margin-bottom:6px;text-transform:uppercase}
+  .field input,.field textarea{width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:12px 13px;font-size:15px}
+  .field textarea{resize:vertical;min-height:54px}
+  .banner{display:none;border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+  .banner.err{display:block;background:#1f0f0e;border:0.5px solid #5C2B27;color:#E9A8A2}
+  .banner.ok{display:block;background:#0E1812;border:0.5px solid #1F5A38;color:#9FE1CB}
+  .banner.info{display:block;background:#10161f;border:0.5px solid #25405C;color:#A9C6E6}
+  .bar{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,8,0.97);backdrop-filter:blur(8px);border-top:0.5px solid #262626;padding:12px 18px calc(12px + env(safe-area-inset-bottom));z-index:60}
+  .bar .inner{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .bar .info{flex:1;min-width:140px;font-size:12px;color:#9A8F76}
+  .bar .info b{color:#F5EFE5}
+  .btn{border-radius:8px;padding:12px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;border:0.5px solid #2E2E2E;background:#1A1A1A;color:#C9A55C}
+  .btn.gold{background:#C9A55C;color:#1A1208;border-color:#C9A55C}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .loading{text-align:center;color:#8A7548;padding:30px;font-size:13px}
+  @media print{
+    body{background:#fff;color:#000}.top,.bar,.orow .chk,.muted,#sel-card .clabel i{display:initial}
+    .bar,.top,.actions-note{display:none}.card{border-color:#ccc;background:#fff}.tcell{background:#f5f5f5}.tcell .n{color:#000}
+  }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">PAMPA MEATS <span>· Compras</span></div>
+    <a class="back" href="/dashboard">&larr; Dashboard</a>
+  </div>
+
+  <div class="wrap">
+    <div class="hd">
+      <div class="eyebrow">ORDEN DE COMPRA AL PROVEEDOR</div>
+      <h1 class="serif">Pedido a Aharon</h1>
+      <p>Elegí los pedidos a abastecer; consolido el total de paquetes por corte.</p>
+    </div>
+
+    <div id="banner" class="banner"></div>
+
+    <div class="card" id="sel-card">
+      <div class="clabel"><i class="ti ti-checklist"></i> Pedidos pendientes <span id="selcount" style="color:#6E6347;text-transform:none;letter-spacing:0"></span></div>
+      <div id="orders"><div class="loading">Cargando pedidos…</div></div>
+    </div>
+
+    <div class="card">
+      <div class="clabel"><i class="ti ti-package"></i> Total a pedir</div>
+      <div class="tot">
+        <div class="tcell"><div class="n" id="t-pic">0</div><div class="l">PICANHA</div></div>
+        <div class="tcell"><div class="n" id="t-top">0</div><div class="l">TOP SIRLOIN</div></div>
+        <div class="tcell"><div class="n" id="t-ny">0</div><div class="l">NY STRIP</div></div>
+        <div class="tcell"><div class="n" id="t-ten">0</div><div class="l">TENDERLOIN</div></div>
+      </div>
+      <div class="tsum"><span><b id="t-pkg">0</b> paquetes en <b id="t-ord">0</b> pedidos</span><span>~<b id="t-lb">0</b> lb aprox.</span></div>
+    </div>
+
+    <div class="card">
+      <div class="clabel"><i class="ti ti-mail"></i> Envío</div>
+      <div class="field" style="margin-bottom:12px"><label>Email de Aharon (para enviar desde purchasing@)</label><input id="f-aharon" type="email" placeholder="email del proveedor"></div>
+      <div class="field"><label>Notas para el proveedor</label><textarea id="f-notes" placeholder="Fecha de retiro/entrega, referencias, etc."></textarea></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="inner">
+      <div class="info"><b id="bar-pkg">0</b> paq · <b id="bar-ord">0</b> pedidos</div>
+      <button class="btn" id="btn-copy"><i class="ti ti-brand-whatsapp" style="vertical-align:-2px"></i> Copiar</button>
+      <button class="btn" id="btn-print"><i class="ti ti-printer" style="vertical-align:-2px"></i> PDF</button>
+      <button class="btn gold" id="btn-create"><i class="ti ti-file-plus" style="vertical-align:-2px"></i> Crear OC</button>
+      <button class="btn gold" id="btn-email"><i class="ti ti-send" style="vertical-align:-2px"></i> Enviar</button>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var $=function(id){return document.getElementById(id);};
+    var CUTS=[['picanha','Picanha',2.5],['topSirloin','Top Sirloin',5],['nyStrip','New York Strip',6.5],['tenderloin','Tenderloin / Filet',2.5]];
+    var orders=[], sel={}, createdPO=null;
+
+    function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.innerHTML=msg; window.scrollTo({top:0,behavior:'smooth'}); }
+
+    function totals(){
+      var t={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0}, pkg=0, lb=0, ord=0;
+      orders.forEach(function(o){ if(sel[o.id]){ ord++; CUTS.forEach(function(c){ var q=o[c[0]]||0; t[c[0]]+=q; pkg+=q; lb+=q*c[2]; }); } });
+      $('t-pic').textContent=t.picanha; $('t-top').textContent=t.topSirloin; $('t-ny').textContent=t.nyStrip; $('t-ten').textContent=t.tenderloin;
+      $('t-pkg').textContent=pkg; $('t-ord').textContent=ord; $('t-lb').textContent=lb%1?lb.toFixed(1):lb;
+      $('bar-pkg').textContent=pkg; $('bar-ord').textContent=ord;
+      var has=pkg>0; $('btn-create').disabled=!has; $('btn-email').disabled=!has; $('btn-copy').disabled=!has;
+      return {t:t,pkg:pkg,ord:ord,lb:lb};
+    }
+
+    function cutsLabel(o){
+      var parts=[]; CUTS.forEach(function(c){ if(o[c[0]]) parts.push(o[c[0]]+'× '+c[1].replace(' / Filet','')); });
+      return parts.length?parts.join(' · '):'sin cortes';
+    }
+
+    function render(){
+      var el=$('orders');
+      if(!orders.length){ el.innerHTML='<div class="loading">No hay pedidos pendientes. 🎉</div>'; return; }
+      el.innerHTML='';
+      orders.forEach(function(o){
+        var row=document.createElement('div'); row.className='orow'+(sel[o.id]?' on':'');
+        row.innerHTML='<div class="chk"><i class="ti ti-check"></i></div>'+
+          '<div class="oinfo"><div class="oname">'+(o.name||'(sin nombre)')+'</div><div class="ocuts">'+cutsLabel(o)+'</div></div>'+
+          '<span class="pill">'+(o.status||'—')+'</span>';
+        row.addEventListener('click',function(){ sel[o.id]=!sel[o.id]; row.classList.toggle('on',sel[o.id]); totals(); });
+        el.appendChild(row);
+      });
+      $('selcount').textContent='('+orders.length+')';
+    }
+
+    function buildText(){
+      var d=totals(); var lines=['*PAMPA MEATS — Orden de compra*',''];
+      CUTS.forEach(function(c){ if(d.t[c[0]]) lines.push('• '+c[1]+': '+d.t[c[0]]+' paq'); });
+      lines.push(''); lines.push('Total: '+d.pkg+' paquetes (~'+(d.lb%1?d.lb.toFixed(1):d.lb)+' lb) · '+d.ord+' pedidos');
+      var n=$('f-notes').value.trim(); if(n){ lines.push(''); lines.push('Notas: '+n); }
+      return lines.join('\n');
+    }
+    function buildHtml(){
+      var d=totals(); var rows='';
+      CUTS.forEach(function(c){ if(d.t[c[0]]) rows+='<tr><td style="padding:8px 12px;border-bottom:1px solid #eee">'+c[1]+'</td><td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:bold">'+d.t[c[0]]+' paq</td></tr>'; });
+      var n=$('f-notes').value.trim();
+      return '<div style="font-family:Arial,sans-serif;max-width:520px"><h2 style="color:#1a1a2e">Pampa Meats — Orden de compra</h2>'+
+        '<table style="width:100%;border-collapse:collapse;font-size:14px">'+rows+
+        '<tr><td style="padding:10px 12px;font-weight:bold">TOTAL</td><td style="padding:10px 12px;text-align:right;font-weight:bold">'+d.pkg+' paq (~'+(d.lb%1?d.lb.toFixed(1):d.lb)+' lb)</td></tr></table>'+
+        (n?'<p style="font-size:13px;color:#444">Notas: '+n+'</p>':'')+
+        '<p style="font-size:12px;color:#888">Enviado desde purchasing@pampameats.com</p></div>';
+    }
+
+    function createPO(cb){
+      var d=totals(); if(d.pkg<=0) return;
+      var refs=orders.filter(function(o){return sel[o.id];}).map(function(o){return o.name;}).join(', ');
+      var notes=($('f-notes').value.trim()+' | Pedidos: '+refs).trim();
+      $('btn-create').disabled=true;
+      fetch('/api/po-create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        picanha:d.t.picanha,topSirloin:d.t.topSirloin,nyStrip:d.t.nyStrip,tenderloin:d.t.tenderloin,notes:notes,status:'Draft'
+      })}).then(function(r){return r.json();}).then(function(res){
+        $('btn-create').disabled=false;
+        if(res&&res.ok){ createdPO=res.po||res.id; banner('ok','<b>Orden de compra creada:</b> '+createdPO+' — guardada en Airtable (estado Draft).'); if(cb)cb(); }
+        else banner('err','No se pudo crear la OC ('+((res&&res.reason)||'error')+').');
+      }).catch(function(){ $('btn-create').disabled=false; banner('err','Error de conexión al crear la OC.'); });
+    }
+
+    $('btn-create').addEventListener('click',function(){ createPO(); });
+    $('btn-copy').addEventListener('click',function(){
+      navigator.clipboard.writeText(buildText()).then(function(){ banner('ok','Texto copiado — pegalo en WhatsApp a Aharon.'); },function(){ banner('info','Copiá manualmente:<br><pre style="white-space:pre-wrap">'+buildText()+'</pre>'); });
+    });
+    $('btn-print').addEventListener('click',function(){ window.print(); });
+    $('btn-email').addEventListener('click',function(){
+      var to=$('f-aharon').value.trim();
+      if(!to){ banner('err','Cargá el email de Aharon para enviar.'); return; }
+      $('btn-email').disabled=true;
+      fetch('/api/po-send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:to,subject:'Pampa Meats — Orden de compra',html:buildHtml(),text:buildText()})})
+        .then(function(r){return r.json();}).then(function(res){
+          $('btn-email').disabled=false;
+          if(res&&res.ok){ banner('ok','Orden enviada a Aharon desde purchasing@pampameats.com.'); createPO(); }
+          else if(res&&res.reason==='email_not_configured'){ banner('info','El email del dominio todavía no está activo. Por ahora usá <b>Copiar</b> (WhatsApp) o <b>PDF</b>. Apenas verifiquemos el dominio, este botón manda solo desde purchasing@.'); }
+          else banner('err','No se pudo enviar ('+((res&&res.reason)||'error')+').');
+        }).catch(function(){ $('btn-email').disabled=false; banner('err','Error de conexión al enviar.'); });
+    });
+
+    fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
+      var all=(d&&d.orders)||[];
+      orders=all.filter(function(o){ return (o.status||'')!=='Delivered' && ((o.picanha||0)+(o.topSirloin||0)+(o.nyStrip||0)+(o.tenderloin||0))>0; });
+      orders.forEach(function(o){ sel[o.id]=true; });
+      render(); totals();
+    }).catch(function(){ $('orders').innerHTML='<div class="loading">No se pudieron cargar los pedidos.</div>'; });
+  })();
+  </script>
+</body>
+</html>
