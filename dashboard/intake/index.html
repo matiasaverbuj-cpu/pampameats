@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#000000">
+  <title>Pampa Meats · Carga de pedidos</title>
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+    .serif{font-family:'Cormorant Garamond',Georgia,serif}
+    a{color:inherit;text-decoration:none}
+    input,select,textarea,button{font-family:inherit}
+    /* ---- top bar ---- */
+    .top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+    .top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+    .top .brand span{color:#6E6347;font-weight:400}
+    .top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+    .top a.back:hover{color:#C9A55C}
+    /* ---- layout ---- */
+    .wrap{max-width:680px;margin:0 auto;padding:26px 18px 140px}
+    .hd{margin:6px 0 22px}
+    .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+    .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;margin:0 0 6px;color:#F5EFE5}
+    .hd p{margin:0;font-size:13px;color:#9A8F76}
+    .card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:20px 18px;margin-bottom:16px}
+    .card .clabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;color:#8A7548;text-transform:uppercase;margin-bottom:16px}
+    .card .clabel i{color:#C9A55C;font-size:15px}
+    .req{color:#C9A55C}
+    /* ---- taken-by pills ---- */
+    .who{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .who button{background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985;padding:13px 6px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+    .who button:hover{border-color:#C9A55C}
+    .who button.sel{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
+    /* ---- fields ---- */
+    .field{margin-bottom:14px}
+    .field:last-child{margin-bottom:0}
+    .field label{display:block;font-size:11px;letter-spacing:1px;color:#9A8F76;margin-bottom:6px;text-transform:uppercase}
+    .field input,.field textarea,.field select{width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:13px 13px;font-size:15px;transition:border-color .15s}
+    .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#C9A55C}
+    .field textarea{resize:vertical;min-height:60px}
+    .field input.err{border-color:#C0584F;background:#1a0f0e}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    /* state toggle */
+    .state-tog{display:flex;gap:8px}
+    .state-tog button{flex:1;background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985;padding:12px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
+    .state-tog button.sel{background:#26344A;border-color:#5B7AB0;color:#DCE8FA}
+    /* ---- cuts ---- */
+    .cut{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:0.5px solid #1E1E1E}
+    .cut:first-of-type{border-top:none;padding-top:2px}
+    .cut .cphoto{width:48px;height:48px;flex-shrink:0;background:#fff;border:1px solid #C9A55C;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .cut .cphoto img{max-width:86%;max-height:86%;object-fit:contain}
+    .cut .cmeta{flex:1;min-width:0}
+    .cut .cname{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:#F5EFE5;line-height:1.1}
+    .cut .calt{font-size:11px;color:#7C7259;font-style:italic}
+    .stepper{display:flex;align-items:center;gap:0;flex-shrink:0}
+    .stepper button{width:38px;height:38px;background:#1A1A1A;border:0.5px solid #2E2E2E;color:#C9A55C;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;-webkit-tap-highlight-color:transparent}
+    .stepper button:active{background:#C9A55C;color:#1A1208}
+    .stepper button.minus{border-radius:8px 0 0 8px}
+    .stepper button.plus{border-radius:0 8px 8px 0}
+    .stepper .qv{width:44px;height:38px;display:flex;align-items:center;justify-content:center;background:#0C0C0C;border:0.5px solid #2E2E2E;border-left:none;border-right:none;font-size:16px;font-weight:600;color:#F5EFE5}
+    .cuts-sum{margin-top:14px;padding-top:12px;border-top:0.5px solid #242424;font-size:12px;color:#9A8F76;display:flex;justify-content:space-between}
+    .cuts-sum b{color:#C9A55C;font-weight:600}
+    /* estimate */
+    .est-row{display:flex;align-items:center;gap:10px}
+    .est-row .dollar{color:#8A7548;font-size:16px}
+    .est-row input{flex:1}
+    .preauth{margin-top:12px;background:#0E1812;border:0.5px solid #1F3A29;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#9FBFA8;display:none}
+    .preauth.show{display:block}
+    .preauth b{color:#7FE0A0;font-weight:600}
+    .preauth .hint{display:block;color:#6E8576;font-size:11px;margin-top:4px;font-style:italic}
+    /* ---- sticky submit ---- */
+    .bar{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,8,0.96);backdrop-filter:blur(8px);border-top:0.5px solid #262626;padding:12px 18px calc(12px + env(safe-area-inset-bottom));z-index:60}
+    .bar .inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:14px}
+    .bar .barinfo{flex:1;min-width:0;font-size:12px;color:#9A8F76;line-height:1.3}
+    .bar .barinfo b{color:#F5EFE5;font-weight:600}
+    .submit{background:#C9A55C;color:#1A1208;border:none;border-radius:8px;padding:15px 26px;font-size:14px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .submit:hover{background:#D9B66C}
+    .submit:disabled{background:#3A352B;color:#7C7259;cursor:not-allowed}
+    /* ---- toast / banner ---- */
+    .banner{display:none;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px}
+    .banner.err{display:block;background:#1f0f0e;border:0.5px solid #5C2B27;color:#E9A8A2}
+    /* ---- success ---- */
+    .done{display:none;text-align:center;padding:20px 10px}
+    .done.show{display:block}
+    .done .check{width:64px;height:64px;border-radius:50%;background:#0E1812;border:1px solid #2C5C3E;color:#7FE0A0;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:32px}
+    .done h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;margin:0 0 6px}
+    .done .ref{font-size:13px;color:#9A8F76;margin-bottom:4px}
+    .done .ref b{color:#C9A55C;letter-spacing:1px}
+    .done .recap{font-size:13px;color:#B8A985;margin:14px auto 24px;max-width:360px;line-height:1.7}
+    .done .again{background:#C9A55C;color:#1A1208;border:none;border-radius:8px;padding:14px 30px;font-size:14px;font-weight:600;cursor:pointer}
+    .done .again:hover{background:#D9B66C}
+    .done .dash{display:block;margin-top:16px;font-size:12px;color:#8A7548}
+    .done .dash:hover{color:#C9A55C}
+    @media (max-width:480px){.who{grid-template-columns:repeat(2,1fr)}.hd h1{font-size:26px}}
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">PAMPA MEATS <span>· Carga</span></div>
+    <a class="back" href="/dashboard">&larr; Dashboard</a>
+  </div>
+
+  <div class="wrap">
+    <!-- FORM -->
+    <div id="form">
+      <div class="hd">
+        <div class="eyebrow">CARGA INTERNA DE PEDIDOS</div>
+        <h1 class="serif">Nuevo pedido</h1>
+        <p>Para pedidos tomados por fuera de la web (teléfono, WhatsApp, en persona).</p>
+      </div>
+
+      <div id="banner" class="banner"></div>
+
+      <!-- WHO -->
+      <div class="card">
+        <div class="clabel"><i class="ti ti-user-check"></i> Tomado por <span class="req">*</span></div>
+        <div class="who" id="who">
+          <button type="button" data-who="Mati">Mati</button>
+          <button type="button" data-who="Jay">Jay</button>
+          <button type="button" data-who="Jan">Jan</button>
+          <button type="button" data-who="Mark">Mark</button>
+        </div>
+      </div>
+
+      <!-- CUSTOMER -->
+      <div class="card">
+        <div class="clabel"><i class="ti ti-id"></i> Cliente</div>
+        <div class="field">
+          <label>Nombre <span class="req">*</span></label>
+          <input id="f-name" type="text" autocomplete="off" placeholder="Nombre del amigo / cliente">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Teléfono</label>
+            <input id="f-phone" type="tel" inputmode="tel" autocomplete="off" placeholder="+1 ...">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input id="f-email" type="email" autocomplete="off" placeholder="opcional">
+          </div>
+        </div>
+        <div class="field">
+          <label>Dirección de entrega</label>
+          <input id="f-address" type="text" autocomplete="off" placeholder="Calle, ciudad...">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Estado</label>
+            <div class="state-tog" id="state">
+              <button type="button" data-st="NY">NY</button>
+              <button type="button" data-st="NJ">NJ</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Zona / barrio</label>
+            <input id="f-zone" type="text" autocomplete="off" placeholder="opcional">
+          </div>
+        </div>
+        <div class="field">
+          <label>Fecha de entrega deseada</label>
+          <input id="f-date" type="date">
+        </div>
+      </div>
+
+      <!-- CUTS -->
+      <div class="card">
+        <div class="clabel"><i class="ti ti-meat"></i> Cortes <span class="req">*</span></div>
+        <div id="cuts"></div>
+        <div class="cuts-sum">
+          <span><b id="sum-pkg">0</b> paquetes</span>
+          <span>~<b id="sum-lb">0</b> lb aprox.</span>
+        </div>
+      </div>
+
+      <!-- ESTIMATE -->
+      <div class="card">
+        <div class="clabel"><i class="ti ti-cash"></i> Total estimado <span style="color:#6E6347;text-transform:none;letter-spacing:0">(opcional)</span></div>
+        <div class="field" style="margin-bottom:0">
+          <div class="est-row">
+            <span class="dollar">$</span>
+            <input id="f-est" type="number" inputmode="decimal" min="0" step="0.01" placeholder="estimado antes de pesar">
+          </div>
+        </div>
+        <div class="preauth" id="preauth"></div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="card">
+        <div class="clabel"><i class="ti ti-note"></i> Notas</div>
+        <div class="field" style="margin-bottom:0">
+          <textarea id="f-notes" placeholder="Preferencias, referencias, cómo cobra, etc."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="done" class="done">
+      <div class="check"><i class="ti ti-check"></i></div>
+      <h2 class="serif">Pedido cargado</h2>
+      <div class="ref">Referencia <b id="done-ref">PM-00000</b></div>
+      <div class="recap" id="done-recap"></div>
+      <button class="again" id="btn-again"><i class="ti ti-plus" style="vertical-align:-2px"></i> Cargar otro pedido</button>
+      <a class="dash" href="/dashboard">Ver todos los pedidos en el dashboard &rarr;</a>
+    </div>
+  </div>
+
+  <!-- STICKY BAR -->
+  <div class="bar" id="bar">
+    <div class="inner">
+      <div class="barinfo"><b id="bar-pkg">0</b> paquetes · <span id="bar-who">sin asignar</span></div>
+      <button class="submit" id="submit" disabled>Cargar pedido</button>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var CUTS=[
+      {key:'picanha',name:'Picanha',alt:'Tapa de Cuadril',img:'/picanha.png',lb:2.5},
+      {key:'topSirloin',name:'Top Sirloin',alt:'Cuadril',img:'/top-sirloin.png',lb:5},
+      {key:'nyStrip',name:'New York Strip',alt:'Bife Angosto',img:'/striploin.png',lb:6.5},
+      {key:'tenderloin',name:'Tenderloin / Filet',alt:'Lomo',img:'/tenderloin.png',lb:2.5}
+    ];
+    var qty={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+    var takenBy=null, state=null;
+    var $=function(id){return document.getElementById(id);};
+
+    // render cuts
+    var cutsEl=$('cuts');
+    CUTS.forEach(function(c){
+      var row=document.createElement('div'); row.className='cut';
+      row.innerHTML='<div class="cphoto"><img src="'+c.img+'" alt="'+c.name+'"></div>'+
+        '<div class="cmeta"><div class="cname">'+c.name+'</div><div class="calt">'+c.alt+'</div></div>'+
+        '<div class="stepper"><button type="button" class="minus" data-k="'+c.key+'" data-d="-1">&minus;</button>'+
+        '<div class="qv" id="qv-'+c.key+'">0</div>'+
+        '<button type="button" class="plus" data-k="'+c.key+'" data-d="1">+</button></div>';
+      cutsEl.appendChild(row);
+    });
+
+    function recalc(){
+      var pkg=0, lb=0;
+      CUTS.forEach(function(c){ pkg+=qty[c.key]; lb+=qty[c.key]*c.lb; });
+      $('sum-pkg').textContent=pkg;
+      $('sum-lb').textContent=lb%1?lb.toFixed(1):lb;
+      $('bar-pkg').textContent=pkg;
+      var ok = !!takenBy && $('f-name').value.trim() && pkg>0;
+      $('submit').disabled=!ok;
+      return pkg;
+    }
+
+    cutsEl.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      var k=b.getAttribute('data-k'), d=parseInt(b.getAttribute('data-d'),10);
+      qty[k]=Math.max(0,qty[k]+d);
+      $('qv-'+k).textContent=qty[k];
+      recalc();
+    });
+
+    // taken by (remembered)
+    var saved=null; try{ saved=localStorage.getItem('pampaIntakeWho'); }catch(e){}
+    function setWho(w){
+      takenBy=w;
+      Array.prototype.forEach.call(document.querySelectorAll('#who button'),function(x){x.classList.toggle('sel',x.getAttribute('data-who')===w);});
+      $('bar-who').textContent=w||'sin asignar';
+      try{ localStorage.setItem('pampaIntakeWho',w); }catch(e){}
+      recalc();
+    }
+    $('who').addEventListener('click',function(e){ var b=e.target.closest('button'); if(b) setWho(b.getAttribute('data-who')); });
+    if(saved) setWho(saved);
+
+    // state toggle
+    $('state').addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      state=b.getAttribute('data-st');
+      Array.prototype.forEach.call(document.querySelectorAll('#state button'),function(x){x.classList.toggle('sel',x===b);});
+    });
+
+    // estimate -> preauth
+    $('f-est').addEventListener('input',function(){
+      var v=parseFloat(this.value);
+      var pa=$('preauth');
+      if(v>0){
+        var hold=(v*1.10);
+        pa.classList.add('show');
+        pa.innerHTML='Pre-autorización sugerida (+10%): <b>$'+hold.toFixed(2)+'</b>'+
+          '<span class="hint">Se cobra el estimado +10%, se pesa, y se ajusta / devuelve la diferencia.</span>';
+      } else { pa.classList.remove('show'); pa.innerHTML=''; }
+    });
+
+    $('f-name').addEventListener('input',function(){ this.classList.remove('err'); recalc(); });
+
+    function showErr(msg){
+      var b=$('banner'); b.className='banner err'; b.textContent=msg;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    // submit
+    $('submit').addEventListener('click',function(){
+      var name=$('f-name').value.trim();
+      if(!takenBy){ showErr('Elegí quién tomó el pedido.'); return; }
+      if(!name){ $('f-name').classList.add('err'); showErr('Falta el nombre del cliente.'); return; }
+      if(recalc()<=0){ showErr('Agregá al menos un corte.'); return; }
+      $('banner').className='banner';
+
+      var payload={
+        takenBy:takenBy, name:name,
+        phone:$('f-phone').value.trim(), email:$('f-email').value.trim(),
+        address:$('f-address').value.trim(), zone:$('f-zone').value.trim(),
+        deliveryState:state||'', deliveryDate:$('f-date').value||'',
+        notes:$('f-notes').value.trim(), estTotal:$('f-est').value||'',
+        picanha:qty.picanha, topSirloin:qty.topSirloin, nyStrip:qty.nyStrip, tenderloin:qty.tenderloin
+      };
+      var btn=this; btn.disabled=true; btn.textContent='Cargando...';
+
+      fetch('/api/intake-create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        .then(function(r){return r.json();})
+        .then(function(d){
+          if(d && d.ok){
+            var ref='PM-'+String(d.id||'').slice(-5).toUpperCase();
+            $('done-ref').textContent=ref;
+            var parts=[]; CUTS.forEach(function(c){ if(qty[c.key]) parts.push(qty[c.key]+'× '+c.name); });
+            var recap=parts.join(' · ')+' — para <b>'+name+'</b>';
+            if(payload.estTotal) recap+=' · est. $'+Number(payload.estTotal).toFixed(2);
+            $('done-recap').innerHTML=recap;
+            $('form').style.display='none';
+            $('bar').style.display='none';
+            $('done').classList.add('show');
+            window.scrollTo({top:0,behavior:'smooth'});
+          } else {
+            btn.disabled=false; btn.textContent='Cargar pedido';
+            showErr('No se pudo guardar ('+((d&&d.reason)||'error')+'). Reintentá.');
+          }
+        })
+        .catch(function(){ btn.disabled=false; btn.textContent='Cargar pedido'; showErr('Error de conexión. Reintentá.'); });
+    });
+
+    // reset for next order (keep takenBy)
+    $('btn-again').addEventListener('click',function(){
+      qty={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+      CUTS.forEach(function(c){ $('qv-'+c.key).textContent='0'; });
+      ['f-name','f-phone','f-email','f-address','f-zone','f-date','f-est','f-notes'].forEach(function(id){ $(id).value=''; });
+      state=null; Array.prototype.forEach.call(document.querySelectorAll('#state button'),function(x){x.classList.remove('sel');});
+      $('preauth').classList.remove('show'); $('preauth').innerHTML='';
+      $('banner').className='banner';
+      $('done').classList.remove('show');
+      $('form').style.display='block';
+      $('bar').style.display='block';
+      $('submit').disabled=true; $('submit').textContent='Cargar pedido';
+      recalc();
+      window.scrollTo({top:0,behavior:'smooth'});
+      $('f-name').focus();
+    });
+
+    recalc();
+  })();
+  </script>
+</body>
+</html>
