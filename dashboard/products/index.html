@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,33 +44,33 @@ td.r{text-align:right;font-variant-numeric:tabular-nums}
 </div>
 <div class="wrap">
 <div class="hd">
-<div class="eyebrow">MAESTRO DE PRODUCTOS</div>
+<div class="eyebrow">PRODUCT MASTER</div>
 <h1 class="serif">Products</h1>
-<p>Cortes con SKU, item# y lote del proveedor, y peso de caja/paquete de referencia.</p>
+<p>Cuts with SKU, supplier item# and lot, and reference case/package weight.</p>
 </div>
 <div class="card">
 <table>
-<thead><tr><th>Corte</th><th>Alt (ES)</th><th>SKU</th><th>UPC</th><th>Item #</th><th>Lote</th><th class="r">Caja lb</th><th class="r">Paq lb</th></tr></thead>
-<tbody id="rows"><tr><td colspan="8" class="loading">Cargando…</td></tr></tbody>
+<thead><tr><th>Cut</th><th>Alt (ES)</th><th>SKU</th><th>UPC</th><th>Item #</th><th>Lote</th><th class="r">Case lb</th><th class="r">Pkg lb</th></tr></thead>
+<tbody id="rows"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
 </table>
 </div>
-<div class="note">El UPC se asigna con códigos GS1 reales (registrados). Item# y lote provienen del Bill of Lading del proveedor. Pesos de caja: referencia; el peso real varía por envío.</div>
+<div class="note">UPC is assigned with real (registered) GS1 codes. Item# and lot come from the supplier Bill of Lading. Case weights are reference; actual weight varies per shipment.</div>
 </div>
 <script>
 (function(){
 fetch('/api/products').then(function(r){return r.json();}).then(function(d){
 var tb=document.getElementById('rows');
-if(!d||!d.ok){ tb.innerHTML='<tr><td colspan="8" class="loading">No se pudo cargar ('+((d&&d.reason)||'error')+').</td></tr>'; return; }
+if(!d||!d.ok){ tb.innerHTML='<tr><td colspan="8" class="loading">Could not load ('+((d&&d.reason)||'error')+').</td></tr>'; return; }
 var ps=d.products||[];
-if(!ps.length){ tb.innerHTML='<tr><td colspan="8" class="loading">Sin productos.</td></tr>'; return; }
+if(!ps.length){ tb.innerHTML='<tr><td colspan="8" class="loading">No products.</td></tr>'; return; }
 tb.innerHTML=ps.map(function(p){
 return '<tr><td class="cut">'+p.cut+'</td><td>'+(p.alt||'')+'</td>'+
 '<td class="sku">'+(p.sku||'')+'</td>'+
-'<td>'+(p.upc?p.upc:'<span class="upc-pend">a asignar</span>')+'</td>'+
+'<td>'+(p.upc?p.upc:'<span class="upc-pend">to assign</span>')+'</td>'+
 '<td>'+(p.item||'')+'</td><td>'+(p.lot||'')+'</td>'+
 '<td class="r">'+(p.caseLb||'')+'</td><td class="r">'+(p.pkgLb||'')+'</td></tr>';
 }).join('');
-}).catch(function(){ document.getElementById('rows').innerHTML='<tr><td colspan="8" class="loading">Error de conexión.</td></tr>'; });
+}).catch(function(){ document.getElementById('rows').innerHTML='<tr><td colspan="8" class="loading">Connection error.</td></tr>'; });
 })();
 </script>
 </body>
