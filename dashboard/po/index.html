@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,6 +65,8 @@
     body{background:#fff;color:#000}.top,.bar,.orow .chk,.muted,#sel-card .clabel i{display:initial}
     .bar,.top,.actions-note{display:none}.card{border-color:#ccc;background:#fff}.tcell{background:#f5f5f5}.tcell .n{color:#000}
   }
+.printhead{display:none}
+@media print{.printhead{display:flex;align-items:center;gap:14px;border-bottom:2px solid #1a1a2e;padding-bottom:14px;margin-bottom:18px}.printhead img{height:48px;width:auto}.printhead .pt{font-family:Georgia,serif;font-size:20px;color:#1a1a2e;font-weight:bold;letter-spacing:1px}.printhead .ps{font-size:11px;color:#666;margin-top:2px}}
 </style>
 </head>
 <body>
@@ -74,9 +76,10 @@
   </div>
 
   <div class="wrap">
+    <div class="printhead"><img src="/logo.png" alt="Pampa Meats"><div><div class="pt">PAMPA MEATS — PURCHASE ORDER</div><div class="ps">KLA Management Group · purchasing@pampameats.com</div></div></div>
     <div class="hd">
       <div class="eyebrow">PURCHASE ORDER TO SUPPLIER</div>
-      <h1 class="serif">Order to Aharon</h1>
+      <h1 class="serif">Order to Rosenblatt</h1>
       <p>Select the orders to fulfill; I consolidate the total packages per cut.</p>
     </div>
 
@@ -102,7 +105,7 @@
 
     <div class="card">
       <div class="clabel"><i class="ti ti-mail"></i> Send</div>
-      <div class="field" style="margin-bottom:12px"><label>Aharon's email (to send from purchasing@)</label><input id="f-aharon" type="email" placeholder="supplier email"></div>
+      <div class="field" style="margin-bottom:12px"><label>Rosenblatt's email (to send from purchasing@)</label><input id="f-aharon" type="email" placeholder="supplier email"></div>
       <div class="field"><label>Notes for the supplier</label><textarea id="f-notes" placeholder="Pickup/delivery date, references, etc."></textarea></div>
     </div>
   </div>
@@ -135,7 +138,7 @@
       $('bar-pkg').textContent=pkg; $('bar-ord').textContent=ord;
       var over=[]; CUTS.forEach(function(c){ var cap=CAPBY[c[0]]*CASES*SAFE; if(lbBy[c[0]]>cap) over.push(c[1].replace(' / Filet','')+' ('+lbBy[c[0]].toFixed(1)+' / '+cap.toFixed(0)+' lb)'); });
       var cw=$('capwarn');
-      if(over.length){ cw.style.display='block'; cw.innerHTML='<i class="ti ti-alert-triangle" style="vertical-align:-2px"></i> <b>Over 1 case:</b> '+over.join(', ')+'. Remove orders or get an extra case from Aharon.'; }
+      if(over.length){ cw.style.display='block'; cw.innerHTML='<i class="ti ti-alert-triangle" style="vertical-align:-2px"></i> <b>Over 1 case:</b> '+over.join(', ')+'. Remove orders or get an extra case from Rosenblatt.'; }
       else { cw.style.display='none'; }
       var has=pkg>0; $('btn-create').disabled=!has; $('btn-email').disabled=!has; $('btn-copy').disabled=!has;
       return {t:t,pkg:pkg,ord:ord,lb:lb,lbBy:lbBy,over:over};
@@ -195,17 +198,17 @@
 
     $('btn-create').addEventListener('click',function(){ createPO(); });
     $('btn-copy').addEventListener('click',function(){
-      navigator.clipboard.writeText(buildText()).then(function(){ banner('ok','Text copied — paste it to Aharon on WhatsApp.'); },function(){ banner('info','Copy manually:<br><pre style="white-space:pre-wrap">'+buildText()+'</pre>'); });
+      navigator.clipboard.writeText(buildText()).then(function(){ banner('ok','Text copied — paste it to Rosenblatt on WhatsApp.'); },function(){ banner('info','Copy manually:<br><pre style="white-space:pre-wrap">'+buildText()+'</pre>'); });
     });
     $('btn-print').addEventListener('click',function(){ window.print(); });
     $('btn-email').addEventListener('click',function(){
       var to=$('f-aharon').value.trim();
-      if(!to){ banner('err','Enter Aharon's email to send.'); return; }
+      if(!to){ banner('err','Enter Rosenblatt's email to send.'); return; }
       $('btn-email').disabled=true;
       fetch('/api/po-send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:to,subject:'Pampa Meats — Purchase Order',html:buildHtml(),text:buildText()})})
         .then(function(r){return r.json();}).then(function(res){
           $('btn-email').disabled=false;
-          if(res&&res.ok){ banner('ok','Order sent to Aharon from purchasing@pampameats.com.'); createPO(); }
+          if(res&&res.ok){ banner('ok','Order sent to Rosenblatt from purchasing@pampameats.com.'); createPO(); }
           else if(res&&res.reason==='email_not_configured'){ banner('info','The domain email is not active yet. For now use <b>Copy</b> (WhatsApp) or <b>PDF</b>. Once we verify the domain, this button sends automatically from purchasing@.'); }
           else banner('err','Could not send ('+((res&&res.reason)||'error')+').');
         }).catch(function(){ $('btn-email').disabled=false; banner('err','Connection error sending.'); });
