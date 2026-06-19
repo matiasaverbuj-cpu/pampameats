@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Pampa Meats — Quote & Invoice</title>
+  <link rel="icon" type="image/png" href="/logo.png">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0e0e10;color:#1c1c1c}
+    .bar{background:#0A0A0A;color:#F5EFE5;padding:14px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+    .bar .t{font-family:Georgia,serif;color:#C9A55C;letter-spacing:2px;font-size:15px}
+    .bar select,.bar button{font-family:Arial;font-size:13px}
+    .ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .ctrl select{background:#161616;color:#F5EFE5;border:0.5px solid #2A2A2A;border-radius:4px;padding:8px 10px}
+    .btn{background:#C9A55C;color:#0A0A0A;border:none;border-radius:4px;padding:9px 16px;font-weight:bold;cursor:pointer;letter-spacing:.5px}
+    .btn.ghost{background:transparent;color:#C9A55C;border:1px solid #C9A55C}
+    .btn:hover{filter:brightness(1.08)}
+    .wrap{max-width:820px;margin:24px auto;padding:0 16px}
+    .msg{color:#C9A55C;font-size:13px;min-height:18px;margin:8px 2px;text-align:center}
+    .msg.err{color:#e2a0a0}
+    /* invoice sheet */
+    .inv{background:#fff;border-radius:8px;padding:40px 44px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;background:#0A0A0A;border-radius:6px;padding:18px 22px;margin:-4px 0 26px}
+    .brand .b{color:#C9A55C;font-size:22px;font-weight:bold;letter-spacing:4px}
+    .brand .s{color:#cfc6b0;font-size:9px;letter-spacing:3px;margin-top:4px}
+    .doc{text-align:right;color:#F5EFE5}
+    .doc .pt{color:#C9A55C;font-weight:bold;letter-spacing:3px;font-size:13px;margin-bottom:6px}
+    .doc .meta{font-size:11px;line-height:1.7}
+    .doc .meta input{width:120px;background:#161616;color:#F5EFE5;border:0.5px solid #333;border-radius:3px;padding:3px 6px;font-size:11px;text-align:right}
+    .parties{display:flex;gap:18px;margin-bottom:22px}
+    .party{flex:1;border:1px solid #e3ddcf;border-radius:5px;padding:12px 14px}
+    .lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#9A7B3A;font-weight:bold;margin-bottom:6px}
+    .party input{width:100%;border:none;border-bottom:1px solid #eee;font-size:12px;padding:3px 0;margin-bottom:3px;font-family:Arial}
+    .party input:focus{outline:none;border-bottom-color:#C9A55C}
+    .party .pname{font-weight:bold;font-size:12px}
+    .party .pline{color:#555;font-size:10px;line-height:1.7}
+    table.items{width:100%;border-collapse:collapse;margin:6px 0}
+    table.items th{background:#1a1a2e;color:#F5EFE5;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:9px 10px;text-align:left}
+    table.items th.r,table.items td.r{text-align:right}
+    table.items td{padding:9px 10px;border-bottom:1px solid #eee;font-size:12px;vertical-align:middle}
+    table.items .es{color:#9A7B3A;font-style:italic;font-size:9px}
+    table.items input{width:74px;border:0.5px solid #ddd;border-radius:3px;padding:5px 7px;font-size:12px;text-align:right;font-family:Arial}
+    table.items input:focus{outline:none;border-color:#C9A55C}
+    tr.zero{opacity:.4}
+    .totals{display:flex;justify-content:flex-end;margin-top:10px}
+    .tt{border-collapse:collapse;min-width:300px}
+    .tt td{padding:6px 10px;font-size:12px}
+    .tt td.r{text-align:right;font-variant-numeric:tabular-nums}
+    .tt td:first-child{color:#555}
+    .tt .grand td{border-top:2px solid #1a1a2e;font-weight:bold;font-size:15px;color:#1a1a2e}
+    .tt .due td{color:#5a1e1e;font-weight:bold}
+    .tt input{width:96px;border:0.5px solid #ddd;border-radius:3px;padding:4px 7px;font-size:12px;text-align:right}
+    .tt select{border:0.5px solid #ddd;border-radius:3px;padding:4px;font-size:11px}
+    .pay{margin-top:22px;border:1px solid #e3ddcf;border-radius:5px;padding:12px 14px;background:#faf8f4}
+    .payline{font-size:10px;color:#555;line-height:1.9}
+    .foot{margin-top:22px;border-top:1px solid #eee;padding-top:10px;text-align:center;color:#999;font-size:9px;letter-spacing:.5px}
+    .fine{font-size:9px;color:#aaa;font-style:italic;margin-top:6px;text-align:center}
+    @media print{
+      body{background:#fff}
+      .bar,.actions,.msg,.no-print{display:none!important}
+      .wrap{margin:0;max-width:none;padding:0}
+      .inv{box-shadow:none;border-radius:0;padding:0}
+      tr.zero{display:none}
+      input,select{border:none!important;background:transparent!important;-webkit-appearance:none;appearance:none}
+      .party input{border-bottom:none!important}
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <span class="t">PAMPA MEATS · QUOTE / INVOICE</span>
+    <div class="ctrl">
+      <select id="orderSel"><option value="">Loading orders…</option></select>
+      <button class="btn ghost" id="reload">↻</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="inv" id="sheet">
+      <div class="top">
+        <div class="brand"><div class="b">PAMPA MEATS</div><div class="s">KLA MANAGEMENT GROUP</div></div>
+        <div class="doc">
+          <div class="pt" id="docType">QUOTE</div>
+          <div class="meta">
+            <div>No. <input id="docNum" type="text"></div>
+            <div>Date <input id="docDate" type="date"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="parties">
+        <div class="party">
+          <div class="lbl">Bill to</div>
+          <input id="cName" class="pname" placeholder="Customer name">
+          <input id="cPhone" placeholder="Phone">
+          <input id="cEmail" placeholder="Email">
+          <input id="cAddr" placeholder="Address · zone">
+        </div>
+        <div class="party">
+          <div class="lbl">From</div>
+          <div class="pname">Pampa Meats · KLA Management Group</div>
+          <div class="pline">Premium Argentine Angus · Glatt Kosher, Beit Yosef</div>
+          <div class="pline">Delivered frozen across NY &amp; NJ · pampameats.com</div>
+        </div>
+      </div>
+
+      <table class="items">
+        <thead><tr><th>Cut</th><th class="r">Qty (pkg)</th><th class="r">~lb ea.</th><th class="r">Unit price</th><th class="r">Line total</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+
+      <div class="totals">
+        <table class="tt">
+          <tr><td>Subtotal</td><td class="r" id="subtotal">$0.00</td></tr>
+          <tr><td>Delivery <span class="no-print" style="color:#9A7B3A">(optional)</span></td><td class="r"><input id="delivery" type="number" min="0" step="0.01" placeholder="0.00"></td></tr>
+          <tr class="grand"><td>Total</td><td class="r" id="grand">$0.00</td></tr>
+          <tr><td>Amount paid <span class="no-print" style="color:#9A7B3A">· <select id="payMethod"><option value="">—</option><option>Wire</option><option>Zelle</option><option>Credit card</option></select></span></td><td class="r"><input id="amountPaid" type="number" min="0" step="0.01" placeholder="0.00"></td></tr>
+          <tr class="due"><td>Balance due</td><td class="r" id="balance">$0.00</td></tr>
+        </table>
+      </div>
+
+      <div class="pay">
+        <div class="lbl">Payment</div>
+        <div class="payline">We accept Wire, Zelle and credit card. Please use the quote/invoice number as reference.</div>
+      </div>
+
+      <div class="foot">PAMPA MEATS · KLA MANAGEMENT GROUP · pampameats.com · Thank you for your order.</div>
+      <div class="fine">All weights are approximate — each cut is hand-trimmed, so the exact weight (and final total) may vary slightly. Final pricing confirmed on this quote.</div>
+    </div>
+
+    <div class="actions no-print" style="text-align:center;margin:20px 0 60px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" id="printBtn">🖨 Print / Save PDF</button>
+      <button class="btn ghost" id="copyBtn">📋 Copy email text</button>
+      <select id="saveStatus" class="ctrl" style="background:#161616;color:#F5EFE5;border:0.5px solid #2A2A2A;border-radius:4px;padding:9px 10px"><option value="Quoted">Status → Quoted</option><option value="Paid">Status → Paid</option><option value="Shipped">Status → Shipped</option><option value="Delivered">Status → Delivered</option><option value="">(don't change status)</option></select>
+      <button class="btn" id="saveBtn">💾 Save total to Airtable</button>
+    </div>
+    <div class="msg no-print" id="msg"></div>
+  </div>
+
+  <script>
+  (function(){
+    var CUTS=[
+      {key:'picanha',name:'Picanha',es:'Tapa de Cuadril',lb:2.5},
+      {key:'topSirloin',name:'Top Sirloin',es:'Cuadril',lb:5},
+      {key:'nyStrip',name:'New York Strip',es:'Bife Angosto',lb:6.5},
+      {key:'tenderloin',name:'Tenderloin / Filet Mignon',es:'Lomo',lb:2.5}
+    ];
+    var orders=[], current=null;
+    var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toFixed(2);};
+
+    // build rows
+    var rowsEl=document.getElementById('rows');
+    CUTS.forEach(function(c){
+      var tr=document.createElement('tr'); tr.id='row-'+c.key; tr.className='zero';
+      tr.innerHTML='<td>'+c.name+' <span class="es">'+c.es+'</span></td>'+
+        '<td class="r"><input id="qty-'+c.key+'" type="number" min="0" step="1" value="0"></td>'+
+        '<td class="r">~'+c.lb+'</td>'+
+        '<td class="r"><input id="price-'+c.key+'" type="number" min="0" step="0.01" placeholder="0.00"></td>'+
+        '<td class="r" id="line-'+c.key+'">$0.00</td>';
+      rowsEl.appendChild(tr);
+    });
+
+    function recalc(){
+      var sub=0;
+      CUTS.forEach(function(c){
+        var q=parseFloat(document.getElementById('qty-'+c.key).value)||0;
+        var p=parseFloat(document.getElementById('price-'+c.key).value)||0;
+        var line=q*p; sub+=line;
+        document.getElementById('line-'+c.key).textContent=money(line);
+        document.getElementById('row-'+c.key).className=(q>0?'':'zero');
+      });
+      var deliv=parseFloat(document.getElementById('delivery').value)||0;
+      var grand=sub+deliv;
+      var paid=parseFloat(document.getElementById('amountPaid').value)||0;
+      document.getElementById('subtotal').textContent=money(sub);
+      document.getElementById('grand').textContent=money(grand);
+      document.getElementById('balance').textContent=money(grand-paid);
+      document.getElementById('docType').textContent=(paid>0 ? 'INVOICE' : 'QUOTE');
+    }
+    document.querySelectorAll('input,select').forEach(function(el){ el.addEventListener('input',recalc); });
+
+    function fill(o){
+      current=o;
+      document.getElementById('cName').value=o.name||'';
+      document.getElementById('cPhone').value=o.phone||'';
+      document.getElementById('cEmail').value=o.email||'';
+      document.getElementById('cAddr').value=((o.address||'')+(o.zone?(' · '+o.zone):'')).trim();
+      CUTS.forEach(function(c){ document.getElementById('qty-'+c.key).value=o[c.key]||0; });
+      document.getElementById('amountPaid').value=o.amountPaid?o.amountPaid:'';
+      if(!document.getElementById('docNum').value) document.getElementById('docNum').value='PM-'+(o.id||'').slice(-5).toUpperCase();
+      recalc();
+    }
+
+    async function loadOrders(){
+      var sel=document.getElementById('orderSel');
+      sel.innerHTML='<option value="">Loading…</option>';
+      try{
+        var r=await fetch('/api/orders'); var d=await r.json();
+        orders=(d&&d.orders)||[];
+        if(!orders.length){ sel.innerHTML='<option value="">No orders</option>'; return; }
+        sel.innerHTML='<option value="">— Select an order —</option>'+orders.map(function(o,i){
+          var pk=(o.picanha||0)+(o.topSirloin||0)+(o.nyStrip||0)+(o.tenderloin||0);
+          return '<option value="'+i+'">'+(o.name||'(no name)')+' · '+pk+' pkg · '+(o.status||'')+'</option>';
+        }).join('');
+      }catch(e){ sel.innerHTML='<option value="">Error loading</option>'; }
+    }
+    document.getElementById('orderSel').addEventListener('change',function(){
+      var i=this.value; if(i==='') return; fill(orders[parseInt(i,10)]);
+    });
+    document.getElementById('reload').addEventListener('click',loadOrders);
+
+    document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
+
+    document.getElementById('copyBtn').addEventListener('click',function(){
+      var lines=[]; CUTS.forEach(function(c){
+        var q=parseFloat(document.getElementById('qty-'+c.key).value)||0;
+        var p=parseFloat(document.getElementById('price-'+c.key).value)||0;
+        if(q>0) lines.push('- '+c.name+' x'+q+' @ '+money(p)+' = '+money(q*p));
+      });
+      var name=(document.getElementById('cName').value||'there').split(' ')[0];
+      var txt='Hi '+name+',\n\nThank you for your Pampa Meats order. Here is your quote:\n\n'+
+        lines.join('\n')+'\n\nTotal: '+document.getElementById('grand').textContent+
+        '\nBalance due: '+document.getElementById('balance').textContent+
+        '\n\nPayment: Wire, Zelle or credit card (reference '+(document.getElementById('docNum').value||'')+').'+
+        '\nWe deliver frozen, cold-chain, across NY & NJ.\n\nThank you,\nPampa Meats · KLA Management Group';
+      navigator.clipboard.writeText(txt).then(function(){ flash('Email text copied to clipboard.'); },function(){ flash('Could not copy — select & copy manually.',true); });
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', async function(){
+      if(!current||!current.id){ flash('Select an order first (to save back to Airtable).',true); return; }
+      var grand=parseFloat(document.getElementById('grand').textContent.replace(/[^0-9.]/g,''))||0;
+      var paid=parseFloat(document.getElementById('amountPaid').value)||0;
+      var payload={id:current.id, orderTotal:grand};
+      if(paid>0){ payload.amountPaid=paid; var pm=document.getElementById('payMethod').value; if(pm) payload.paymentMethod=pm; }
+      var st=document.getElementById('saveStatus').value; if(st) payload.status=st;
+      flash('Saving…');
+      try{
+        var r=await fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        var d=await r.json();
+        if(d&&d.ok){ flash('Saved to Airtable ✓ — dashboard KPIs updated.'); }
+        else { flash('Save failed: '+((d&&d.reason)||'unknown'),true); }
+      }catch(e){ flash('Network error saving.',true); }
+    });
+
+    function flash(t,err){ var m=document.getElementById('msg'); m.className='msg no-print'+(err?' err':''); m.textContent=t; }
+
+    // init
+    document.getElementById('docDate').value=new Date().toISOString().slice(0,10);
+    loadOrders();
+    recalc();
+  })();
+  </script>
+</body>
+</html>
