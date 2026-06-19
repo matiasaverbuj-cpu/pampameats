@@ -96,6 +96,8 @@
         <div class="tcell"><div class="n" id="t-ten">0</div><div class="l">TENDERLOIN</div></div>
       </div>
       <div class="tsum"><span><b id="t-pkg">0</b> paquetes en <b id="t-ord">0</b> pedidos</span><span>~<b id="t-lb">0</b> lb aprox.</span></div>
+      <div id="capwarn" style="display:none;margin-top:12px;background:#1f0f0e;border:0.5px solid #5C2B27;color:#E9A8A2;border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.5"></div>
+      <div class="muted" style="margin-top:10px;font-size:11px">Caja de referencia (el peso real varía por envío): Picanha 34 · Top Sirloin 49 · NY Strip 50 · Filet 53 lb. 1 caja por corte.</div>
     </div>
 
     <div class="card">
@@ -119,18 +121,24 @@
   (function(){
     var $=function(id){return document.getElementById(id);};
     var CUTS=[['picanha','Picanha',2.5],['topSirloin','Top Sirloin',5],['nyStrip','New York Strip',6.5],['tenderloin','Tenderloin / Filet',2.5]];
+    var CAPBY={picanha:34.36,topSirloin:48.62,nyStrip:49.93,tenderloin:53.07};
+    var CASES=1, SAFE=1;
     var orders=[], sel={}, createdPO=null;
 
     function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.innerHTML=msg; window.scrollTo({top:0,behavior:'smooth'}); }
 
     function totals(){
-      var t={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0}, pkg=0, lb=0, ord=0;
-      orders.forEach(function(o){ if(sel[o.id]){ ord++; CUTS.forEach(function(c){ var q=o[c[0]]||0; t[c[0]]+=q; pkg+=q; lb+=q*c[2]; }); } });
+      var t={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0}, lbBy={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0}, pkg=0, lb=0, ord=0;
+      orders.forEach(function(o){ if(sel[o.id]){ ord++; CUTS.forEach(function(c){ var q=o[c[0]]||0; t[c[0]]+=q; lbBy[c[0]]+=q*c[2]; pkg+=q; lb+=q*c[2]; }); } });
       $('t-pic').textContent=t.picanha; $('t-top').textContent=t.topSirloin; $('t-ny').textContent=t.nyStrip; $('t-ten').textContent=t.tenderloin;
       $('t-pkg').textContent=pkg; $('t-ord').textContent=ord; $('t-lb').textContent=lb%1?lb.toFixed(1):lb;
       $('bar-pkg').textContent=pkg; $('bar-ord').textContent=ord;
+      var over=[]; CUTS.forEach(function(c){ var cap=CAPBY[c[0]]*CASES*SAFE; if(lbBy[c[0]]>cap) over.push(c[1].replace(' / Filet','')+' ('+lbBy[c[0]].toFixed(1)+' / '+cap.toFixed(0)+' lb)'); });
+      var cw=$('capwarn');
+      if(over.length){ cw.style.display='block'; cw.innerHTML='<i class="ti ti-alert-triangle" style="vertical-align:-2px"></i> <b>Pasa de 1 caja:</b> '+over.join(', ')+'. Sacá pedidos o conseguí caja extra con Aharon.'; }
+      else { cw.style.display='none'; }
       var has=pkg>0; $('btn-create').disabled=!has; $('btn-email').disabled=!has; $('btn-copy').disabled=!has;
-      return {t:t,pkg:pkg,ord:ord,lb:lb};
+      return {t:t,pkg:pkg,ord:ord,lb:lb,lbBy:lbBy,over:over};
     }
 
     function cutsLabel(o){
