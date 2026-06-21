@@ -25,7 +25,8 @@ export default async function handler(req, res) {
           category: f['Category'] || '',
           amount: Number(f['Amount']) || 0,
           date: f['Date'] || '',
-          notes: f['Notes'] || ''
+          notes: f['Notes'] || '',
+          receiptUrl: (Array.isArray(f['Receipt']) && f['Receipt'][0] && f['Receipt'][0].url) || ''
         };
       });
       res.status(200).json({ ok: true, expenses });
