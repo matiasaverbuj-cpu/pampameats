@@ -11,7 +11,7 @@ export const config = {
 export default function middleware(req) {
   // Public endpoint: the customer order form posts here. Never gate it.
   const pathname = new URL(req.url).pathname;
-  if (pathname === '/api/order-create') return;
+  if ((pathname === '/api/order-create' || pathname === '/api/daily-digest')) return;
 
   const pass = process.env.DASH_PASS;
   const auth = req.headers.get('authorization') || '';
