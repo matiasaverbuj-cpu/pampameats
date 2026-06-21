@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
-<title>Pampa Meats · Accounts Payable</title>
+<title>Pampa Meats · A/P</title>
 <link rel="icon" type="image/png" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,11 +21,18 @@ input,textarea,button{font-family:inherit}
 .top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
 .top .brand span{color:#6E6347;font-weight:400}
 .top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
-.wrap{max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
 .hd{margin:4px 0 18px}
 .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
 .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
 .hd p{margin:0;font-size:13px;color:#9A8F76}
+.acts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+.act{background:#121212;border:0.5px solid #2A2A2A;border-radius:12px;padding:18px 16px;display:flex;align-items:center;gap:13px;transition:all .16s}
+.act:hover{border-color:#C9A55C;transform:translateY(-2px);background:#161412}
+.act .ic{width:42px;height:42px;border-radius:50%;border:1px solid #C9A55C;display:flex;align-items:center;justify-content:center;color:#C9A55C;font-size:20px;flex:0 0 auto}
+.act .tn{font-size:14px;color:#F5EFE5;font-weight:500}
+.act .td{font-size:11px;color:#8A7548;margin-top:2px}
+.sec-t{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#6E6347;margin:0 0 12px}
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
 .kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:14px 16px}
 .kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
@@ -34,7 +41,7 @@ input,textarea,button{font-family:inherit}
 .card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;margin-bottom:16px;overflow-x:auto}
 .clabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;color:#8A7548;text-transform:uppercase;padding:12px 14px 4px}
 .clabel i{color:#C9A55C;font-size:15px}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
 th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
 td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985}
 td.r{text-align:right;font-variant-numeric:tabular-nums}
@@ -44,33 +51,45 @@ td.r{text-align:right;font-variant-numeric:tabular-nums}
 .pill.Paid{background:#13361f;color:#8AF0A8}
 .payb{background:#C9A55C;color:#1A1208;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer}
 .payb:disabled{opacity:.4;cursor:default}
+.pdfb{background:#1A1A1A;border:0.5px solid #2E2E2E;color:#C9A55C;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.pdfb:hover{border-color:#C9A55C}
+.pdf-view{color:#8AF0A8;font-size:12px;display:inline-flex;align-items:center;gap:5px}
 .formcard{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:18px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:11px;letter-spacing:1px;color:#9A8F76;margin-bottom:5px;text-transform:uppercase}
 .field input,.field textarea{width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:11px 12px;font-size:14px}
+.drop{border:1px dashed #3A3A3A;border-radius:8px;padding:14px;text-align:center;color:#8A7548;font-size:12px;cursor:pointer;transition:all .15s}
+.drop:hover{border-color:#C9A55C;color:#C9A55C}
+.drop.has{border-color:#1F5A38;color:#9FE1CB}
 .btn{background:#C9A55C;color:#1A1208;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer}
 .banner{display:none;border-radius:8px;padding:11px 14px;margin-bottom:14px;font-size:13px}
 .banner.err{display:block;background:#1f0f0e;border:0.5px solid #5C2B27;color:#E9A8A2}
 .banner.ok{display:block;background:#0E1812;border:0.5px solid #1F5A38;color:#9FE1CB}
 .loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
-@media(max-width:560px){.kpis{grid-template-columns:1fr}.row3{grid-template-columns:1fr}}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.acts{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="top">
-<div class="brand">PAMPA MEATS <span>· Accounts Payable</span></div>
+<div class="brand">PAMPA MEATS <span>· A/P</span></div>
 <a class="back" href="/dashboard">&larr; Backend</a>
 </div>
 <div class="wrap">
 <div class="hd">
-<div class="eyebrow">ACCOUNTS PAYABLE · A/P</div>
-<h1 class="serif">Vendor bills</h1>
-<p>Load supplier invoices against your POs and track what's paid vs owed.</p>
+<div class="eyebrow">PURCHASING &amp; PAYABLES · A/P</div>
+<h1 class="serif">Purchasing &amp; Payables</h1>
+<p>Order from Rosenblatt, load the vendor invoice (PDF + amount), and track what you owe.</p>
+</div>
+
+<div class="acts">
+<a class="act" href="/dashboard/po"><div class="ic"><i class="ti ti-clipboard-list"></i></div><div><div class="tn">Create PO</div><div class="td">order to Rosenblatt</div></div></a>
+<a class="act" href="/dashboard/vendors"><div class="ic"><i class="ti ti-building-store"></i></div><div><div class="tn">Vendors</div><div class="td">suppliers</div></div></a>
 </div>
 
 <div id="banner" class="banner"></div>
 
+<div class="sec-t">Payables — what you owe</div>
 <div class="kpis">
 <div class="kpi"><div class="l">Bills</div><div class="v" id="k-count">0</div></div>
 <div class="kpi"><div class="l">Total billed</div><div class="v" id="k-total">$0</div></div>
@@ -78,15 +97,15 @@ td.r{text-align:right;font-variant-numeric:tabular-nums}
 </div>
 
 <div class="card">
-<div class="clabel"><i class="ti ti-file-invoice"></i> Bills</div>
+<div class="clabel"><i class="ti ti-file-invoice"></i> Vendor bills</div>
 <table>
-<thead><tr><th>Bill #</th><th>Invoice #</th><th>Invoice date</th><th>Due</th><th class="r">Amount</th><th class="r">Balance</th><th>Status</th><th></th></tr></thead>
-<tbody id="rows"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
+<thead><tr><th>Bill #</th><th>Invoice #</th><th>Invoice date</th><th>Due</th><th class="r">Amount</th><th class="r">Balance</th><th>Status</th><th>Invoice PDF</th><th></th></tr></thead>
+<tbody id="rows"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
 </table>
 </div>
 
 <div class="formcard">
-<div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Load a vendor bill (Rosenblatt)</div>
+<div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Load a vendor invoice (Rosenblatt)</div>
 <div class="row3">
 <div class="field"><label>Vendor invoice #</label><input id="f-inv" type="text" placeholder="e.g. 180429"></div>
 <div class="field"><label>Amount $</label><input id="f-amt" type="number" min="0" step="0.01" placeholder="0.00"></div>
@@ -96,16 +115,33 @@ td.r{text-align:right;font-variant-numeric:tabular-nums}
 <div class="field"><label>Due date</label><input id="f-due" type="date"></div>
 <div class="field" style="grid-column:span 2"><label>Notes</label><input id="f-notes" type="text" placeholder="PO ref, terms, etc."></div>
 </div>
+<div class="field"><label>Invoice PDF (optional)</label>
+<div class="drop" id="drop"><i class="ti ti-upload"></i> Click to attach the vendor's invoice PDF</div>
+<input id="f-file" type="file" accept="application/pdf,image/*" style="display:none">
+</div>
 <button class="btn" id="f-save">Add bill</button>
-<div style="font-size:11px;color:#6E6347;margin-top:10px">Tip: attach the BL/invoice PDF directly on the record's Attachment field in Airtable. Mark a bill paid with the button in the table.</div>
+<div style="font-size:11px;color:#6E6347;margin-top:10px">You can also upload the PDF later from the table (📎 button on each bill).</div>
 </div>
 </div>
+
+<input id="f-file-row" type="file" accept="application/pdf,image/*" style="display:none">
 
 <script>
 (function(){
 var $=function(id){return document.getElementById(id);};
 var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
 function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.textContent=msg; window.scrollTo({top:0,behavior:'smooth'}); }
+var pendingFile=null;
+var rowUploadId=null;
+
+function fileToB64(file){ return new Promise(function(res,rej){ var r=new FileReader(); r.onload=function(){ res(String(r.result).split(',')[1]); }; r.onerror=rej; r.readAsDataURL(file); }); }
+function uploadPdf(recordId,file){
+  return fileToB64(file).then(function(b64){
+    return fetch('/api/bill-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      recordId:recordId, filename:file.name||'invoice.pdf', contentType:file.type||'application/pdf', fileBase64:b64
+    })}).then(function(r){return r.json();});
+  });
+}
 
 function render(bills){
 var tb=$('rows');
@@ -114,14 +150,18 @@ bills.forEach(function(b){ total+=b.amount; due+=b.balance; });
 $('k-count').textContent=bills.length;
 $('k-total').textContent=money(total);
 $('k-due').textContent=money(due);
-if(!bills.length){ tb.innerHTML='<tr><td colspan="8" class="loading">No bills yet. Load the first one below.</td></tr>'; return; }
+if(!bills.length){ tb.innerHTML='<tr><td colspan="9" class="loading">No bills yet. Load the first one below.</td></tr>'; return; }
 tb.innerHTML='';
 bills.forEach(function(b){
 var tr=document.createElement('tr');
+var pdfCell = b.attachmentUrl
+  ? '<a class="pdf-view" href="'+b.attachmentUrl+'" target="_blank" rel="noopener"><i class="ti ti-file-check"></i> View</a>'
+  : '<button class="pdfb" data-up="'+b.id+'"><i class="ti ti-paperclip"></i> Upload</button>';
 tr.innerHTML='<td>'+(b.billNum||'')+'</td><td>'+(b.invoiceNum||'—')+'</td>'+
 '<td>'+(b.invoiceDate||'')+'</td><td>'+(b.dueDate||'')+'</td>'+
 '<td class="r">'+money(b.amount)+'</td><td class="r">'+money(b.balance)+'</td>'+
 '<td><span class="pill '+(b.status||'Unpaid')+'">'+(b.status||'Unpaid')+'</span></td>'+
+'<td>'+pdfCell+'</td>'+
 '<td class="r"><button class="payb" '+(b.status==='Paid'?'disabled':'')+' data-id="'+b.id+'" data-amt="'+b.amount+'">'+(b.status==='Paid'?'Paid':'Mark paid')+'</button></td>';
 tb.appendChild(tr);
 });
@@ -130,20 +170,43 @@ tb.appendChild(tr);
 function load(){
 fetch('/api/bills').then(function(r){return r.json();}).then(function(d){
 if(d&&d.ok){ render(d.bills||[]); }
-else { $('rows').innerHTML='<tr><td colspan="8" class="loading">Could not load ('+((d&&d.reason)||'error')+').</td></tr>'; }
-}).catch(function(){ $('rows').innerHTML='<tr><td colspan="8" class="loading">Connection error.</td></tr>'; });
+else { $('rows').innerHTML='<tr><td colspan="9" class="loading">Could not load ('+((d&&d.reason)||'error')+').</td></tr>'; }
+}).catch(function(){ $('rows').innerHTML='<tr><td colspan="9" class="loading">Connection error.</td></tr>'; });
 }
 
-document.getElementById('rows').addEventListener('click',function(e){
-var b=e.target.closest('.payb'); if(!b||b.disabled) return;
-var id=b.getAttribute('data-id'), amt=b.getAttribute('data-amt');
-if(!confirm('Mark this bill as fully paid ('+money(amt)+')?')) return;
-b.disabled=true;
-fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,amountPaid:Number(amt),status:'Paid',paidDate:new Date().toISOString().slice(0,10)})})
-.then(function(r){return r.json();}).then(function(d){
-if(d&&d.ok){ banner('ok','Bill marked paid ✓'); load(); }
-else { b.disabled=false; banner('err','Could not update ('+((d&&d.reason)||'error')+').'); }
-}).catch(function(){ b.disabled=false; banner('err','Connection error.'); });
+// table: mark paid + upload
+$('rows').addEventListener('click',function(e){
+var pay=e.target.closest('.payb');
+if(pay && !pay.disabled){
+  var id=pay.getAttribute('data-id'), amt=pay.getAttribute('data-amt');
+  if(!confirm('Mark this bill as fully paid ('+money(amt)+')?')) return;
+  pay.disabled=true;
+  fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,amountPaid:Number(amt),status:'Paid',paidDate:new Date().toISOString().slice(0,10)})})
+  .then(function(r){return r.json();}).then(function(d){
+    if(d&&d.ok){ banner('ok','Bill marked paid ✓'); load(); }
+    else { pay.disabled=false; banner('err','Could not update ('+((d&&d.reason)||'error')+').'); }
+  }).catch(function(){ pay.disabled=false; banner('err','Connection error.'); });
+  return;
+}
+var up=e.target.closest('.pdfb');
+if(up){ rowUploadId=up.getAttribute('data-up'); $('f-file-row').click(); }
+});
+
+$('f-file-row').addEventListener('change',function(){
+var f=this.files&&this.files[0]; if(!f||!rowUploadId) return;
+banner('ok','Uploading PDF…');
+uploadPdf(rowUploadId,f).then(function(d){
+  this.value='';
+  if(d&&d.ok){ banner('ok','Invoice PDF attached ✓'); load(); }
+  else { banner('err','Upload failed ('+((d&&d.reason)||'error')+').'); }
+}.bind(this)).catch(function(){ banner('err','Upload connection error.'); });
+});
+
+$('drop').addEventListener('click',function(){ $('f-file').click(); });
+$('f-file').addEventListener('change',function(){
+pendingFile=this.files&&this.files[0]||null;
+$('drop').classList.toggle('has',!!pendingFile);
+$('drop').innerHTML = pendingFile ? '<i class="ti ti-file-check"></i> '+pendingFile.name : '<i class="ti ti-upload"></i> Click to attach the vendor's invoice PDF';
 });
 
 $('f-save').addEventListener('click',function(){
@@ -153,9 +216,21 @@ $('f-save').disabled=true;
 fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
 invoiceNum:$('f-inv').value.trim(), amount:amt, invoiceDate:$('f-idate').value||'', dueDate:$('f-due').value||'', notes:$('f-notes').value.trim()
 })}).then(function(r){return r.json();}).then(function(d){
-$('f-save').disabled=false;
-if(d&&d.ok){ banner('ok','Bill added ✓ ('+d.billNum+')'); ['f-inv','f-amt','f-idate','f-due','f-notes'].forEach(function(id){$(id).value='';}); load(); }
-else { banner('err','Could not save ('+((d&&d.reason)||'error')+').'); }
+if(!(d&&d.ok)){ $('f-save').disabled=false; banner('err','Could not save ('+((d&&d.reason)||'error')+').'); return; }
+var finish=function(){
+  $('f-save').disabled=false;
+  ['f-inv','f-amt','f-idate','f-due','f-notes'].forEach(function(id){$(id).value='';});
+  pendingFile=null; $('f-file').value=''; $('drop').classList.remove('has');
+  $('drop').innerHTML='<i class="ti ti-upload"></i> Click to attach the vendor's invoice PDF';
+  load();
+};
+if(pendingFile && d.id){
+  banner('ok','Bill added — uploading PDF…');
+  uploadPdf(d.id,pendingFile).then(function(u){
+    banner(u&&u.ok?'ok':'err', u&&u.ok?'Bill + invoice PDF saved ✓ ('+d.billNum+')':'Bill saved, but PDF upload failed.');
+    finish();
+  }).catch(function(){ banner('err','Bill saved, PDF upload connection error.'); finish(); });
+} else { banner('ok','Bill added ✓ ('+d.billNum+')'); finish(); }
 }).catch(function(){ $('f-save').disabled=false; banner('err','Connection error.'); });
 });
 
