@@ -21,6 +21,7 @@ export default async function handler(req, res) {
         const f = rec.fields || {};
         const amount = Number(f['Amount']) || 0;
         const paid = Number(f['Amount Paid']) || 0;
+        const att = Array.isArray(f['Attachment']) ? f['Attachment'] : [];
         return {
           id: rec.id,
           billNum: f['Bill #'] || '',
@@ -32,7 +33,9 @@ export default async function handler(req, res) {
           balance: Math.round((amount - paid) * 100) / 100,
           status: f['Status'] || 'Unpaid',
           paidDate: f['Paid Date'] || '',
-          notes: f['Notes'] || ''
+          notes: f['Notes'] || '',
+          attachmentUrl: (att[0] && att[0].url) || '',
+          attachmentName: (att[0] && att[0].filename) || ''
         };
       });
       res.status(200).json({ ok: true, bills });
