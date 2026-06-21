@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Gross Profit</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+.wrap{max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.pnl{background:#121212;border:0.5px solid #262626;border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.pnl .row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:0.5px solid #1C1C1C;font-size:15px}
+.pnl .row:last-child{border-bottom:none}
+.pnl .row .lbl{color:#B8A985}
+.pnl .row .val{font-variant-numeric:tabular-nums;color:#F5EFE5;font-weight:500}
+.pnl .row.minus .val{color:#E9A8A2}
+.pnl .row.gp{border-top:1px solid #C9A55C;margin-top:4px;padding-top:14px}
+.pnl .row.gp .lbl{font-family:'Cormorant Garamond',serif;font-size:20px;color:#C9A55C}
+.pnl .row.gp .val{font-family:'Cormorant Garamond',serif;font-size:24px;color:#C9A55C;font-weight:600}
+.pnl .row.net{border-top:1px solid #2C5C3E;margin-top:4px;padding-top:14px}
+.pnl .row.net .lbl{font-family:'Cormorant Garamond',serif;font-size:20px;color:#8AF0A8}
+.pnl .row.net .val{font-family:'Cormorant Garamond',serif;font-size:24px;color:#8AF0A8;font-weight:600}
+.pnl .row .sub{font-size:11px;color:#6E6347;margin-left:8px}
+.mpct{font-size:12px;color:#8A7548;margin-top:8px;text-align:right}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;overflow-x:auto}
+.clabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;color:#8A7548;text-transform:uppercase;padding:12px 14px 4px}
+.clabel i{color:#C9A55C;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
+td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985}
+td.cut{color:#F5EFE5;font-weight:600}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+td.pos{color:#8AF0A8}
+td.neg{color:#E9A8A2}
+.note{font-size:11px;color:#6E6347;margin-top:14px;line-height:1.6}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Gross Profit</span></div>
+<a class="back" href="/dashboard">&larr; Backend</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">PROFITABILITY · GP</div>
+<h1 class="serif">Gross profit</h1>
+<p>Revenue (sales) − cost of goods (supplier) = gross profit, minus expenses = net.</p>
+</div>
+
+<div class="pnl" id="pnl"><div class="loading">Loading…</div></div>
+
+<div class="card">
+<div class="clabel"><i class="ti ti-meat"></i> Margin per cut (sale vs purchase price)</div>
+<table>
+<thead><tr><th>Cut</th><th class="r">Cost / lb</th><th class="r">Price / lb</th><th class="r">Margin / lb</th><th class="r">Margin %</th></tr></thead>
+<tbody id="cuts"><tr><td colspan="5" class="loading">Loading…</td></tr></tbody>
+</table>
+</div>
+<div class="note">Revenue = invoiced order totals (A/R). COGS = vendor bills (A/P). Set Cost/lb and Price/lb per cut in Products to see margin per cut. Figures are operational, not accounting-grade — sync to QuickBooks for the books.</div>
+</div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
+var pct=function(n){return (Math.round(n*10)/10)+'%';};
+
+Promise.all([
+  fetch('/api/orders').then(function(r){return r.json();}).catch(function(){return{};}),
+  fetch('/api/bills').then(function(r){return r.json();}).catch(function(){return{};}),
+  fetch('/api/expenses').then(function(r){return r.json();}).catch(function(){return{};}),
+  fetch('/api/products').then(function(r){return r.json();}).catch(function(){return{};})
+]).then(function(res){
+  var orders=(res[0]&&res[0].orders)||[];
+  var bills=(res[1]&&res[1].bills)||[];
+  var exp=(res[2]&&res[2].expenses)||[];
+  var prods=(res[3]&&res[3].products)||[];
+
+  var revenue=orders.reduce(function(s,o){return s+(o.total||0);},0);
+  var collected=orders.reduce(function(s,o){return s+(o.amountPaid||0);},0);
+  var cogs=bills.reduce(function(s,b){return s+(b.amount||0);},0);
+  var expenses=exp.reduce(function(s,e){return s+(e.amount||0);},0);
+  var gp=revenue-cogs;
+  var net=gp-expenses;
+  var gpM=revenue>0?(gp/revenue*100):0;
+  var netM=revenue>0?(net/revenue*100):0;
+
+  $('pnl').innerHTML=
+    '<div class="row"><span class="lbl">Revenue <span class="sub">invoiced</span></span><span class="val">'+money(revenue)+'</span></div>'+
+    '<div class="row minus"><span class="lbl">− Cost of goods <span class="sub">supplier bills</span></span><span class="val">'+money(cogs)+'</span></div>'+
+    '<div class="row gp"><span class="lbl">Gross profit</span><span class="val">'+money(gp)+'</span></div>'+
+    '<div class="row minus"><span class="lbl">− Operating expenses</span><span class="val">'+money(expenses)+'</span></div>'+
+    '<div class="row net"><span class="lbl">Net profit</span><span class="val">'+money(net)+'</span></div>';
+  var mp=document.createElement('div'); mp.className='mpct';
+  mp.textContent='GP margin '+pct(gpM)+' · Net margin '+pct(netM)+' · Collected '+money(collected);
+  $('pnl').appendChild(mp);
+
+  var tb=$('cuts');
+  if(!prods.length){ tb.innerHTML='<tr><td colspan="5" class="loading">No products.</td></tr>'; return; }
+  tb.innerHTML=prods.map(function(p){
+    var m=(p.priceLb||0)-(p.costLb||0);
+    var mpc=p.priceLb>0?(m/p.priceLb*100):0;
+    var cls=m>0?'pos':(m<0?'neg':'');
+    return '<tr><td class="cut">'+p.cut+'</td>'+
+      '<td class="r">'+(p.costLb?money(p.costLb):'—')+'</td>'+
+      '<td class="r">'+(p.priceLb?money(p.priceLb):'—')+'</td>'+
+      '<td class="r '+cls+'">'+((p.costLb||p.priceLb)?money(m):'—')+'</td>'+
+      '<td class="r '+cls+'">'+(p.priceLb?pct(mpc):'—')+'</td></tr>';
+  }).join('');
+}).catch(function(){ $('pnl').innerHTML='<div class="loading">Connection error.</div>'; });
+})();
+</script>
+</body>
+</html>
