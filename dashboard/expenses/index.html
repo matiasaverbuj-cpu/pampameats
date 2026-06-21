@@ -140,7 +140,7 @@ document.querySelectorAll('#who button').forEach(function(x){x.classList.toggle(
 
 var pendingFile=null;
 function fileToB64(file){return new Promise(function(res,rej){var rr=new FileReader();rr.onload=function(){res(String(rr.result).split(',')[1]);};rr.onerror=rej;rr.readAsDataURL(file);});}
-function uploadReceipt(id,file){return fileToB64(file).then(function(b64){return fetch('/api/expense-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({recordId:id,filename:file.name||'receipt',contentType:file.type||'application/octet-stream',fileBase64:b64})}).then(function(rsp){return rsp.json();});});}
+function uploadReceipt(id,file){return fileToB64(file).then(function(b64){return fetch('/api/bill-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fieldId:'fldVvcAB104xWk1gD',recordId:id,filename:file.name||'receipt',contentType:file.type||'application/octet-stream',fileBase64:b64})}).then(function(rsp){return rsp.json();});});}
 var drop=$('drop');
 drop.addEventListener('click',function(){$('f-file').click();});
 ['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.style.borderColor='#C9A55C';drop.style.color='#C9A55C';});});
