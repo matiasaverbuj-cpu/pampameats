@@ -3,242 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex">
-<title>Pampa Meats — Backend</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Backend</title>
 <link rel="icon" type="image/png" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
 <style>
-  :root{ --black:#000000; --panel:#111111; --line:#2A2A2A; --gold:#C9A55C; --cream:#F5EFE5; --muted:#8A7548; --text:#B8A985; }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;line-height:1.6;padding:0 0 60px}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:26px 0 20px;border-bottom:0.5px solid var(--line);margin-bottom:24px}
-  .brand{display:flex;align-items:center;gap:14px}
-  .brand img{height:46px;width:auto}
-  .brand .t{font-family:'Cormorant Garamond',serif;letter-spacing:3px;font-size:20px;color:var(--gold);font-weight:500}
-  .brand .s{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:2px}
-  .filters{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
-  .presets{display:flex;gap:6px}
-  .pbtn{background:var(--panel);color:var(--text);border:0.5px solid var(--line);border-radius:5px;padding:7px 13px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .15s}
-  .pbtn:hover{border-color:var(--gold);color:var(--cream)}
-  .pbtn.on{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500}
-  .slc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-  .range{display:flex;align-items:center;gap:8px}
-  .range label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
-  input[type=date],select.slc{background:var(--panel);color:var(--cream);border:0.5px solid var(--line);border-radius:5px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:12px;color-scheme:dark;cursor:pointer}
-  input[type=date]:hover,select.slc:hover{border-color:var(--gold)}
-  .upd{font-size:11px;color:var(--muted);letter-spacing:1px}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
-  .kpi{background:var(--panel);border:0.5px solid var(--line);border-radius:6px;padding:18px 20px;position:relative;overflow:hidden}
-  .kpi:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
-  .kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
-  .kpi .v{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--cream);font-weight:600;line-height:1;margin-top:8px}
-  .kpi .sub{font-size:11px;color:var(--muted);margin-top:6px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
-  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:0.5px solid var(--line);border-radius:6px;padding:18px 20px}
-  .card h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);font-weight:500;margin-bottom:6px}
-  .card .ch{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-  .chartbox{position:relative;height:240px}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;padding:10px 10px;border-bottom:1px solid var(--gold)}
-  td{padding:10px 10px;border-bottom:0.5px solid var(--line);color:var(--text)}
-  tr:hover td{background:rgba(201,165,92,0.04)}
-  .num{text-align:center;font-variant-numeric:tabular-nums}
-  .name{color:var(--cream);font-weight:400}
-  .tot{color:var(--gold);font-weight:600}
-  .pill{display:inline-block;padding:3px 11px;border-radius:11px;font-size:11px;font-weight:500}
-  .totrow td{border-top:1px solid var(--gold);border-bottom:none;color:var(--cream);font-weight:600;padding-top:12px}
-  .state{text-align:center;padding:70px 24px;color:var(--muted)}
-  .state .big{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--cream);margin-bottom:10px}
-  .spin{width:26px;height:26px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;margin:0 auto 18px;animation:sp 0.8s linear infinite}
-  @keyframes sp{to{transform:rotate(360deg)}}
-  .foot{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:30px}
-  .ornament{display:flex;justify-content:center;align-items:center;gap:12px;opacity:.5;margin:8px 0 0}
-  .ornament .line{width:36px;height:1px;background:var(--gold)} .ornament .d{color:var(--gold);font-size:7px}
-.hubnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
-.hubnav .hb{background:var(--panel);border:0.5px solid var(--line);border-radius:6px;padding:11px 16px;font-size:12px;letter-spacing:1px;color:var(--cream);text-decoration:none;transition:all .15s}
-.hubnav .hb:hover{border-color:var(--gold);color:var(--gold)}
-.hubnav .hb.gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500}
-.hubnav .hb.soon{opacity:.5;cursor:default}
-.pill.adv:hover{outline:1px solid var(--gold);outline-offset:1px}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:0.5px solid #242424;background:#000}
+.top .brand{display:flex;align-items:center;gap:12px}
+.top .brand img{height:34px;width:auto}
+.top .brand .t{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand .s{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#6E6347;margin-top:2px}
+.wrap{max-width:760px;margin:0 auto;padding:40px 18px 80px}
+.hd{text-align:center;margin-bottom:30px}
+.hd .eyebrow{font-size:10px;letter-spacing:4px;color:#8A7548;margin-bottom:10px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;margin:0;color:#F5EFE5}
+.hd p{margin:8px 0 0;font-size:13px;color:#9A8F76}
+.mods{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
+.mod{background:#121212;border:0.5px solid #2A2A2A;border-radius:14px;padding:28px 24px;text-align:center;transition:all .18s;cursor:pointer;display:block}
+.mod:hover{border-color:#C9A55C;transform:translateY(-2px);background:#161412}
+.mod .ic{width:62px;height:62px;border-radius:50%;border:1px solid #C9A55C;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#C9A55C;font-size:30px}
+.mod .code{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:#F5EFE5;letter-spacing:1px}
+.mod .name{font-size:13px;color:#C9A55C;letter-spacing:1px;margin-top:2px;font-weight:500}
+.mod .desc{font-size:12px;color:#8A7548;margin-top:12px;line-height:1.6}
+.sec-t{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#6E6347;text-align:center;margin:0 0 14px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tool{background:#121212;border:0.5px solid #242424;border-radius:10px;padding:14px 14px;display:flex;align-items:center;gap:11px;transition:all .15s}
+.tool:hover{border-color:#C9A55C}
+.tool i{color:#C9A55C;font-size:18px}
+.tool .tn{font-size:13px;color:#F5EFE5}
+.tool .td{font-size:10px;color:#8A7548}
+@media(max-width:560px){.mods{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img src="/logo.png" alt="Pampa Meats">
-        <div><div class="t">PAMPA MEATS</div><div class="s">Backend · Operations Center</div></div>
-      </div>
-      <div class="filters">
-        <div class="presets">
-          <button class="pbtn on" data-r="all">All</button>
-          <button class="pbtn" data-r="today">Today</button>
-          <button class="pbtn" data-r="7">7 days</button>
-          <button class="pbtn" data-r="30">30 days</button>
-        </div>
-        <div class="slc-row">
-          <div class="range"><label for="fromD">From</label><input type="date" id="fromD"><label for="toD">To</label><input type="date" id="toD"></div>
-          <select id="statusF" class="slc"><option value="all">All statuses</option></select>
-          <select id="custF" class="slc"><option value="all">All customers</option></select>
-        </div>
-        <div class="upd" id="upd">Loading&hellip;</div>
-      </div>
-    </header>
-<div class="hubnav">
-<a class="hb gold" href="/dashboard/po">+ Place PO</a>
-<a class="hb" href="/dashboard/intake">New order / SO</a>
-<a class="hb" href="/dashboard/quote">Quote / Invoice</a>
-<a class="hb" href="/dashboard/ap">A/P · Payables</a>
-<a class="hb" href="/dashboard/ar">A/R · Receivables</a>
-<a class="hb" href="/dashboard/vendors">Vendors</a>
-<a class="hb" href="/dashboard/products">Products</a>
+<div class="top">
+<div class="brand"><img src="/logo.png" alt="Pampa Meats"><div><div class="t">PAMPA MEATS</div><div class="s">Operations Backend</div></div></div>
 </div>
-    <div id="content">
-      <div class="state"><div class="spin"></div><div>Loading live orders&hellip;</div></div>
-    </div>
-    <div class="foot">Pampa Meats &middot; Premium Argentine Angus &middot; Live order data</div>
-    <div class="ornament"><span class="line"></span><span class="d">&#9670;</span><span class="line"></span></div>
-  </div>
-<script>
-const CUTS=[["picanha","Picanha","#C9A55C"],["topSirloin","Top Sirloin","#B5894A"],
-["nyStrip","New York Strip","#8A6D3B"],["tenderloin","Tenderloin / Filet Mignon","#6F5630"]];
-const STATUS_COLORS={"New":["#1e3a5f","#9ec5ff"],"Quoted":["#5c4a1e","#ffd98a"],
-"Paid":["#1e4d2b","#8af0a8"],"Shipped":["#2a2a5c","#b4b8ff"],"Delivered":["#14402b","#7df0c0"],
-"No status":["#2A2A2A","#8A7548"]};
-let ALL=[];
-const STATUS_FLOW=["New","Quoted","Paid","Shipped","Delivered"];
-function advanceStatus(id,cur){
-  const i=STATUS_FLOW.indexOf(cur); const next=STATUS_FLOW[i+1];
-  if(!next){ alert("Already at the last status ("+(cur||"no status")+")."); return; }
-  if(!confirm("Advance to \""+next+"\"?")) return;
-  fetch("/api/order-update",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:id,status:next})})
-    .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ load(); } else alert("Could not update ("+((d&&d.reason)||"error")+")."); })
-    .catch(function(){ alert("Connection error."); });
-}
-document.addEventListener("click",function(e){ var p=e.target.closest&&e.target.closest(".pill.adv"); if(p){ advanceStatus(p.getAttribute("data-oid"), p.getAttribute("data-ost")); } });
-function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
-function fmtDay(d){const x=new Date(d);if(isNaN(x))return"";return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");}
-function todayKey(){return fmtDay(new Date());}
-function shiftKey(days){const x=new Date();x.setDate(x.getDate()-days);return fmtDay(x);}
-async function load(){
-  let data;
-  try{ const r=await fetch('/api/orders',{cache:'no-store'}); data=await r.json(); }
-  catch(e){ return showError("Couldn't reach the live data service."); }
-  if(!data.ok){
-    if(data.reason==='missing_token') return showSetup();
-    return showError("Live data not available yet ("+esc(data.reason||'unknown')+").");
-  }
-  ALL=data.orders||[];
-  buildSlicers();
-  applyFilter();
-}
-function setPresetActive(r){
-  document.querySelectorAll('.pbtn').forEach(b=>b.classList.toggle('on',b.getAttribute('data-r')===r));
-}
-function applyPreset(r){
-  const f=document.getElementById('fromD'), t=document.getElementById('toD');
-  if(r==='all'){ f.value=''; t.value=''; }
-  else if(r==='today'){ f.value=todayKey(); t.value=todayKey(); }
-  else { f.value=shiftKey(parseInt(r,10)-1); t.value=todayKey(); }
-  setPresetActive(r);
-  applyFilter();
-}
-function buildSlicers(){
-  const sF=document.getElementById('statusF'), cF=document.getElementById('custF');
-  const sCur=sF.value, cCur=cF.value;
-  const statuses=[...new Set(ALL.map(o=>o.status||'No status'))].sort();
-  const custs=[...new Set(ALL.map(o=>o.name).filter(Boolean))].sort();
-  sF.innerHTML='<option value="all">All statuses</option>'+statuses.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('');
-  cF.innerHTML='<option value="all">All customers</option>'+custs.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join('');
-  if([...sF.options].some(o=>o.value===sCur)) sF.value=sCur;
-  if([...cF.options].some(o=>o.value===cCur)) cF.value=cCur;
-  sF.onchange=applyFilter; cF.onchange=applyFilter;
-}
-function applyFilter(){
-  const f=document.getElementById('fromD').value, t=document.getElementById('toD').value;
-  const st=document.getElementById('statusF').value, cu=document.getElementById('custF').value;
-  let list=ALL.slice();
-  if(f) list=list.filter(o=>fmtDay(o.date)>=f);
-  if(t) list=list.filter(o=>fmtDay(o.date)<=t);
-  if(st!=='all') list=list.filter(o=>(o.status||'No status')===st);
-  if(cu!=='all') list=list.filter(o=>o.name===cu);
-  render(list);
-}
-function initFilters(){
-  document.querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>applyPreset(b.getAttribute('data-r')));
-  document.getElementById('fromD').onchange=()=>{setPresetActive('');applyFilter();};
-  document.getElementById('toD').onchange=()=>{setPresetActive('');applyFilter();};
-}
-function showSetup(){
-  document.getElementById('content').innerHTML=
-    '<div class="state"><div class="big">Almost ready</div>'+
-    '<div>The dashboard is deployed. It will show live orders as soon as the data source is connected.</div></div>';
-  document.getElementById('upd').textContent='Awaiting data connection';
-}
-function showError(msg){
-  document.getElementById('content').innerHTML='<div class="state"><div class="big">Hold on</div><div>'+esc(msg)+'</div></div>';
-  document.getElementById('upd').textContent='Retrying&hellip;';
-  setTimeout(load,15000);
-}
-function render(orders){
-  const cutTotals={}; CUTS.forEach(([k])=>cutTotals[k]=orders.reduce((s,o)=>s+(o[k]||0),0));
-  const totalPkgs=orders.reduce((s,o)=>s+(o.units||0),0);
-  const withProd=orders.filter(o=>o.units>0).length;
-  const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);
-  const totalPaid=orders.reduce((s,o)=>s+(o.amountPaid||0),0);
-  const totalDue=orders.reduce((s,o)=>s+(o.balance||0),0);
-  const byStatus={}; orders.forEach(o=>{const s=o.status||"No status";byStatus[s]=(byStatus[s]||0)+1;});
-  const kpi=(l,v,sub)=>`<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div>${sub?`<div class="sub">${sub}</div>`:""}</div>`;
-  let html='<div class="kpis">'+
-    kpi("Orders",orders.length,withProd+" with product")+
-    kpi("Total packages",totalPkgs,"all 4 cuts")+
-    kpi("Active cuts",CUTS.filter(([k])=>cutTotals[k]>0).length+"/4","with demand")+
-    kpi("Invoiced","$"+totalRev.toLocaleString(),"order totals")+
-    kpi("Collected","$"+totalPaid.toLocaleString(),"paid")+
-    kpi("Outstanding","$"+totalDue.toLocaleString(),"balance due")+
-  '</div>';
-  html+='<div class="grid2">'+
-    '<div class="card"><h3>Packages by cut</h3><div class="ch">Demand in this view</div><div class="chartbox"><canvas id="cutsChart"></canvas></div></div>'+
-    '<div class="card"><h3>Pipeline by status</h3><div class="ch">Where orders stand</div><div class="chartbox"><canvas id="statusChart"></canvas></div></div>'+
-  '</div>';
-  const sorted=orders.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const trs=sorted.map(o=>{
-    const sc=STATUS_COLORS[o.status||"No status"]||STATUS_COLORS["No status"];
-    const d=new Date(o.date); const ds=isNaN(d)?"":(d.getMonth()+1)+"/"+d.getDate();
-    return `<tr><td class="name">${esc(o.name||"—")}</td>`+
-      `<td><span class="pill adv" data-oid="${esc(o.id)}" data-ost="${esc(o.status||'')}" style="background:${sc[0]};color:${sc[1]};cursor:pointer" title="Click para avanzar el estado">${esc(o.status||"No status")} &rsaquo;</span></td>`+
-      `<td class="num">${o.picanha||"·"}</td><td class="num">${o.topSirloin||"·"}</td>`+
-      `<td class="num">${o.nyStrip||"·"}</td><td class="num">${o.tenderloin||"·"}</td>`+
-      `<td class="num tot">${o.units||"·"}</td><td>${esc(o.zone||"")}</td><td>${ds}</td></tr>`;
-  }).join("");
-  html+='<div class="card"><h3>Orders</h3><div class="ch">'+orders.length+' in this view</div><div style="overflow-x:auto"><table>'+
-    '<thead><tr><th>Customer</th><th>Status</th><th>Pic</th><th>Top</th><th>NY</th><th>Ten/Filet</th><th>Pkgs</th><th>Zone</th><th>Date</th></tr></thead><tbody>'+
-    (trs||'<tr><td colspan="9" style="text-align:center;color:#8A7548;padding:24px">No orders match these filters.</td></tr>')+
-    '<tr class="totrow"><td>TOTAL</td><td></td>'+
-      `<td class="num">${cutTotals.picanha}</td><td class="num">${cutTotals.topSirloin}</td>`+
-      `<td class="num">${cutTotals.nyStrip}</td><td class="num">${cutTotals.tenderloin}</td>`+
-      `<td class="num">${totalPkgs}</td><td></td><td></td></tr>`+
-    '</tbody></table></div></div>';
-  document.getElementById('content').innerHTML=html;
-  document.getElementById('upd').textContent='Updated '+new Date().toLocaleString();
-  Chart.defaults.color='#8A7548'; Chart.defaults.font.family='Inter';
-  new Chart(document.getElementById('cutsChart'),{type:'bar',
-    data:{labels:CUTS.map(c=>c[1]),datasets:[{data:CUTS.map(c=>cutTotals[c[0]]),backgroundColor:CUTS.map(c=>c[2]),borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#1c1c1c'}}}}});
-  const sl=Object.keys(byStatus), sd=sl.map(k=>byStatus[k]);
-  new Chart(document.getElementById('statusChart'),{type:'doughnut',
-    data:{labels:sl,datasets:[{data:sd,backgroundColor:["#C9A55C","#6F5630","#B5894A","#8A6D3B","#4d4030","#2A2A2A"],borderColor:'#111',borderWidth:2}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}}}}});
-}
-initFilters();
-load();
-setInterval(load, 120000);
-</script>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">OPERATIONS CENTER</div>
+<h1 class="serif">What do you need?</h1>
+<p>Pick a module to start.</p>
+</div>
+
+<div class="mods">
+<a class="mod" href="/dashboard/ar">
+<div class="ic"><i class="ti ti-cash"></i></div>
+<div class="code">A/R</div>
+<div class="name">Sales &amp; Receivables</div>
+<div class="desc">Customer orders, invoices, and what customers owe you.</div>
+</a>
+<a class="mod" href="/dashboard/ap">
+<div class="ic"><i class="ti ti-truck-delivery"></i></div>
+<div class="code">A/P</div>
+<div class="name">Purchasing &amp; Payables</div>
+<div class="desc">POs to Rosenblatt, vendor invoices, and what you owe.</div>
+</a>
+</div>
+
+<div class="sec-t">Finance &amp; Setup</div>
+<div class="tools">
+<a class="tool" href="/dashboard/sales"><i class="ti ti-chart-bar"></i><div><div class="tn">Sales overview</div><div class="td">orders &amp; KPIs</div></div></a>
+<a class="tool" href="/dashboard/gp"><i class="ti ti-trending-up"></i><div><div class="tn">Gross profit</div><div class="td">revenue − cost</div></div></a>
+<a class="tool" href="/dashboard/expenses"><i class="ti ti-receipt"></i><div><div class="tn">Expenses</div><div class="td">by partner</div></div></a>
+<a class="tool" href="/dashboard/vendors"><i class="ti ti-building-store"></i><div><div class="tn">Vendors</div><div class="td">suppliers</div></div></a>
+<a class="tool" href="/dashboard/products"><i class="ti ti-tags"></i><div><div class="tn">Products</div><div class="td">cuts &amp; SKUs</div></div></a>
+</div>
+</div>
 </body>
 </html>
