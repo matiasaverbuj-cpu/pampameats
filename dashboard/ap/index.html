@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Accounts Payable</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+input,textarea,button{font-family:inherit}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+.wrap{max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:14px 16px}
+.kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:26px;color:#F5EFE5;margin-top:4px}
+.kpi.due .v{color:#E9A8A2}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;margin-bottom:16px;overflow-x:auto}
+.clabel{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;color:#8A7548;text-transform:uppercase;padding:12px 14px 4px}
+.clabel i{color:#C9A55C;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
+td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:3px 10px;border-radius:11px;font-size:11px;font-weight:500}
+.pill.Unpaid{background:#3a1614;color:#E9A8A2}
+.pill.Partial{background:#3a2f12;color:#EBD08A}
+.pill.Paid{background:#13361f;color:#8AF0A8}
+.payb{background:#C9A55C;color:#1A1208;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.payb:disabled{opacity:.4;cursor:default}
+.formcard{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:18px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;letter-spacing:1px;color:#9A8F76;margin-bottom:5px;text-transform:uppercase}
+.field input,.field textarea{width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:11px 12px;font-size:14px}
+.btn{background:#C9A55C;color:#1A1208;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer}
+.banner{display:none;border-radius:8px;padding:11px 14px;margin-bottom:14px;font-size:13px}
+.banner.err{display:block;background:#1f0f0e;border:0.5px solid #5C2B27;color:#E9A8A2}
+.banner.ok{display:block;background:#0E1812;border:0.5px solid #1F5A38;color:#9FE1CB}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}.row3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Accounts Payable</span></div>
+<a class="back" href="/dashboard">&larr; Backend</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">ACCOUNTS PAYABLE · A/P</div>
+<h1 class="serif">Vendor bills</h1>
+<p>Load supplier invoices against your POs and track what's paid vs owed.</p>
+</div>
+
+<div id="banner" class="banner"></div>
+
+<div class="kpis">
+<div class="kpi"><div class="l">Bills</div><div class="v" id="k-count">0</div></div>
+<div class="kpi"><div class="l">Total billed</div><div class="v" id="k-total">$0</div></div>
+<div class="kpi due"><div class="l">Outstanding</div><div class="v" id="k-due">$0</div></div>
+</div>
+
+<div class="card">
+<div class="clabel"><i class="ti ti-file-invoice"></i> Bills</div>
+<table>
+<thead><tr><th>Bill #</th><th>Invoice #</th><th>Invoice date</th><th>Due</th><th class="r">Amount</th><th class="r">Balance</th><th>Status</th><th></th></tr></thead>
+<tbody id="rows"><tr><td colspan="8" class="loading">Loading…</td></tr></tbody>
+</table>
+</div>
+
+<div class="formcard">
+<div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Load a vendor bill (Rosenblatt)</div>
+<div class="row3">
+<div class="field"><label>Vendor invoice #</label><input id="f-inv" type="text" placeholder="e.g. 180429"></div>
+<div class="field"><label>Amount $</label><input id="f-amt" type="number" min="0" step="0.01" placeholder="0.00"></div>
+<div class="field"><label>Invoice date</label><input id="f-idate" type="date"></div>
+</div>
+<div class="row3">
+<div class="field"><label>Due date</label><input id="f-due" type="date"></div>
+<div class="field" style="grid-column:span 2"><label>Notes</label><input id="f-notes" type="text" placeholder="PO ref, terms, etc."></div>
+</div>
+<button class="btn" id="f-save">Add bill</button>
+<div style="font-size:11px;color:#6E6347;margin-top:10px">Tip: attach the BL/invoice PDF directly on the record's Attachment field in Airtable. Mark a bill paid with the button in the table.</div>
+</div>
+</div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
+function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.textContent=msg; window.scrollTo({top:0,behavior:'smooth'}); }
+
+function render(bills){
+var tb=$('rows');
+var total=0,due=0;
+bills.forEach(function(b){ total+=b.amount; due+=b.balance; });
+$('k-count').textContent=bills.length;
+$('k-total').textContent=money(total);
+$('k-due').textContent=money(due);
+if(!bills.length){ tb.innerHTML='<tr><td colspan="8" class="loading">No bills yet. Load the first one below.</td></tr>'; return; }
+tb.innerHTML='';
+bills.forEach(function(b){
+var tr=document.createElement('tr');
+tr.innerHTML='<td>'+(b.billNum||'')+'</td><td>'+(b.invoiceNum||'—')+'</td>'+
+'<td>'+(b.invoiceDate||'')+'</td><td>'+(b.dueDate||'')+'</td>'+
+'<td class="r">'+money(b.amount)+'</td><td class="r">'+money(b.balance)+'</td>'+
+'<td><span class="pill '+(b.status||'Unpaid')+'">'+(b.status||'Unpaid')+'</span></td>'+
+'<td class="r"><button class="payb" '+(b.status==='Paid'?'disabled':'')+' data-id="'+b.id+'" data-amt="'+b.amount+'">'+(b.status==='Paid'?'Paid':'Mark paid')+'</button></td>';
+tb.appendChild(tr);
+});
+}
+
+function load(){
+fetch('/api/bills').then(function(r){return r.json();}).then(function(d){
+if(d&&d.ok){ render(d.bills||[]); }
+else { $('rows').innerHTML='<tr><td colspan="8" class="loading">Could not load ('+((d&&d.reason)||'error')+').</td></tr>'; }
+}).catch(function(){ $('rows').innerHTML='<tr><td colspan="8" class="loading">Connection error.</td></tr>'; });
+}
+
+document.getElementById('rows').addEventListener('click',function(e){
+var b=e.target.closest('.payb'); if(!b||b.disabled) return;
+var id=b.getAttribute('data-id'), amt=b.getAttribute('data-amt');
+if(!confirm('Mark this bill as fully paid ('+money(amt)+')?')) return;
+b.disabled=true;
+fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,amountPaid:Number(amt),status:'Paid',paidDate:new Date().toISOString().slice(0,10)})})
+.then(function(r){return r.json();}).then(function(d){
+if(d&&d.ok){ banner('ok','Bill marked paid ✓'); load(); }
+else { b.disabled=false; banner('err','Could not update ('+((d&&d.reason)||'error')+').'); }
+}).catch(function(){ b.disabled=false; banner('err','Connection error.'); });
+});
+
+$('f-save').addEventListener('click',function(){
+var amt=parseFloat($('f-amt').value);
+if(!(amt>0)){ banner('err','Enter the bill amount.'); return; }
+$('f-save').disabled=true;
+fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+invoiceNum:$('f-inv').value.trim(), amount:amt, invoiceDate:$('f-idate').value||'', dueDate:$('f-due').value||'', notes:$('f-notes').value.trim()
+})}).then(function(r){return r.json();}).then(function(d){
+$('f-save').disabled=false;
+if(d&&d.ok){ banner('ok','Bill added ✓ ('+d.billNum+')'); ['f-inv','f-amt','f-idate','f-due','f-notes'].forEach(function(id){$(id).value='';}); load(); }
+else { banner('err','Could not save ('+((d&&d.reason)||'error')+').'); }
+}).catch(function(){ $('f-save').disabled=false; banner('err','Connection error.'); });
+});
+
+load();
+})();
+</script>
+</body>
+</html>
