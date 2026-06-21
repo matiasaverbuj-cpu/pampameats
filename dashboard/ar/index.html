@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Accounts Receivable</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
+.wrap{max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.hd p a{color:#C9A55C;border-bottom:0.5px solid #C9A55C}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:14px 16px}
+.kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:26px;color:#F5EFE5;margin-top:4px}
+.kpi.due .v{color:#E9A8A2}
+.kpi.coll .v{color:#8AF0A8}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{background:#161616;border:0.5px solid #2E2E2E;color:#B8A985;border-radius:20px;padding:7px 14px;font-size:12px;cursor:pointer}
+.tab.on{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
+td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985}
+td.cust{color:#F5EFE5;font-weight:600}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:3px 10px;border-radius:11px;font-size:11px;font-weight:500}
+.pill.Unpaid,.pill.unpaid{background:#3a1614;color:#E9A8A2}
+.pill.Partial,.pill.partial{background:#3a2f12;color:#EBD08A}
+.pill.Paid,.pill.paid{background:#13361f;color:#8AF0A8}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Accounts Receivable</span></div>
+<a class="back" href="/dashboard">&larr; Backend</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">ACCOUNTS RECEIVABLE · A/R</div>
+<h1 class="serif">Customer receivables</h1>
+<p>What customers owe. Generate &amp; record invoices in <a href="/dashboard/quote">Quote / Invoice</a>.</p>
+</div>
+
+<div class="kpis">
+<div class="kpi"><div class="l">Invoiced</div><div class="v" id="k-inv">$0</div></div>
+<div class="kpi coll"><div class="l">Collected</div><div class="v" id="k-coll">$0</div></div>
+<div class="kpi due"><div class="l">Outstanding</div><div class="v" id="k-due">$0</div></div>
+</div>
+
+<div class="tabs">
+<button class="tab on" data-f="open">Open balances</button>
+<button class="tab" data-f="all">All invoiced</button>
+</div>
+
+<div class="card">
+<table>
+<thead><tr><th>Customer</th><th>Date</th><th class="r">Invoiced</th><th class="r">Paid</th><th class="r">Balance</th><th>Status</th></tr></thead>
+<tbody id="rows"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+</table>
+</div>
+</div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
+var ALL=[], filter='open';
+
+function statusOf(o){
+  var bal=o.balance, tot=o.total, paid=o.amountPaid;
+  if(o.payStatus) return o.payStatus;
+  if(tot>0 && paid<=0) return 'Unpaid';
+  if(bal>0 && paid>0) return 'Partial';
+  if(tot>0 && bal<=0) return 'Paid';
+  return '';
+}
+
+function render(){
+var tb=$('rows');
+var list=ALL.filter(function(o){return (o.total||0)>0;});
+var inv=0,coll=0,due=0;
+list.forEach(function(o){ inv+=o.total||0; coll+=o.amountPaid||0; due+=o.balance||0; });
+$('k-inv').textContent=money(inv); $('k-coll').textContent=money(coll); $('k-due').textContent=money(due);
+var rows=list.filter(function(o){ return filter==='all' ? true : (o.balance||0)>0.001; });
+rows.sort(function(a,b){ return (b.balance||0)-(a.balance||0); });
+if(!rows.length){ tb.innerHTML='<tr><td colspan="6" class="loading">'+(filter==='open'?'No open balances — everyone is paid up. 🎉':'No invoiced orders yet.')+'</td></tr>'; return; }
+tb.innerHTML=rows.map(function(o){
+var d=o.date?new Date(o.date):null; var ds=d&&!isNaN(d)?((d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(2)):'';
+var st=statusOf(o);
+return '<tr><td class="cust">'+(o.name||'—')+'</td><td>'+ds+'</td>'+
+'<td class="r">'+money(o.total)+'</td><td class="r">'+money(o.amountPaid)+'</td>'+
+'<td class="r">'+money(o.balance)+'</td><td><span class="pill '+st+'">'+(st||'—')+'</span></td></tr>';
+}).join('');
+}
+
+document.querySelector('.tabs').addEventListener('click',function(e){
+var t=e.target.closest('.tab'); if(!t) return;
+filter=t.getAttribute('data-f');
+document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t);});
+render();
+});
+
+fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
+ALL=(d&&d.orders)||[]; render();
+}).catch(function(){ $('rows').innerHTML='<tr><td colspan="6" class="loading">Connection error.</td></tr>'; });
+})();
+</script>
+</body>
+</html>
