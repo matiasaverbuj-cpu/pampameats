@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   if (fileBase64.length > 7000000) { res.status(200).json({ ok: false, reason: 'file_too_large' }); return; }
 
   try {
-    const r = await fetch(`https://content.airtable.com/v0/${BASE}/${recordId}/${ATTACH_FIELD}/uploadAttachment`, {
+    const r = await fetch(`https://content.airtable.com/v0/${BASE}/${recordId}/${(typeof body.fieldId==="string"&&/^fld[A-Za-z0-9]{14}$/.test(body.fieldId))?body.fieldId:ATTACH_FIELD}/uploadAttachment`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ contentType, file: fileBase64, filename })
