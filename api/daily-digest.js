@@ -53,7 +53,9 @@ export default async function handler(req, res) {
     let revenue = 0, collected = 0, outstanding = 0, new24 = 0, new24val = 0;
     orders.forEach(rec => {
       const f = rec.fields || {};
+      const nm = String(f['Name'] || '').trim();
       const total = Number(f['Order Total']) || 0;
+      if (/test/i.test(nm) || (!nm && total === 0)) return; // skip test / empty rows
       const paid = Number(f['Amount Paid']) || 0;
       const bal = (f['Balance'] != null) ? Number(f['Balance']) : (total - paid);
       revenue += total; collected += paid; outstanding += Math.max(0, bal);
