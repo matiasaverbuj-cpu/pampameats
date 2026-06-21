@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
-<title>Pampa Meats · Accounts Receivable</title>
+<title>Pampa Meats · A/R</title>
 <link rel="icon" type="image/png" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,61 +20,73 @@ a{color:inherit;text-decoration:none}
 .top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
 .top .brand span{color:#6E6347;font-weight:400}
 .top a.back{font-size:11px;letter-spacing:1.2px;color:#8A7548}
-.wrap{max-width:900px;margin:0 auto;padding:24px 18px 80px}
+.wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
 .hd{margin:4px 0 18px}
 .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
 .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
 .hd p{margin:0;font-size:13px;color:#9A8F76}
-.hd p a{color:#C9A55C;border-bottom:0.5px solid #C9A55C}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.act{background:#121212;border:0.5px solid #2A2A2A;border-radius:12px;padding:18px 16px;display:flex;align-items:center;gap:13px;transition:all .16s}
+.act:hover{border-color:#C9A55C;transform:translateY(-2px);background:#161412}
+.act .ic{width:42px;height:42px;border-radius:50%;border:1px solid #C9A55C;display:flex;align-items:center;justify-content:center;color:#C9A55C;font-size:20px;flex:0 0 auto}
+.act .tn{font-size:14px;color:#F5EFE5;font-weight:500}
+.act .td{font-size:11px;color:#8A7548;margin-top:2px}
+.sec-t{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#6E6347;margin:0 0 12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 .kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:14px 16px}
 .kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
 .kpi .v{font-family:'Cormorant Garamond',serif;font-size:26px;color:#F5EFE5;margin-top:4px}
 .kpi.due .v{color:#E9A8A2}
-.kpi.coll .v{color:#8AF0A8}
-.tabs{display:flex;gap:8px;margin-bottom:12px}
-.tab{background:#161616;border:0.5px solid #2E2E2E;color:#B8A985;border-radius:20px;padding:7px 14px;font-size:12px;cursor:pointer}
-.tab.on{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
+.tabs{display:flex;gap:8px;margin-bottom:10px}
+.tabs button{background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985;padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.tabs button.sel{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
 .card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:620px}
 th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
 td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985}
-td.cust{color:#F5EFE5;font-weight:600}
 td.r{text-align:right;font-variant-numeric:tabular-nums}
-.pill{display:inline-block;padding:3px 10px;border-radius:11px;font-size:11px;font-weight:500}
-.pill.Unpaid,.pill.unpaid{background:#3a1614;color:#E9A8A2}
-.pill.Partial,.pill.partial{background:#3a2f12;color:#EBD08A}
-.pill.Paid,.pill.paid{background:#13361f;color:#8AF0A8}
+td.cust{color:#F5EFE5;font-weight:600}
+.pill{display:inline-block;padding:3px 10px;border-radius:11px;font-size:11px;font-weight:500;background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985}
+.pill.paid{background:#13361f;color:#8AF0A8;border-color:#1F5A38}
+.pill.partial{background:#3a2f12;color:#EBD08A;border-color:#5a4a1f}
+.pill.open{background:#3a1614;color:#E9A8A2;border-color:#5C2B27}
 .loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
-@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+@media(max-width:560px){.acts{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="top">
-<div class="brand">PAMPA MEATS <span>· Accounts Receivable</span></div>
+<div class="brand">PAMPA MEATS <span>· A/R</span></div>
 <a class="back" href="/dashboard">&larr; Backend</a>
 </div>
 <div class="wrap">
 <div class="hd">
-<div class="eyebrow">ACCOUNTS RECEIVABLE · A/R</div>
-<h1 class="serif">Customer receivables</h1>
-<p>What customers owe. Generate &amp; record invoices in <a href="/dashboard/quote">Quote / Invoice</a>.</p>
+<div class="eyebrow">SALES &amp; RECEIVABLES · A/R</div>
+<h1 class="serif">Sales &amp; Receivables</h1>
+<p>Take customer orders, invoice them, and track what customers owe.</p>
 </div>
 
+<div class="acts">
+<a class="act" href="/dashboard/intake"><div class="ic"><i class="ti ti-shopping-cart-plus"></i></div><div><div class="tn">New customer order</div><div class="td">log a sale</div></div></a>
+<a class="act" href="/dashboard/quote"><div class="ic"><i class="ti ti-file-invoice"></i></div><div><div class="tn">Generate invoice</div><div class="td">quote / invoice</div></div></a>
+<a class="act" href="/dashboard/sales"><div class="ic"><i class="ti ti-chart-bar"></i></div><div><div class="tn">Sales overview</div><div class="td">orders &amp; KPIs</div></div></a>
+</div>
+
+<div class="sec-t">Receivables — who owes you</div>
 <div class="kpis">
 <div class="kpi"><div class="l">Invoiced</div><div class="v" id="k-inv">$0</div></div>
-<div class="kpi coll"><div class="l">Collected</div><div class="v" id="k-coll">$0</div></div>
-<div class="kpi due"><div class="l">Outstanding</div><div class="v" id="k-due">$0</div></div>
+<div class="kpi"><div class="l">Collected</div><div class="v" id="k-col">$0</div></div>
+<div class="kpi due"><div class="l">Outstanding</div><div class="v" id="k-out">$0</div></div>
 </div>
 
 <div class="tabs">
-<button class="tab on" data-f="open">Open balances</button>
-<button class="tab" data-f="all">All invoiced</button>
+<button id="t-open" class="sel">Open balances</button>
+<button id="t-all">All orders</button>
 </div>
 
 <div class="card">
 <table>
-<thead><tr><th>Customer</th><th>Date</th><th class="r">Invoiced</th><th class="r">Paid</th><th class="r">Balance</th><th>Status</th></tr></thead>
+<thead><tr><th>Date</th><th>Customer</th><th>Status</th><th class="r">Invoiced</th><th class="r">Paid</th><th class="r">Balance</th></tr></thead>
 <tbody id="rows"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
 </table>
 </div>
@@ -84,45 +96,46 @@ td.r{text-align:right;font-variant-numeric:tabular-nums}
 (function(){
 var $=function(id){return document.getElementById(id);};
 var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
-var ALL=[], filter='open';
+var ALL=[], mode='open';
 
-function statusOf(o){
-  var bal=o.balance, tot=o.total, paid=o.amountPaid;
-  if(o.payStatus) return o.payStatus;
-  if(tot>0 && paid<=0) return 'Unpaid';
-  if(bal>0 && paid>0) return 'Partial';
-  if(tot>0 && bal<=0) return 'Paid';
-  return '';
+function bal(o){ return (o.balance!=null)?Number(o.balance):(Number(o.total||0)-Number(o.amountPaid||0)); }
+function dt(o){ return o.date||o.deliveryDate||o.created||''; }
+function statusPill(o){
+  var b=bal(o), paid=Number(o.amountPaid||0);
+  if(b<=0.005 && (o.total||0)>0) return '<span class="pill paid">Paid</span>';
+  if(paid>0) return '<span class="pill partial">Partial</span>';
+  return '<span class="pill open">Open</span>';
 }
 
 function render(){
-var tb=$('rows');
-var list=ALL.filter(function(o){return (o.total||0)>0;});
-var inv=0,coll=0,due=0;
-list.forEach(function(o){ inv+=o.total||0; coll+=o.amountPaid||0; due+=o.balance||0; });
-$('k-inv').textContent=money(inv); $('k-coll').textContent=money(coll); $('k-due').textContent=money(due);
-var rows=list.filter(function(o){ return filter==='all' ? true : (o.balance||0)>0.001; });
-rows.sort(function(a,b){ return (b.balance||0)-(a.balance||0); });
-if(!rows.length){ tb.innerHTML='<tr><td colspan="6" class="loading">'+(filter==='open'?'No open balances — everyone is paid up. 🎉':'No invoiced orders yet.')+'</td></tr>'; return; }
-tb.innerHTML=rows.map(function(o){
-var d=o.date?new Date(o.date):null; var ds=d&&!isNaN(d)?((d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(2)):'';
-var st=statusOf(o);
-return '<tr><td class="cust">'+(o.name||'—')+'</td><td>'+ds+'</td>'+
-'<td class="r">'+money(o.total)+'</td><td class="r">'+money(o.amountPaid)+'</td>'+
-'<td class="r">'+money(o.balance)+'</td><td><span class="pill '+st+'">'+(st||'—')+'</span></td></tr>';
-}).join('');
+  var list=ALL.slice();
+  if(mode==='open') list=list.filter(function(o){return bal(o)>0.005;});
+  list.sort(function(a,b){return (dt(b)||'').localeCompare(dt(a)||'');});
+  var tb=$('rows');
+  if(!list.length){ tb.innerHTML='<tr><td colspan="6" class="loading">'+(mode==='open'?'No open balances — all collected ✓':'No orders yet.')+'</td></tr>'; return; }
+  tb.innerHTML=list.map(function(o){
+    return '<tr><td>'+(dt(o)||'—')+'</td><td class="cust">'+(o.name||o.customer||'—')+'</td>'+
+      '<td>'+statusPill(o)+'</td>'+
+      '<td class="r">'+money(o.total)+'</td>'+
+      '<td class="r">'+money(o.amountPaid)+'</td>'+
+      '<td class="r">'+money(bal(o))+'</td></tr>';
+  }).join('');
 }
 
-document.querySelector('.tabs').addEventListener('click',function(e){
-var t=e.target.closest('.tab'); if(!t) return;
-filter=t.getAttribute('data-f');
-document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t);});
-render();
-});
+function load(){
+  fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
+    var orders=(d&&d.orders)||[];
+    ALL=orders;
+    var inv=0,col=0,out=0;
+    orders.forEach(function(o){ inv+=Number(o.total||0); col+=Number(o.amountPaid||0); out+=Math.max(0,bal(o)); });
+    $('k-inv').textContent=money(inv); $('k-col').textContent=money(col); $('k-out').textContent=money(out);
+    render();
+  }).catch(function(){ $('rows').innerHTML='<tr><td colspan="6" class="loading">Connection error.</td></tr>'; });
+}
 
-fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
-ALL=(d&&d.orders)||[]; render();
-}).catch(function(){ $('rows').innerHTML='<tr><td colspan="6" class="loading">Connection error.</td></tr>'; });
+$('t-open').addEventListener('click',function(){mode='open';$('t-open').classList.add('sel');$('t-all').classList.remove('sel');render();});
+$('t-all').addEventListener('click',function(){mode='all';$('t-all').classList.add('sel');$('t-open').classList.remove('sel');render();});
+load();
 })();
 </script>
 </body>
