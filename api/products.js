@@ -25,6 +25,8 @@ export default async function handler(req, res) {
         bol: f['BOL description'] || '',
         caseLb: Number(f['Case avg (lb)']) || 0,
         pkgLb: Number(f['Pkg avg (lb)']) || 0,
+        costLb: Number(f['Cost per lb']) || 0,
+        priceLb: Number(f['Price per lb']) || 0,
         active: !!f['Active']
       };
     });
