@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Customers</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500;transition:all .15s}
+.top a.back:hover{background:#C9A55C;color:#1A1208}
+.wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:13px 14px}
+.kpi .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:23px;color:#F5EFE5;margin-top:4px}
+.kpi.due .v{color:#E9A8A2}
+.tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tabs button{background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985;padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.tabs button.sel{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:680px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
+td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985;vertical-align:top}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+td.cust{color:#F5EFE5;font-weight:600}
+td .sub{font-size:11px;color:#6E6347;display:block;margin-top:2px}
+td.owe{color:#E9A8A2;font-variant-numeric:tabular-nums;text-align:right}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+@media(max-width:560px){.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Customers</span></div>
+<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">CRM · CUSTOMERS</div>
+<h1 class="serif">Customers</h1>
+<p>Your customer base, built automatically from every order — spend, history, and who owes you.</p>
+</div>
+
+<div class="kpis">
+<div class="kpi"><div class="l">Customers</div><div class="v" id="k-count">0</div></div>
+<div class="kpi"><div class="l">Total spent</div><div class="v" id="k-spent">$0</div></div>
+<div class="kpi"><div class="l">Avg / customer</div><div class="v" id="k-avg">$0</div></div>
+<div class="kpi due"><div class="l">Owes you</div><div class="v" id="k-owe">$0</div></div>
+</div>
+
+<div class="tabs">
+<button id="t-all" class="sel">All</button>
+<button id="t-owe">Owe money</button>
+<button id="t-lapsed">Lapsed (30d+)</button>
+</div>
+
+<div class="card">
+<table>
+<thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th></tr></thead>
+<tbody id="rows"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+</table>
+</div>
+</div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
+var CUST=[], mode='all';
+var DAY=86400000;
+
+function dt(o){ return o.date||o.deliveryDate||o.created||''; }
+function bal(o){ return (o.balance!=null)?Number(o.balance):(Number(o.total||0)-Number(o.amountPaid||0)); }
+
+function build(orders){
+  var map={};
+  orders.forEach(function(o){
+    var nm=(o.name||o.customer||'').trim();
+    if(/test/i.test(nm)) return;
+    var email=(o.email||'').trim().toLowerCase();
+    if(!nm && !email) return;
+    var key=email||('name:'+nm.toLowerCase());
+    if(!map[key]) map[key]={name:nm||email, email:o.email||'', phone:o.phone||'', orders:0, spent:0, paid:0, owes:0, last:''};
+    var c=map[key];
+    if(nm && !/test/i.test(nm)) c.name=nm;
+    if(o.email && !c.email) c.email=o.email;
+    if(o.phone && !c.phone) c.phone=o.phone;
+    c.orders++; c.spent+=Number(o.total||0); c.paid+=Number(o.amountPaid||0); c.owes+=Math.max(0,bal(o));
+    var d=dt(o); if(d && d>c.last) c.last=d;
+  });
+  return Object.keys(map).map(function(k){return map[k];});
+}
+
+function render(){
+  var list=CUST.slice();
+  var now=Date.now();
+  if(mode==='owe') list=list.filter(function(c){return c.owes>0.005;});
+  if(mode==='lapsed') list=list.filter(function(c){ if(!c.last) return true; return (now-new Date(c.last).getTime())>30*DAY; });
+  list.sort(function(a,b){return b.spent-a.spent;});
+  var tb=$('rows');
+  if(!list.length){ tb.innerHTML='<tr><td colspan="6" class="loading">No customers'+(mode==='all'?' yet.':' in this view.')+'</td></tr>'; return; }
+  tb.innerHTML=list.map(function(c){
+    var contact=(c.email?c.email:'')+(c.phone?('<span class="sub">'+c.phone+'</span>'):'');
+    if(!c.email&&c.phone) contact=c.phone;
+    return '<tr><td class="cust">'+(c.name||'—')+'</td>'+
+      '<td>'+(contact||'<span class="sub">no contact</span>')+'</td>'+
+      '<td class="r">'+c.orders+'</td>'+
+      '<td class="r">'+money(c.spent)+'</td>'+
+      '<td class="owe">'+(c.owes>0.005?money(c.owes):'—')+'</td>'+
+      '<td>'+(c.last||'—')+'</td></tr>';
+  }).join('');
+}
+
+function load(){
+  fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
+    var orders=(d&&d.orders)||[];
+    CUST=build(orders);
+    var spent=0,owe=0;
+    CUST.forEach(function(c){spent+=c.spent;owe+=c.owes;});
+    $('k-count').textContent=CUST.length;
+    $('k-spent').textContent=money(spent);
+    $('k-avg').textContent=money(CUST.length?spent/CUST.length:0);
+    $('k-owe').textContent=money(owe);
+    render();
+  }).catch(function(){ $('rows').innerHTML='<tr><td colspan="6" class="loading">Connection error.</td></tr>'; });
+}
+
+function tab(id,m){ $(id).addEventListener('click',function(){ mode=m; ['t-all','t-owe','t-lapsed'].forEach(function(x){$(x).classList.toggle('sel',x===id);}); render(); }); }
+tab('t-all','all'); tab('t-owe','owe'); tab('t-lapsed','lapsed');
+load();
+})();
+</script>
+</body>
+</html>
