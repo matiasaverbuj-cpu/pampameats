@@ -21,18 +21,53 @@ a{color:inherit;text-decoration:none}
 .top .brand img{height:34px;width:auto}
 .top .brand .t{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
 .top .brand .s{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#6E6347;margin-top:2px}
-.wrap{max-width:760px;margin:0 auto;padding:40px 18px 80px}
-.hd{text-align:center;margin-bottom:30px}
-.hd .eyebrow{font-size:10px;letter-spacing:4px;color:#8A7548;margin-bottom:10px}
-.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;margin:0;color:#F5EFE5}
-.hd p{margin:8px 0 0;font-size:13px;color:#9A8F76}
-.mods{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
-.mod{background:#121212;border:0.5px solid #2A2A2A;border-radius:14px;padding:28px 24px;text-align:center;transition:all .18s;cursor:pointer;display:block}
+.top .upd{font-size:10px;color:#6E6347;letter-spacing:.5px}
+.wrap{max-width:980px;margin:0 auto;padding:30px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:4px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;margin:0;color:#F5EFE5}
+.hd p{margin:6px 0 0;font-size:13px;color:#9A8F76}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 8px}
+.kpi{background:#121212;border:0.5px solid #262626;border-radius:11px;padding:14px 15px}
+.kpi .l{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#8A7548}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:26px;color:#F5EFE5;margin-top:5px;line-height:1.1}
+.kpi .x{font-size:11px;color:#6E6347;margin-top:3px}
+.kpi.due .v{color:#E9A8A2}
+.kpi.pos .v{color:#A8E0B0}
+.kpi.gold .v{color:#C9A55C}
+.aging{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 4px}
+.age{background:#0F0F0F;border:0.5px solid #242424;border-left:3px solid #4a7a52;border-radius:9px;padding:12px 14px}
+.age.mid{border-left-color:#C9A55C}
+.age.old{border-left-color:#c0625c}
+.age .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548}
+.age .v{font-family:'Cormorant Garamond',serif;font-size:20px;margin-top:3px}
+.age .c{font-size:10px;color:#6E6347;margin-top:2px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.panel{background:#121212;border:0.5px solid #262626;border-radius:12px;padding:16px 18px}
+.panel h2{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8A7548;margin:0 0 12px;font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #1C1C1C;font-size:13px}
+.row:last-child{border-bottom:none}
+.row .nm{color:#F5EFE5}
+.row .sub{font-size:11px;color:#6E6347}
+.row .amt{font-variant-numeric:tabular-nums;color:#C9A55C}
+.row .owe{font-size:11px;color:#E9A8A2;margin-left:8px}
+.bar{height:6px;background:#1C1C1C;border-radius:4px;overflow:hidden;margin-top:6px}
+.bar > i{display:block;height:100%;background:#C9A55C;border-radius:4px}
+.cut{padding:9px 0;border-bottom:0.5px solid #1C1C1C}
+.cut:last-child{border-bottom:none}
+.cut .t{display:flex;justify-content:space-between;font-size:13px}
+.cut .t .q{color:#9A8F76;font-variant-numeric:tabular-nums}
+.statline{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#0F0F0F;border:0.5px solid #2A2A2A;border-radius:20px;padding:5px 12px;font-size:12px;color:#B8A985}
+.chip b{color:#C9A55C;font-weight:600;margin-left:5px}
+.muted{color:#6E6347;font-size:12px}
+.mods{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 22px}
+.mod{background:#121212;border:0.5px solid #2A2A2A;border-radius:14px;padding:22px 22px;text-align:center;transition:all .18s;cursor:pointer;display:block}
 .mod:hover{border-color:#C9A55C;transform:translateY(-2px);background:#161412}
-.mod .ic{width:62px;height:62px;border-radius:50%;border:1px solid #C9A55C;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#C9A55C;font-size:30px}
-.mod .code{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:#F5EFE5;letter-spacing:1px}
-.mod .name{font-size:13px;color:#C9A55C;letter-spacing:1px;margin-top:2px;font-weight:500}
-.mod .desc{font-size:12px;color:#8A7548;margin-top:12px;line-height:1.6}
+.mod .ic{width:54px;height:54px;border-radius:50%;border:1px solid #C9A55C;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#C9A55C;font-size:26px}
+.mod .code{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#F5EFE5;letter-spacing:1px}
+.mod .name{font-size:12px;color:#C9A55C;letter-spacing:1px;margin-top:2px;font-weight:500}
+.mod .desc{font-size:11px;color:#8A7548;margin-top:9px;line-height:1.55}
 .sec-t{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#6E6347;text-align:center;margin:0 0 14px}
 .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .tool{background:#121212;border:0.5px solid #242424;border-radius:10px;padding:14px 14px;display:flex;align-items:center;gap:11px;transition:all .15s}
@@ -40,21 +75,48 @@ a{color:inherit;text-decoration:none}
 .tool i{color:#C9A55C;font-size:18px}
 .tool .tn{font-size:13px;color:#F5EFE5}
 .tool .td{font-size:10px;color:#8A7548}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}}
 @media(max-width:560px){.mods{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="top">
 <div class="brand"><img src="/logo.png" alt="Pampa Meats"><div><div class="t">PAMPA MEATS</div><div class="s">Operations Backend</div></div></div>
+<div class="upd" id="upd"></div>
 </div>
 <div class="wrap">
 <div class="hd">
-<div class="eyebrow">OPERATIONS CENTER</div>
-<h1 class="serif">What do you need?</h1>
-<p>Pick a module to start.</p>
+<div class="eyebrow">EXECUTIVE DASHBOARD</div>
+<h1 class="serif">Business at a glance</h1>
+<p>Live numbers, pulled straight from your orders, bills and expenses.</p>
 </div>
-
-<div class="mods">
+<div class="kpis">
+<div class="kpi due"><div class="l">Owed to us</div><div class="v" id="k-recv">—</div><div class="x" id="k-recv-x">receivable</div></div>
+<div class="kpi gold"><div class="l">Revenue (mo.)</div><div class="v" id="k-rev">—</div><div class="x" id="k-rev-x">this month</div></div>
+<div class="kpi pos"><div class="l">Collected (mo.)</div><div class="v" id="k-coll">—</div><div class="x">cash in</div></div>
+<div class="kpi"><div class="l">Owed to RB</div><div class="v" id="k-pay">—</div><div class="x" id="k-pay-x">payable</div></div>
+<div class="kpi"><div class="l">Net cash</div><div class="v" id="k-net">—</div><div class="x">in − RB − exp</div></div>
+</div>
+<div class="aging">
+<div class="age"><div class="l">Current 0–30d</div><div class="v" id="a-0">—</div><div class="c" id="a-0c"></div></div>
+<div class="age mid"><div class="l">30–60 days</div><div class="v" id="a-30">—</div><div class="c" id="a-30c"></div></div>
+<div class="age old"><div class="l">60+ days · chase</div><div class="v" id="a-60">—</div><div class="c" id="a-60c"></div></div>
+</div>
+<div class="cols">
+<div class="panel">
+<h2>Top customers</h2>
+<div id="top-cust"><div class="muted">Loading…</div></div>
+</div>
+<div class="panel">
+<h2>Packages sold · by cut</h2>
+<div id="cuts"><div class="muted">Loading…</div></div>
+</div>
+</div>
+<div class="panel" style="margin-top:14px">
+<h2>Orders by status</h2>
+<div class="statline" id="status"><div class="muted">Loading…</div></div>
+</div>
+<div class="mods" style="margin-top:30px">
 <a class="mod" href="/dashboard/ar">
 <div class="ic"><i class="ti ti-cash"></i></div>
 <div class="code">A/R</div>
@@ -68,16 +130,122 @@ a{color:inherit;text-decoration:none}
 <div class="desc">POs to RB, vendor invoices, and what you owe.</div>
 </a>
 </div>
-
 <div class="sec-t">Finance &amp; Setup</div>
 <div class="tools">
 <a class="tool" href="/dashboard/sales"><i class="ti ti-chart-bar"></i><div><div class="tn">Sales overview</div><div class="td">orders &amp; KPIs</div></div></a>
+<a class="tool" href="/dashboard/customers"><i class="ti ti-users"></i><div><div class="tn">Customers</div><div class="td">CRM &amp; contacts</div></div></a>
 <a class="tool" href="/dashboard/gp"><i class="ti ti-trending-up"></i><div><div class="tn">Gross profit</div><div class="td">revenue − cost</div></div></a>
 <a class="tool" href="/dashboard/expenses"><i class="ti ti-receipt"></i><div><div class="tn">Expenses</div><div class="td">by partner</div></div></a>
 <a class="tool" href="/dashboard/vendors"><i class="ti ti-building-store"></i><div><div class="tn">Vendors</div><div class="td">suppliers</div></div></a>
 <a class="tool" href="/dashboard/products"><i class="ti ti-tags"></i><div><div class="tn">Products</div><div class="td">cuts &amp; SKUs</div></div></a>
-<a class="tool" href="/dashboard/customers"><i class="ti ti-users"></i><div><div class="tn">Customers</div><div class="td">CRM &amp; contacts</div></div></a>
 </div>
 </div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){n=Math.round(Number(n)||0);return '$'+n.toLocaleString('en-US');};
+var DAY=86400000;
+function isTest(nm,total){return /test/i.test(nm||'')||(!nm&&(Number(total)||0)===0);}
+function bal(o){return (o.balance!=null)?Number(o.balance):(Number(o.total||0)-Number(o.amountPaid||0));}
+function paidOf(o){return (o.amountPaid!=null)?Number(o.amountPaid):(Number(o.total||0)-Number(o.balance||0));}
+function when(o){return o.date||o.orderDate||o.created||o.createdTime||'';}
+function safe(p){return p.then(function(r){return r.json();}).catch(function(){return {};});}
+Promise.all([
+  safe(fetch('/api/orders')),
+  safe(fetch('/api/bills')),
+  safe(fetch('/api/expenses'))
+]).then(function(res){
+  var orders=(res[0]&&res[0].orders)||[];
+  var bills=(res[1]&&res[1].bills)||[];
+  var exps=(res[2]&&res[2].expenses)||[];
+  var now=new Date();
+  var mStart=new Date(now.getFullYear(),now.getMonth(),1).getTime();
+  var recv=0,a0=0,a30=0,a60=0,n0=0,n30=0,n60=0;
+  var monthRev=0,monthColl=0,collAll=0;
+  var cuts={Picanha:0,'Top Sirloin':0,'NY Strip':0,Tenderloin:0};
+  var statusCount={};
+  var custMap={};
+  orders.forEach(function(o){
+    var nm=(o.name||'').trim();
+    if(isTest(nm,o.total)) return;
+    var total=Number(o.total||0);
+    var paid=paidOf(o);
+    var b=Math.max(0,bal(o));
+    collAll+=paid;
+    var d=when(o); var t=d?new Date(d).getTime():0;
+    if(t&&t>=mStart){monthRev+=total;monthColl+=paid;}
+    if(b>0.5){
+      recv+=b;
+      var age=t?Math.floor((now.getTime()-t)/DAY):0;
+      if(age<=30){a0+=b;n0++;}
+      else if(age<=60){a30+=b;n30++;}
+      else{a60+=b;n60++;}
+    }
+    cuts.Picanha+=Number(o.picanha||0);
+    cuts['Top Sirloin']+=Number(o.topSirloin||0);
+    cuts['NY Strip']+=Number(o.nyStrip||0);
+    cuts.Tenderloin+=Number(o.tenderloin||0);
+    var st=(o.status||'No status');
+    statusCount[st]=(statusCount[st]||0)+1;
+    var email=(o.email||'').trim().toLowerCase();
+    var key=email||('n:'+nm.toLowerCase());
+    if(!custMap[key])custMap[key]={name:nm||email,spent:0,owes:0};
+    if(nm)custMap[key].name=nm;
+    custMap[key].spent+=total;custMap[key].owes+=b;
+  });
+  var payRB=0,paidRB=0;
+  bills.forEach(function(bi){
+    var st=(bi.status||'').toLowerCase();
+    paidRB+=Number(bi.paid||0);
+    if(st!=='paid')payRB+=Math.max(0,Number(bi.balance||0));
+  });
+  var expTotal=0; exps.forEach(function(e){expTotal+=Number(e.amount||0);});
+  var net=collAll-paidRB-expTotal;
+  $('k-recv').textContent=money(recv);
+  $('k-recv-x').textContent=(n0+n30+n60)+' open invoice'+((n0+n30+n60)===1?'':'s');
+  $('k-rev').textContent=money(monthRev);
+  $('k-coll').textContent=money(monthColl);
+  $('k-pay').textContent=money(payRB);
+  $('k-pay-x').textContent='to RB';
+  $('k-net').textContent=money(net);
+  $('k-net').parentNode.classList.toggle('due',net<0);
+  $('k-net').parentNode.classList.toggle('pos',net>=0);
+  $('a-0').textContent=money(a0); $('a-0c').textContent=n0+' invoice'+(n0===1?'':'s');
+  $('a-30').textContent=money(a30); $('a-30c').textContent=n30+' invoice'+(n30===1?'':'s');
+  $('a-60').textContent=money(a60); $('a-60c').textContent=n60+' invoice'+(n60===1?'':'s');
+  var cl=Object.keys(custMap).map(function(k){return custMap[k];}).filter(function(c){return c.spent>0;});
+  cl.sort(function(a,b){return b.spent-a.spent;});
+  var tc=$('top-cust');
+  if(!cl.length){tc.innerHTML='<div class="muted">No customers yet.</div>';}
+  else{
+    tc.innerHTML=cl.slice(0,6).map(function(c){
+      return '<div class="row"><div class="nm">'+(c.name||'—')+(c.owes>0.5?'<span class="owe">owes '+money(c.owes)+'</span>':'')+'</div><div class="amt">'+money(c.spent)+'</div></div>';
+    }).join('');
+  }
+  var maxCut=Math.max(cuts.Picanha,cuts['Top Sirloin'],cuts['NY Strip'],cuts.Tenderloin,1);
+  var cc=$('cuts');
+  var order=['Picanha','Top Sirloin','NY Strip','Tenderloin'];
+  var anyCut=order.some(function(k){return cuts[k]>0;});
+  if(!anyCut){cc.innerHTML='<div class="muted">No cut data yet.</div>';}
+  else{
+    cc.innerHTML=order.map(function(k){
+      var q=cuts[k];var w=Math.round(q/maxCut*100);
+      return '<div class="cut"><div class="t"><span>'+k+'</span><span class="q">'+q+' pkg</span></div><div class="bar"><i style="width:'+w+'%"></i></div></div>';
+    }).join('');
+  }
+  var sk=Object.keys(statusCount);
+  var sc=$('status');
+  if(!sk.length){sc.innerHTML='<div class="muted">No orders yet.</div>';}
+  else{
+    sk.sort(function(a,b){return statusCount[b]-statusCount[a];});
+    sc.innerHTML=sk.map(function(s){return '<span class="chip">'+s+'<b>'+statusCount[s]+'</b></span>';}).join('');
+  }
+  var u=new Date();
+  $('upd').textContent='Updated '+u.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+u.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}).catch(function(){
+  $('top-cust').innerHTML='<div class="muted">Connection error.</div>';
+});
+})();
+</script>
 </body>
 </html>
