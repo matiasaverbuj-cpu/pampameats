@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Inventory</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500;transition:all .15s}
+.top a.back:hover{background:#C9A55C;color:#1A1208}
+.wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:14px 16px}
+.kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:26px;color:#F5EFE5;margin-top:4px}
+.kpi.warn .v{color:#EBD08A}
+.alert{background:#2a1714;border:0.5px solid #5C2B27;border-radius:9px;padding:12px 15px;margin-bottom:16px;font-size:13px;color:#E9A8A2;display:none}
+.alert.on{display:block}
+.alert b{color:#F3C9C4}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:8px 4px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
+th.r,td.r{text-align:right}
+td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985;vertical-align:middle}
+td.cut{color:#F5EFE5;font-weight:600}
+td .sub{font-size:11px;color:#6E6347;display:block;margin-top:2px}
+input.q{width:80px;background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:7px;padding:7px 9px;font-size:13px;text-align:right;font-family:inherit}
+input.q:focus{outline:none;border-color:#C9A55C}
+.pill{display:inline-block;padding:3px 10px;border-radius:11px;font-size:11px;font-weight:600;white-space:nowrap}
+.pill.ok{background:#13361f;color:#8AF0A8;border:0.5px solid #1F5A38}
+.pill.low{background:#3a2f12;color:#EBD08A;border:0.5px solid #5a4a1f}
+.pill.out{background:#3a1614;color:#E9A8A2;border:0.5px solid #5C2B27}
+.btn{background:#1A1A1A;border:0.5px solid #3a3a3a;color:#C9A55C;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:#C9A55C}
+.btn.gold{background:#C9A55C;color:#1A1208;border-color:#C9A55C;font-weight:600}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+.foot-note{font-size:11px;color:#6E6347;margin-top:14px;line-height:1.6}
+.savebar{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+.msg{font-size:12px;color:#8AF0A8;align-self:center}
+.msg.err{color:#E9A8A2}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Inventory</span></div>
+<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">STOCK · NJ</div>
+<h1 class="serif">Inventory</h1>
+<p>Packages on hand per cut. Set your reorder point and the system flags what's running low.</p>
+</div>
+<div class="kpis">
+<div class="kpi"><div class="l">On hand</div><div class="v" id="k-pkg">—</div></div>
+<div class="kpi"><div class="l">Approx. weight</div><div class="v" id="k-lb">—</div></div>
+<div class="kpi warn"><div class="l">Low / out</div><div class="v" id="k-low">—</div></div>
+</div>
+<div class="alert" id="alert"></div>
+<div class="card">
+<table>
+<thead><tr><th>Cut</th><th class="r">On hand (pkg)</th><th class="r">≈ lb</th><th class="r">Sold 30d</th><th class="r">Reorder at</th><th>Status</th></tr></thead>
+<tbody id="rows"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+</table>
+</div>
+<div class="savebar">
+<span class="msg" id="msg"></span>
+<button class="btn gold" id="saveAll">Save changes</button>
+</div>
+<div class="foot-note">On-hand is in packages (your selling unit). Add to it when a PO arrives, subtract as you sell — or just set the current count. "Sold 30d" is your recent velocity, to help decide when to reorder.</div>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var DAY=86400000;
+var PRODUCTS=[], SOLD={};
+function mapCutKey(name){
+  var n=(name||'').toLowerCase();
+  if(n.indexOf('picanha')>=0) return 'picanha';
+  if(n.indexOf('top sirloin')>=0) return 'topSirloin';
+  if(n.indexOf('new york')>=0||n.indexOf('ny strip')>=0||n.indexOf('strip')>=0) return 'nyStrip';
+  if(n.indexOf('tenderloin')>=0||n.indexOf('filet')>=0) return 'tenderloin';
+  return '';
+}
+function isTest(o){ var nm=(o.name||'').trim(); return /test/i.test(nm)||(!nm&&Number(o.total||0)===0); }
+function statusOf(onHand,reorderAt){
+  if(onHand<=0) return 'out';
+  if(reorderAt>0 && onHand<=reorderAt) return 'low';
+  return 'ok';
+}
+function pill(s){ var t=s==='ok'?'OK':(s==='low'?'LOW':'OUT'); return '<span class="pill '+s+'">'+t+'</span>'; }
+function recompute(){
+  var totPkg=0, totLb=0, low=0, lowNames=[];
+  PRODUCTS.forEach(function(p){
+    var oh=Number($('oh-'+p.id).value||0);
+    var ra=Number($('ra-'+p.id).value||0);
+    totPkg+=oh; totLb+=oh*(p.pkgLb||0);
+    var st=statusOf(oh,ra);
+    $('st-'+p.id).innerHTML=pill(st);
+    if(st!=='ok'){ low++; lowNames.push(p.cut+(st==='out'?' (out)':'')); }
+    $('lb-'+p.id).textContent=Math.round(oh*(p.pkgLb||0)).toLocaleString('en-US')+' lb';
+  });
+  $('k-pkg').textContent=totPkg.toLocaleString('en-US')+' pkg';
+  $('k-lb').textContent=Math.round(totLb).toLocaleString('en-US')+' lb';
+  $('k-low').textContent=low;
+  var al=$('alert');
+  if(low){ al.className='alert on'; al.innerHTML='<b>Reorder soon:</b> '+lowNames.join(' · '); }
+  else { al.className='alert'; al.innerHTML=''; }
+}
+function render(){
+  var tb=$('rows');
+  if(!PRODUCTS.length){ tb.innerHTML='<tr><td colspan="6" class="loading">No products found.</td></tr>'; return; }
+  tb.innerHTML=PRODUCTS.map(function(p){
+    var sold=SOLD[mapCutKey(p.cut)]||0;
+    return '<tr>'+
+      '<td class="cut">'+(p.cut||'—')+'<span class="sub">~'+(p.pkgLb||0)+' lb/pkg</span></td>'+
+      '<td class="r"><input class="q" id="oh-'+p.id+'" type="number" min="0" step="1" value="'+(p.onHand||0)+'"></td>'+
+      '<td class="r" id="lb-'+p.id+'">0 lb</td>'+
+      '<td class="r">'+sold+' pkg</td>'+
+      '<td class="r"><input class="q" id="ra-'+p.id+'" type="number" min="0" step="1" value="'+(p.reorderAt||0)+'"></td>'+
+      '<td id="st-'+p.id+'"></td>'+
+    '</tr>';
+  }).join('');
+  PRODUCTS.forEach(function(p){
+    $('oh-'+p.id).addEventListener('input',recompute);
+    $('ra-'+p.id).addEventListener('input',recompute);
+  });
+  recompute();
+}
+function load(){
+  Promise.all([
+    fetch('/api/products').then(function(r){return r.json();}).catch(function(){return {};}),
+    fetch('/api/orders').then(function(r){return r.json();}).catch(function(){return {};})
+  ]).then(function(res){
+    PRODUCTS=((res[0]&&res[0].products)||[]).filter(function(p){return p.cut;});
+    var orders=(res[1]&&res[1].orders)||[];
+    var cut=Date.now()-30*DAY;
+    SOLD={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+    orders.forEach(function(o){
+      if(isTest(o)) return;
+      var d=o.date||o.created||o.createdTime||''; var t=d?new Date(d).getTime():0;
+      if(t&&t<cut) return;
+      SOLD.picanha+=Number(o.picanha||0);
+      SOLD.topSirloin+=Number(o.topSirloin||0);
+      SOLD.nyStrip+=Number(o.nyStrip||0);
+      SOLD.tenderloin+=Number(o.tenderloin||0);
+    });
+    render();
+  }).catch(function(){ $('rows').innerHTML='<tr><td colspan="6" class="loading">Connection error.</td></tr>'; });
+}
+function post(body){ return fetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}); }
+$('saveAll').addEventListener('click',function(){
+  var msg=$('msg'); msg.className='msg'; msg.textContent='Saving…';
+  var jobs=PRODUCTS.map(function(p){
+    return post({id:p.id, onHand:Number($('oh-'+p.id).value||0), reorderAt:Number($('ra-'+p.id).value||0)});
+  });
+  Promise.all(jobs).then(function(results){
+    var bad=results.filter(function(r){return !(r&&r.ok);}).length;
+    if(bad){ msg.className='msg err'; msg.textContent=bad+' could not save.'; }
+    else { msg.className='msg'; msg.textContent='Saved ✓'; PRODUCTS.forEach(function(p){p.onHand=Number($('oh-'+p.id).value||0);p.reorderAt=Number($('ra-'+p.id).value||0);}); }
+    setTimeout(function(){msg.textContent='';},4000);
+  }).catch(function(){ msg.className='msg err'; msg.textContent='Connection error.'; });
+});
+load();
+})();
+</script>
+</body>
+</html>
