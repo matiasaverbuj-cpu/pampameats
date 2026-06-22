@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Buying &amp; Margin</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500;transition:all .15s}
+.top a.back:hover{background:#C9A55C;color:#1A1208}
+.wrap{max-width:980px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 18px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.sec{background:#111;border:0.5px solid #242424;border-radius:14px;padding:18px 18px;margin-bottom:18px}
+.sec h2{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#C9A55C;margin:0 0 4px;font-weight:600}
+.sec .sub{font-size:12px;color:#8A7548;margin:0 0 14px}
+.ctrlrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13px;color:#B8A985}
+.ctrlrow input,.ctrlrow select{background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:7px;padding:7px 9px;font-size:13px;font-family:inherit;width:80px;text-align:right}
+.card{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:680px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:9px 10px;border-bottom:1px solid #C9A55C}
+th.r,td.r{text-align:right}
+td{padding:9px 10px;border-bottom:0.5px solid #1E1E1E;color:#B8A985;vertical-align:middle}
+td.cut{color:#F5EFE5;font-weight:600}
+tfoot td{border-top:1px solid #C9A55C;border-bottom:none;color:#F5EFE5;font-weight:600}
+input.n{width:78px;background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:7px;padding:6px 8px;font-size:13px;text-align:right;font-family:inherit}
+input.n:focus{outline:none;border-color:#C9A55C}
+.sug{color:#C9A55C;font-weight:600}
+.good{color:#8AF0A8}.warn{color:#EBD08A}.bad{color:#E9A8A2}
+.poline{margin-top:12px;font-size:13px;color:#F5EFE5;background:#0F0F0F;border:0.5px solid #2A2A2A;border-radius:9px;padding:12px 14px}
+.poline b{color:#C9A55C}
+.btnrow{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:#1A1A1A;border:0.5px solid #3a3a3a;color:#C9A55C;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:#C9A55C}
+.btn.gold{background:#C9A55C;color:#1A1208;border-color:#C9A55C;font-weight:600}
+.kbox{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.kb{background:#0F0F0F;border:0.5px solid #242424;border-radius:9px;padding:12px 14px}
+.kb .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548}
+.kb .v{font-family:'Cormorant Garamond',serif;font-size:22px;margin-top:3px}
+.loading{color:#8A7548;font-size:13px;padding:16px;text-align:center}
+.note{font-size:11px;color:#6E6347;margin-top:10px;line-height:1.6}
+@media(max-width:560px){.kbox{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Buying &amp; Margin</span></div>
+<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">SMART PURCHASING · AI</div>
+<h1 class="serif">Buying &amp; Margin</h1>
+<p>What to reorder next, and the real margin of each shipment once freight and duties are in.</p>
+</div>
+<div class="sec">
+<h2>1 · Reorder planner</h2>
+<p class="sub">Based on how fast each cut sells and what's on hand. Set how many weeks of cover you want to keep.</p>
+<div class="ctrlrow">
+<span>Target weeks of cover:</span>
+<input id="weeks" type="number" min="1" step="1" value="4">
+<span class="note" style="margin:0">Velocity = packages sold in the last 30 days.</span>
+</div>
+<div class="card">
+<table id="rt">
+<thead><tr><th>Cut</th><th class="r">On hand</th><th class="r">Sold 30d</th><th class="r">/ week</th><th class="r">Weeks cover</th><th class="r">Suggest (pkg)</th><th class="r">≈ cases</th></tr></thead>
+<tbody id="r-rows"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
+</table>
+</div>
+<div class="poline" id="po-summary">—</div>
+<div class="btnrow"><a class="btn gold" href="/dashboard/po"><i class="ti ti-file-plus"></i> Open PO builder</a></div>
+</div>
+<div class="sec">
+<h2>2 · Landed cost &amp; real margin (per PO)</h2>
+<p class="sub">Enter this shipment's cases per cut and product cost. Add freight + duties once — they're split across cuts by weight to give the true cost per lb and your real margin.</p>
+<div class="card">
+<table id="lt">
+<thead><tr><th>Cut</th><th class="r">Cases</th><th class="r">Case lb</th><th class="r">Product $/lb</th><th class="r">Price $/lb</th><th class="r">Landed $/lb</th><th class="r">Margin/lb</th><th class="r">Margin %</th><th class="r">Profit</th></tr></thead>
+<tbody id="l-rows"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
+<tfoot><tr><td>Total</td><td class="r" id="f-cases">0</td><td class="r" id="f-lb">0 lb</td><td></td><td></td><td class="r" id="f-landed">—</td><td></td><td class="r" id="f-mpct">—</td><td class="r" id="f-profit">$0</td></tr></tfoot>
+</table>
+</div>
+<div class="ctrlrow" style="margin-top:14px">
+<span>Freight $</span><input id="freight" class="n" type="number" min="0" step="0.01" value="0">
+<span>Duties $</span><input id="duties" class="n" type="number" min="0" step="0.01" value="0">
+<span>Other $</span><input id="other" class="n" type="number" min="0" step="0.01" value="0">
+</div>
+<div class="kbox">
+<div class="kb"><div class="l">Total landed cost</div><div class="v" id="k-cost">$0</div></div>
+<div class="kb"><div class="l">Revenue (at price)</div><div class="v" id="k-rev">$0</div></div>
+<div class="kb"><div class="l">Gross profit</div><div class="v good" id="k-profit">$0</div></div>
+</div>
+<div class="note">Allocation: freight + duties + other are spread across all cuts by weight (lb). Product $/lb and Price $/lb prefill from your Products master — edit any cell for this specific PO. Nothing here is saved; it's a what-if calculator.</div>
+</div>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});};
+var DAY=86400000;
+var PRODUCTS=[], SOLD={};
+function mapCutKey(name){
+  var n=(name||'').toLowerCase();
+  if(n.indexOf('picanha')>=0) return 'picanha';
+  if(n.indexOf('top sirloin')>=0) return 'topSirloin';
+  if(n.indexOf('new york')>=0||n.indexOf('ny strip')>=0||n.indexOf('strip')>=0) return 'nyStrip';
+  if(n.indexOf('tenderloin')>=0||n.indexOf('filet')>=0) return 'tenderloin';
+  return '';
+}
+function isTest(o){ var nm=(o.name||'').trim(); return /test/i.test(nm)||(!nm&&Number(o.total||0)===0); }
+function pkgPerCase(p){ var ppc=(p.pkgLb>0)?Math.round(p.caseLb/p.pkgLb):0; return ppc>0?ppc:1; }
+function renderReorder(){
+  var weeks=Number($('weeks').value||4); if(weeks<1)weeks=1;
+  var tb=$('r-rows'); var sug={};
+  if(!PRODUCTS.length){ tb.innerHTML='<tr><td colspan="7" class="loading">No products.</td></tr>'; return; }
+  tb.innerHTML=PRODUCTS.map(function(p){
+    var key=mapCutKey(p.cut);
+    var sold=SOLD[key]||0;
+    var perWeek=sold/4.3;
+    var cover=perWeek>0?(p.onHand/perWeek):(p.onHand>0?999:0);
+    var coverTxt=perWeek>0?cover.toFixed(1):(p.onHand>0?'∞':'0');
+    var coverCls=perWeek>0?(cover<2?'bad':(cover<weeks?'warn':'good')):'';
+    var needPkg=Math.max(0,Math.ceil(perWeek*weeks - p.onHand));
+    var cases=Math.ceil(needPkg/pkgPerCase(p));
+    sug[key]={cut:p.cut,cases:cases,pkg:needPkg};
+    return '<tr><td class="cut">'+p.cut+'</td>'+
+      '<td class="r">'+p.onHand+'</td>'+
+      '<td class="r">'+sold+'</td>'+
+      '<td class="r">'+perWeek.toFixed(1)+'</td>'+
+      '<td class="r '+coverCls+'">'+coverTxt+'</td>'+
+      '<td class="r sug">'+needPkg+'</td>'+
+      '<td class="r sug">'+cases+'</td></tr>';
+  }).join('');
+  var parts=Object.keys(sug).map(function(k){return sug[k];}).filter(function(s){return s.cases>0;});
+  if(parts.length){
+    $('po-summary').innerHTML='<b>Suggested next PO:</b> '+parts.map(function(s){return s.cases+' case'+(s.cases===1?'':'s')+' '+s.cut;}).join(' · ');
+  } else {
+    $('po-summary').innerHTML='<b>Suggested next PO:</b> nothing needed — stock covers your target.';
+  }
+}
+function renderLanded(){
+  var tb=$('l-rows');
+  if(!PRODUCTS.length){ tb.innerHTML='<tr><td colspan="9" class="loading">No products.</td></tr>'; return; }
+  if(!$('lc-'+PRODUCTS[0].id)){
+    tb.innerHTML=PRODUCTS.map(function(p){
+      return '<tr>'+
+        '<td class="cut">'+p.cut+'</td>'+
+        '<td class="r"><input class="n" id="cs-'+p.id+'" type="number" min="0" step="1" value="0"></td>'+
+        '<td class="r">'+(p.caseLb||0)+'</td>'+
+        '<td class="r"><input class="n" id="lc-'+p.id+'" type="number" min="0" step="0.01" value="'+(p.costLb||0)+'"></td>'+
+        '<td class="r"><input class="n" id="pr-'+p.id+'" type="number" min="0" step="0.01" value="'+(p.priceLb||45)+'"></td>'+
+        '<td class="r" id="ld-'+p.id+'">—</td>'+
+        '<td class="r" id="mg-'+p.id+'">—</td>'+
+        '<td class="r" id="mp-'+p.id+'">—</td>'+
+        '<td class="r" id="pf-'+p.id+'">—</td></tr>';
+    }).join('');
+    PRODUCTS.forEach(function(p){
+      ['cs-','lc-','pr-'].forEach(function(pre){ $(pre+p.id).addEventListener('input',calcLanded); });
+    });
+    ['freight','duties','other'].forEach(function(id){ $(id).addEventListener('input',calcLanded); });
+  }
+  calcLanded();
+}
+function calcLanded(){
+  var totalLb=0;
+  PRODUCTS.forEach(function(p){
+    var cs=Number($('cs-'+p.id).value||0);
+    totalLb += cs*(p.caseLb||0);
+  });
+  var extra=Number($('freight').value||0)+Number($('duties').value||0)+Number($('other').value||0);
+  var allocPerLb = totalLb>0 ? extra/totalLb : 0;
+  var totCases=0,totProfit=0,totRev=0,totCost=0;
+  PRODUCTS.forEach(function(p){
+    var cs=Number($('cs-'+p.id).value||0);
+    var lb=cs*(p.caseLb||0);
+    var costLb=Number($('lc-'+p.id).value||0);
+    var priceLb=Number($('pr-'+p.id).value||0);
+    var landed=costLb+allocPerLb;
+    var margin=priceLb-landed;
+    var mpct=priceLb>0?(margin/priceLb*100):0;
+    var profit=margin*lb;
+    totCases+=cs; totProfit+=profit; totRev+=priceLb*lb; totCost+=landed*lb;
+    $('ld-'+p.id).textContent=lb>0?money(landed):'—';
+    var mg=$('mg-'+p.id); mg.textContent=lb>0?money(margin):'—'; mg.className='r '+(margin>=0?'good':'bad');
+    var mp=$('mp-'+p.id); mp.textContent=lb>0?(mpct.toFixed(0)+'%'):'—'; mp.className='r '+(mpct>=20?'good':(mpct>=0?'warn':'bad'));
+    $('pf-'+p.id).textContent=lb>0?money(profit):'—';
+  });
+  $('f-cases').textContent=totCases;
+  $('f-lb').textContent=Math.round(totalLb).toLocaleString('en-US')+' lb';
+  $('f-landed').textContent=totalLb>0?money(totCost/totalLb)+'/lb':'—';
+  $('f-mpct').textContent=totRev>0?Math.round((totRev-totCost)/totRev*100)+'%':'—';
+  $('f-profit').textContent=money(totProfit);
+  $('k-cost').textContent=money(totCost);
+  $('k-rev').textContent=money(totRev);
+  var kp=$('k-profit'); kp.textContent=money(totProfit); kp.className='v '+(totProfit>=0?'good':'bad');
+}
+function load(){
+  Promise.all([
+    fetch('/api/products').then(function(r){return r.json();}).catch(function(){return {};}),
+    fetch('/api/orders').then(function(r){return r.json();}).catch(function(){return {};})
+  ]).then(function(res){
+    PRODUCTS=((res[0]&&res[0].products)||[]).filter(function(p){return p.cut;});
+    var orders=(res[1]&&res[1].orders)||[];
+    var cutd=Date.now()-30*DAY;
+    SOLD={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+    orders.forEach(function(o){
+      if(isTest(o)) return;
+      var d=o.date||o.created||o.createdTime||''; var t=d?new Date(d).getTime():0;
+      if(t&&t<cutd) return;
+      SOLD.picanha+=Number(o.picanha||0);
+      SOLD.topSirloin+=Number(o.topSirloin||0);
+      SOLD.nyStrip+=Number(o.nyStrip||0);
+      SOLD.tenderloin+=Number(o.tenderloin||0);
+    });
+    renderReorder();
+    renderLanded();
+    $('weeks').addEventListener('input',renderReorder);
+  }).catch(function(){ $('r-rows').innerHTML='<tr><td colspan="7" class="loading">Connection error.</td></tr>'; });
+}
+load();
+})();
+</script>
+</body>
+</html>
