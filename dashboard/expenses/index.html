@@ -26,7 +26,7 @@ input,textarea,select,button{font-family:inherit}
 .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
 .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
 .hd p{margin:0;font-size:13px;color:#9A8F76}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
 .kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:13px 14px}
 .kpi .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548}
 .kpi .v{font-family:'Cormorant Garamond',serif;font-size:23px;color:#F5EFE5;margin-top:4px}
@@ -71,9 +71,10 @@ td.who{color:#F5EFE5;font-weight:600}
 
 <div class="kpis" id="kpis">
 <div class="kpi"><div class="l">Total</div><div class="v" id="k-all">$0</div></div>
-<div class="kpi"><div class="l">Mati</div><div class="v" id="k-Mati">$0</div></div>
+<div class="kpi"><div class="l">Matias</div><div class="v" id="k-Matias">$0</div></div>
 <div class="kpi"><div class="l">Jay</div><div class="v" id="k-Jay">$0</div></div>
-<div class="kpi"><div class="l">Jan</div><div class="v" id="k-Jan">$0</div></div>
+<div class="kpi"><div class="l">Tzvi</div><div class="v" id="k-Tzvi">$0</div></div>
+<div class="kpi"><div class="l">Mark</div><div class="v" id="k-Mark">$0</div></div>
 </div>
 
 <div class="card">
@@ -87,9 +88,9 @@ td.who{color:#F5EFE5;font-weight:600}
 <div class="formcard">
 <div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Log an expense</div>
 <div class="who-pills" id="who">
-<button type="button" data-w="Mati">Mati</button>
+<button type="button" data-w="Matias">Matias</button>
 <button type="button" data-w="Jay">Jay</button>
-<button type="button" data-w="Jan">Jan</button>
+<button type="button" data-w="Tzvi">Tzvi</button>
 <button type="button" data-w="Mark">Mark</button>
 </div>
 <div class="row3">
@@ -113,9 +114,9 @@ function banner(cls,msg){ var b=$('banner'); b.className='banner '+cls; b.textCo
 
 function render(exp){
 var tb=$('rows');
-var by={Mati:0,Jay:0,Jan:0,Mark:0}, all=0;
+var by={Matias:0,Jay:0,Tzvi:0,Mark:0}, all=0;
 exp.forEach(function(e){ all+=e.amount; if(by[e.partner]!=null) by[e.partner]+=e.amount; });
-$('k-all').textContent=money(all); $('k-Mati').textContent=money(by.Mati); $('k-Jay').textContent=money(by.Jay); $('k-Jan').textContent=money(by.Jan);
+$('k-all').textContent=money(all); $('k-Matias').textContent=money(by.Matias); $('k-Jay').textContent=money(by.Jay); $('k-Tzvi').textContent=money(by.Tzvi); $('k-Mark').textContent=money(by.Mark);
 if(!exp.length){ tb.innerHTML='<tr><td colspan="5" class="loading">No expenses yet. Log the first below.</td></tr>'; return; }
 exp.sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
 tb.innerHTML=exp.map(function(e){
