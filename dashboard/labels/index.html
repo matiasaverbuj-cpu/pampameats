@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Warehouse Labels</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500}
+.top a.back:hover{background:#C9A55C;color:#1A1208}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 18px 80px;display:grid;grid-template-columns:1fr 420px;gap:22px}
+.hd{grid-column:1 / -1;margin:4px 0 6px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.tabs{display:flex;gap:8px;margin-bottom:10px}
+.tabs button{background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985;padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.tabs button.sel{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
+.card{background:#121212;border:0.5px solid #262626;border-radius:10px;overflow:hidden}
+.olist{max-height:560px;overflow-y:auto}
+.orow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:0.5px solid #1E1E1E;cursor:pointer;transition:background .12s}
+.orow:hover{background:#171717}
+.orow.sel{background:#1b1710;border-left:3px solid #C9A55C}
+.orow .nm{color:#F5EFE5;font-weight:600;font-size:14px}
+.orow .meta{font-size:11px;color:#8A7548;margin-top:2px}
+.orow .pk{font-size:12px;color:#C9A55C;white-space:nowrap}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+.side .actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.btn{background:#1A1A1A;border:0.5px solid #3a3a3a;color:#C9A55C;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:#C9A55C}
+.btn.gold{background:#C9A55C;color:#1A1208;border-color:#C9A55C;font-weight:600}
+.hint{font-size:11px;color:#6E6347;margin-top:8px}
+#sheet{display:flex;flex-direction:column;gap:14px;align-items:center}
+.label{width:4in;min-height:6in;background:#fff;color:#111;border-radius:6px;padding:0.28in 0.3in;font-family:Arial,Helvetica,sans-serif;display:flex;flex-direction:column}
+.label .lhead{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:8px}
+.label .lbrand{font-weight:bold;font-size:19px;letter-spacing:2px;color:#111}
+.label .lbrand small{display:block;font-weight:normal;font-size:8px;letter-spacing:2px;color:#666;margin-top:2px}
+.label .lkosher{text-align:right;font-size:8px;line-height:1.5;color:#111;font-weight:bold}
+.label .frozen{background:#111;color:#fff;text-align:center;font-weight:bold;font-size:11px;letter-spacing:2px;padding:5px;margin:8px 0}
+.label .sect{font-size:8px;letter-spacing:1.5px;color:#888;text-transform:uppercase;margin:8px 0 3px}
+.label .ship{font-size:14px;line-height:1.4;color:#111}
+.label .ship b{font-size:16px}
+.label table{width:100%;border-collapse:collapse;margin-top:2px}
+.label td{font-size:13px;padding:3px 0;border-bottom:1px solid #eee;color:#111}
+.label td.q{text-align:right;font-weight:bold;width:54px}
+.label .tot{display:flex;justify-content:space-between;font-size:12px;font-weight:bold;margin-top:6px;color:#111}
+.label .bc{margin-top:auto;text-align:center;padding-top:8px}
+.label .bc svg{max-width:100%}
+.label .packed{display:flex;justify-content:space-between;font-size:9px;color:#444;border-top:1px solid #ccc;margin-top:8px;padding-top:6px}
+.empty{color:#8A7548;font-size:13px;text-align:center;padding:40px 10px}
+@media(max-width:820px){.wrap{grid-template-columns:1fr}}
+@media print{
+body{background:#fff}
+.top,.hd,.lcol,.side .actions,.hint,.tabs{display:none!important}
+.wrap{display:block;margin:0;padding:0;max-width:none}
+#sheet{gap:0}
+.label{width:4in;height:6in;border-radius:0;page-break-after:always;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Warehouse</span></div>
+<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">FULFILLMENT · LABELS</div>
+<h1 class="serif">Warehouse Labels</h1>
+<p>Pick an order to generate its shipping label, then print. Or load all orders to pack and print the full batch.</p>
+</div>
+<div class="lcol">
+<div class="tabs">
+<button id="t-pack" class="sel">To pack</button>
+<button id="t-all">All orders</button>
+</div>
+<div class="card"><div class="olist" id="rows"><div class="loading">Loading…</div></div></div>
+</div>
+<div class="side">
+<div class="actions">
+<button class="btn gold" id="printBtn"><i class="ti ti-printer"></i> Print label</button>
+<button class="btn" id="allBtn"><i class="ti ti-stack-2"></i> Load all to-pack</button>
+</div>
+<div id="sheet"><div class="empty">Select an order on the left to preview its label.</div></div>
+<div class="hint">Tip: in the print dialog choose your label printer (or "Save as PDF"). Label size is 4&times;6 in.</div>
+</div>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var ALL=[], mode='pack', CUR=null;
+var CUTS=[['picanha','Picanha',2.5],['topSirloin','Top Sirloin',5],['nyStrip','New York Strip',6.5],['tenderloin','Tenderloin / Filet',2.5]];
+function isTest(o){var nm=(o.name||'').trim();return /test/i.test(nm)||(!nm&&Number(o.total||0)===0);}
+function dt(o){return o.date||o.deliveryDate||o.created||o.createdTime||'';}
+function stage(o){return (o.status||'').trim();}
+function pkgs(o){var n=0;CUTS.forEach(function(c){n+=Number(o[c[0]]||0);});return n;}
+function lbs(o){var n=0;CUTS.forEach(function(c){n+=Number(o[c[0]]||0)*c[2];});return Math.round(n*10)/10;}
+function ref(o){return 'PM-'+String(o.id||'').slice(-5).toUpperCase();}
+function esc(s){return String(s||'').replace(/[&<>]/g,function(m){return({'&':'&amp;','<':'&lt;','>':'&gt;'})[m];});}
+function labelHTML(o){
+  var rowsTxt='';
+  CUTS.forEach(function(c){var q=Number(o[c[0]]||0); if(q>0) rowsTxt+='<tr><td>'+c[1]+'</td><td class="q">'+q+'</td></tr>';});
+  if(!rowsTxt) rowsTxt='<tr><td colspan="2" style="color:#999">No cuts on this order</td></tr>';
+  var addr=esc((o.address||'')+(o.zone?(' · '+o.zone):''));
+  var d=dt(o)?String(dt(o)).slice(0,10):'';
+  var bcId='bc-'+o.id;
+  return '<div class="label">'+
+    '<div class="lhead"><div class="lbrand">PAMPA MEATS<small>PREMIUM ARGENTINE ANGUS</small></div>'+
+    '<div class="lkosher">GLATT KOSHER<br>BEIT YOSEF</div></div>'+
+    '<div class="frozen">&#10052; KEEP FROZEN &middot; COLD-CHAIN</div>'+
+    '<div class="sect">Ship to</div>'+
+    '<div class="ship"><b>'+esc(o.name||'—')+'</b><br>'+esc(o.phone||'')+'<br>'+(addr||'<span style="color:#999">address on file</span>')+'</div>'+
+    '<div class="sect">Order '+ref(o)+(d?(' &middot; '+d):'')+(stage(o)?(' &middot; '+esc(stage(o))):'')+'</div>'+
+    '<table>'+rowsTxt+'</table>'+
+    '<div class="tot"><span>'+pkgs(o)+' packages</span><span>~'+lbs(o)+' lb</span></div>'+
+    '<div class="bc"><svg id="'+bcId+'"></svg></div>'+
+    '<div class="packed"><span>Packed by: __________</span><span>Date: ________</span></div>'+
+    '</div>';
+}
+function drawBarcodes(list){
+  list.forEach(function(o){
+    try{ JsBarcode('#bc-'+o.id, ref(o), {format:'CODE128',displayValue:true,fontSize:12,height:42,margin:0,width:1.7}); }catch(e){}
+  });
+}
+function renderList(){
+  var list=ALL.filter(function(o){return !isTest(o);});
+  if(mode==='pack') list=list.filter(function(o){return !/deliver/i.test(stage(o));});
+  list.sort(function(a,b){return (dt(b)||'').localeCompare(dt(a)||'');});
+  var tb=$('rows');
+  if(!list.length){ tb.innerHTML='<div class="loading">'+(mode==='pack'?'Nothing to pack right now.':'No orders yet.')+'</div>'; return; }
+  tb.innerHTML=list.map(function(o){
+    return '<div class="orow" data-id="'+o.id+'"><div><div class="nm">'+esc(o.name||'—')+'</div>'+
+      '<div class="meta">'+ref(o)+' &middot; '+(dt(o)?String(dt(o)).slice(0,10):'')+(o.zone?(' &middot; '+esc(o.zone)):'')+'</div></div>'+
+      '<div class="pk">'+pkgs(o)+' pkg</div></div>';
+  }).join('');
+  Array.prototype.forEach.call(tb.querySelectorAll('.orow'),function(el){
+    el.addEventListener('click',function(){ selectOne(el.getAttribute('data-id'));
+      Array.prototype.forEach.call(tb.querySelectorAll('.orow'),function(x){x.classList.remove('sel');}); el.classList.add('sel'); });
+  });
+}
+function selectOne(id){
+  var o=ALL.filter(function(x){return x.id===id;})[0]; if(!o) return;
+  CUR=[o];
+  $('sheet').innerHTML=labelHTML(o);
+  drawBarcodes([o]);
+}
+function loadAllToPack(){
+  var list=ALL.filter(function(o){return !isTest(o) && !/deliver/i.test(stage(o));});
+  if(!list.length){ $('sheet').innerHTML='<div class="empty">Nothing to pack.</div>'; return; }
+  CUR=list;
+  $('sheet').innerHTML=list.map(labelHTML).join('');
+  drawBarcodes(list);
+}
+function load(){
+  fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
+    ALL=(d&&d.orders)||[];
+    renderList();
+  }).catch(function(){ $('rows').innerHTML='<div class="loading">Connection error.</div>'; });
+}
+$('printBtn').addEventListener('click',function(){ if(!CUR){alert('Select an order first.');return;} window.print(); });
+$('allBtn').addEventListener('click',loadAllToPack);
+$('t-pack').addEventListener('click',function(){mode='pack';$('t-pack').classList.add('sel');$('t-all').classList.remove('sel');renderList();});
+$('t-all').addEventListener('click',function(){mode='all';$('t-all').classList.add('sel');$('t-pack').classList.remove('sel');renderList();});
+load();
+})();
+</script>
+</body>
+</html>
