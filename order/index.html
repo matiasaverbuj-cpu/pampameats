@@ -323,7 +323,7 @@ var totalPkgs=qty.picanha+qty.topSirloin+qty.nyStrip+qty.tenderloin;
 var bad=false;
 if(!name){ document.getElementById('f-name').classList.add('invalid'); bad=true; }
 if(!phone){ document.getElementById('f-phone').classList.add('invalid'); bad=true; }
-if(email && !/^[^@s]+@[^@s]+.[^@s]+$/.test(email)){ document.getElementById('f-email').classList.add('invalid'); bad=true; }
+if(email && !(email.indexOf('@')>0 && email.lastIndexOf('.')>email.indexOf('@')+1 && email.indexOf(' ')<0)){ document.getElementById('f-email').classList.add('invalid'); bad=true; }
 if(!state){ document.getElementById('f-state').classList.add('invalid'); bad=true; }
 if(totalPkgs<=0){ msg.className='form-msg error'; msg.textContent='Please add at least one cut to your order.'; bad=true; }
 if(bad){ if(!msg.textContent){ msg.className='form-msg error'; msg.textContent='Please complete the highlighted fields.'; } return; }
