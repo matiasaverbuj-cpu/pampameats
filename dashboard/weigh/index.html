@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Weigh &amp; Invoice</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500}
+.top a.back:hover{background:#C9A55C;color:#1A1208}
+.wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 16px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+select{background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;min-width:280px}
+.card{background:#121212;border:0.5px solid #262626;border-radius:12px;padding:16px 18px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:9px 8px;border-bottom:1px solid #C9A55C}
+th.r,td.r{text-align:right}
+td{padding:10px 8px;border-bottom:0.5px solid #1E1E1E;color:#B8A985;vertical-align:middle}
+td.cut{color:#F5EFE5;font-weight:600}
+input.w{width:92px;background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:7px;padding:8px 9px;font-size:14px;text-align:right;font-family:inherit}
+input.w:focus{outline:none;border-color:#C9A55C}
+tfoot td{border-top:1px solid #C9A55C;border-bottom:none;color:#F5EFE5;font-weight:600;font-size:15px;padding-top:12px}
+tfoot .g{font-family:'Cormorant Garamond',serif;font-size:24px;color:#C9A55C}
+.pay{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.pay input,.pay select{background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit}
+.pay input{width:130px;text-align:right}
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{background:#1A1A1A;border:0.5px solid #3a3a3a;color:#C9A55C;border-radius:8px;padding:11px 16px;font-size:14px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:#C9A55C}
+.btn.gold{background:#C9A55C;color:#1A1208;border-color:#C9A55C;font-weight:600}
+.msg{font-size:13px;margin-top:12px;min-height:16px}
+.msg.ok{color:#8AF0A8}.msg.err{color:#E9A8A2}
+.muted{color:#6E6347;font-size:12px}
+.note{font-size:11px;color:#6E6347;margin-top:14px;line-height:1.6}
+.est{font-size:11px;color:#6E6347}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Weigh &amp; Invoice</span></div>
+<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">CATCH-WEIGHT · FINAL BILLING</div>
+<h1 class="serif">Weigh &amp; Invoice</h1>
+<p>Enter the exact scanned weight per cut. The system bills the real weight × price/lb and saves the final total to the order.</p>
+</div>
+<div class="bar">
+<select id="orderSel"><option value="">Loading orders…</option></select>
+<button class="btn" id="reload"><i class="ti ti-refresh"></i></button>
+</div>
+<div class="card">
+<table>
+<thead><tr><th>Cut</th><th class="r">Ordered</th><th class="r">Exact weight (lb)</th><th class="r">$/lb</th><th class="r">Line total</th></tr></thead>
+<tbody id="rows"><tr><td colspan="5" class="muted" style="padding:18px;text-align:center">Select an order to weigh.</td></tr></tbody>
+<tfoot><tr><td colspan="4">Final total</td><td class="r g" id="grand">$0.00</td></tr></tfoot>
+</table>
+<div class="pay">
+<span class="muted">Amount paid</span>
+<input id="paid" type="number" min="0" step="0.01" placeholder="0.00">
+<select id="method"><option value="">Method…</option><option>Wire</option><option>Zelle</option><option>Credit card</option><option>Cash</option></select>
+<button class="btn" id="fullBtn">Mark fully paid</button>
+</div>
+<div class="actions">
+<button class="btn gold" id="saveBtn"><i class="ti ti-device-floating"></i> Save final invoice to order</button>
+<a class="btn" id="invLink" href="/dashboard/quote"><i class="ti ti-file-invoice"></i> Open invoice / PDF</a>
+</div>
+<div class="msg" id="msg"></div>
+</div>
+<div class="note">Final total = exact weight × price/lb per cut (catch-weight). The weight field prefills with the estimate — overwrite it with the scanned label weight. Saving updates the order's total (and the dashboard, A/R and digest). If you took a card hold at order time, capture the final amount in Stripe once connected.</div>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});};
+var CUTS=[['picanha','Picanha',2.5],['topSirloin','Top Sirloin',5],['nyStrip','New York Strip',6.5],['tenderloin','Tenderloin / Filet',2.5]];
+var PRICE={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+var ORDERS=[], CUR=null;
+function isTest(o){var nm=(o.name||'').trim();return /test/i.test(nm)||(!nm&&Number(o.total||0)===0);}
+function mapCutKey(name){var n=(name||'').toLowerCase();
+  if(n.indexOf('picanha')>=0)return'picanha';
+  if(n.indexOf('top sirloin')>=0)return'topSirloin';
+  if(n.indexOf('new york')>=0||n.indexOf('ny strip')>=0||n.indexOf('strip')>=0)return'nyStrip';
+  if(n.indexOf('tenderloin')>=0||n.indexOf('filet')>=0)return'tenderloin';
+  return'';}
+function recalc(){
+  var total=0;
+  CUTS.forEach(function(c){
+    var w=$('w-'+c[0]); if(!w) return;
+    var lb=Number(w.value||0); var p=PRICE[c[0]]||0; var line=lb*p;
+    total+=line;
+    $('lt-'+c[0]).textContent=money(line);
+  });
+  $('grand').textContent=money(total);
+  return total;
+}
+function fill(o){
+  CUR=o;
+  var tb=$('rows'); var html='';
+  CUTS.forEach(function(c){
+    var q=Number(o[c[0]]||0); if(q<=0) return;
+    var est=q*c[2];
+    html+='<tr><td class="cut">'+c[1]+'</td>'+
+      '<td class="r">'+q+' pkg</td>'+
+      '<td class="r"><input class="w" id="w-'+c[0]+'" type="number" min="0" step="0.01" value="'+est+'"><div class="est">est '+est+'</div></td>'+
+      '<td class="r">'+money(PRICE[c[0]]||0)+'</td>'+
+      '<td class="r" id="lt-'+c[0]+'">$0.00</td></tr>';
+  });
+  if(!html) html='<tr><td colspan="5" class="muted" style="padding:18px;text-align:center">This order has no cuts.</td></tr>';
+  tb.innerHTML=html;
+  CUTS.forEach(function(c){ var w=$('w-'+c[0]); if(w) w.addEventListener('input',recalc); });
+  $('paid').value=o.amountPaid?o.amountPaid:'';
+  recalc();
+}
+function loadProducts(){
+  return fetch('/api/products').then(function(r){return r.json();}).then(function(d){
+    ((d&&d.products)||[]).forEach(function(p){ var k=mapCutKey(p.cut); if(k) PRICE[k]=Number(p.priceLb||0); });
+  }).catch(function(){});
+}
+function loadOrders(){
+  var sel=$('orderSel'); sel.innerHTML='<option value="">Loading…</option>';
+  return fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
+    ORDERS=((d&&d.orders)||[]).filter(function(o){return !isTest(o);});
+    if(!ORDERS.length){ sel.innerHTML='<option value="">No orders</option>'; return; }
+    sel.innerHTML='<option value="">— Select an order to weigh —</option>'+ORDERS.map(function(o,i){
+      var pk=(o.picanha||0)+(o.topSirloin||0)+(o.nyStrip||0)+(o.tenderloin||0);
+      return '<option value="'+i+'">'+(o.name||'(no name)')+' · '+pk+' pkg · '+(o.status||'')+'</option>';
+    }).join('');
+  }).catch(function(){ sel.innerHTML='<option value="">Error</option>'; });
+}
+$('orderSel').addEventListener('change',function(){ var i=this.value; if(i==='')return; fill(ORDERS[parseInt(i,10)]); });
+$('reload').addEventListener('click',function(){ loadOrders(); });
+$('fullBtn').addEventListener('click',function(){ $('paid').value=(recalc()).toFixed(2); });
+$('saveBtn').addEventListener('click',function(){
+  var m=$('msg');
+  if(!CUR||!CUR.id){ m.className='msg err'; m.textContent='Select an order first.'; return; }
+  var total=recalc();
+  var paid=Number($('paid').value||0);
+  var body={id:CUR.id, orderTotal:total, status:'Weighed'};
+  if(paid>0){ body.amountPaid=paid; var pm=$('method').value; if(pm) body.paymentMethod=pm; if(paid>=total) body.status='Paid'; }
+  m.className='msg'; m.textContent='Saving…';
+  fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+   .then(function(r){return r.json();}).then(function(res){
+     if(res&&res.ok){ m.className='msg ok'; m.textContent='Final invoice saved ✓ — total '+money(total)+'. Order updated.'; CUR.total=total; CUR.amountPaid=paid; }
+     else { m.className='msg err'; m.textContent='Could not save ('+((res&&res.reason)||'error')+')'; }
+   }).catch(function(){ m.className='msg err'; m.textContent='Connection error.'; });
+});
+Promise.all([loadProducts(),loadOrders()]).then(function(){});
+})();
+</script>
+</body>
+</html>
