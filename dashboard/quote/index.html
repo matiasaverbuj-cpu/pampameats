@@ -242,6 +242,7 @@ sel.innerHTML='<option value="">— Select an order —</option>'+orders.map(fun
 var pk=(o.picanha||0)+(o.topSirloin||0)+(o.nyStrip||0)+(o.tenderloin||0);
 return '<option value="'+i+'">'+(o.name||'(no name)')+' · '+pk+' pkg · '+(o.status||'')+'</option>';
 }).join('');
+var pre=new URLSearchParams(location.search).get('order'); if(pre){ var idx=-1; for(var k=0;k<orders.length;k++){ if(orders[k].id===pre){ idx=k; break; } } if(idx>=0){ sel.value=String(idx); fill(orders[idx]); } }
 }catch(e){ sel.innerHTML='<option value="">Error loading</option>'; }
 }
 document.getElementById('orderSel').addEventListener('change',function(){
