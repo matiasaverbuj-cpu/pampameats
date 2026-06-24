@@ -130,6 +130,7 @@ function recalc(){
 }
 function fill(o){
   CUR=o;
+  var il=$('invLink'); if(il) il.href='/dashboard/quote?order='+encodeURIComponent(o.id||'');
   var tb=$('rows'); var html='';
   CUTS.forEach(function(c){
     var q=Number(o[c[0]]||0); if(q<=0) return;
