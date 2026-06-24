@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats · Picking List</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.top .brand span{color:#6E6347;font-weight:400}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500}
+.top a.back:hover{background:#C9A55C;color:#1A1208}
+.wrap{max-width:880px;margin:0 auto;padding:24px 18px 80px}
+.hd{margin:4px 0 16px}
+.hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
+.hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
+.hd p{margin:0;font-size:13px;color:#9A8F76}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 18px}
+.kpi{background:#141414;border:0.5px solid #262626;border-radius:8px;padding:14px 16px}
+.kpi .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:26px;color:#F5EFE5;margin-top:4px}
+.sec-t{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C9A55C;margin:8px 0 10px;font-weight:600}
+.card{background:#121212;border:0.5px solid #262626;border-radius:12px;padding:8px 4px;overflow-x:auto;margin-bottom:22px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 12px;border-bottom:1px solid #C9A55C}
+th.r,td.r{text-align:right}
+td{padding:11px 12px;border-bottom:0.5px solid #1E1E1E;color:#D8CDB4;vertical-align:middle}
+td.cut{color:#F5EFE5;font-weight:600;font-size:15px}
+td.big{font-family:'Cormorant Garamond',serif;font-size:20px;color:#C9A55C;text-align:right}
+tfoot td{border-top:1px solid #C9A55C;border-bottom:none;color:#F5EFE5;font-weight:700}
+.ord{background:#121212;border:0.5px solid #262626;border-radius:10px;padding:13px 16px;margin-bottom:10px}
+.ord .h{display:flex;justify-content:space-between;align-items:baseline}
+.ord .nm{color:#F5EFE5;font-weight:600;font-size:15px}
+.ord .meta{font-size:11px;color:#6E6347}
+.ord .items{margin-top:6px;font-size:13px;color:#C9A55C}
+.loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+.note{font-size:11px;color:#6E6347;margin-top:6px;line-height:1.6}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{background:#1A1A1A;border:0.5px solid #2E2E2E;color:#B8A985;padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.tabs button.sel{background:#C9A55C;border-color:#C9A55C;color:#1A1208;font-weight:600}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="brand">PAMPA MEATS <span>· Picking List</span></div>
+<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+</div>
+<div class="wrap">
+<div class="hd">
+<div class="eyebrow">FULFILLMENT · PULL FROM RB</div>
+<h1 class="serif">Picking List</h1>
+<p>Everything you need to pull from RB to cover the open orders — totaled by cut, plus the per-order pack list.</p>
+</div>
+<div class="tabs">
+<button id="t-open" class="sel">Open (to fulfill)</button>
+<button id="t-all">All orders</button>
+</div>
+<div class="kpis">
+<div class="kpi"><div class="l">Orders</div><div class="v" id="k-ord">—</div></div>
+<div class="kpi"><div class="l">Packages</div><div class="v" id="k-pkg">—</div></div>
+<div class="kpi"><div class="l">Approx. weight</div><div class="v" id="k-lb">—</div></div>
+</div>
+<div class="sec-t">Pull from RB — by cut</div>
+<div class="card">
+<table>
+<thead><tr><th>Cut</th><th class="r">Packages</th><th class="r">≈ cases</th><th class="r">≈ lb</th></tr></thead>
+<tbody id="cut-rows"><tr><td colspan="4" class="loading">Loading…</td></tr></tbody>
+<tfoot><tr><td>Total</td><td class="r" id="f-pkg">0</td><td class="r" id="f-case">0</td><td class="r" id="f-lb">0 lb</td></tr></tfoot>
+</table>
+</div>
+<div class="sec-t">Pack list — by order</div>
+<div id="orders"><div class="loading">Loading…</div></div>
+<div class="note">"Open" = orders not marked Delivered. Cases are an estimate using your Products case/package weights — RB's printed weight per package is the source of truth at pickup.</div>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var CUTS=[['picanha','Picanha',2.5],['topSirloin','Top Sirloin',5],['nyStrip','New York Strip',6.5],['tenderloin','Tenderloin / Filet',2.5]];
+var PPC={picanha:14,topSirloin:7,nyStrip:5,tenderloin:21};
+var ALL=[], mode='open';
+function isTest(o){var nm=(o.name||'').trim();return /test/i.test(nm)||(!nm&&Number(o.total||0)===0);}
+function dt(o){return o.date||o.deliveryDate||o.created||o.createdTime||'';}
+function stage(o){return (o.status||'').trim();}
+function mapCutKey(name){var n=(name||'').toLowerCase();
+  if(n.indexOf('picanha')>=0)return'picanha';
+  if(n.indexOf('top sirloin')>=0)return'topSirloin';
+  if(n.indexOf('new york')>=0||n.indexOf('ny strip')>=0||n.indexOf('strip')>=0)return'nyStrip';
+  if(n.indexOf('tenderloin')>=0||n.indexOf('filet')>=0)return'tenderloin';
+  return'';}
+function loadProducts(){
+  return fetch('/api/products').then(function(r){return r.json();}).then(function(d){
+    ((d&&d.products)||[]).forEach(function(p){
+      var k=mapCutKey(p.cut); if(k && p.caseLb>0 && p.pkgLb>0){ var v=Math.round(p.caseLb/p.pkgLb); if(v>0) PPC[k]=v; }
+    });
+  }).catch(function(){});
+}
+function render(){
+  var list=ALL.filter(function(o){return !isTest(o);});
+  if(mode==='open') list=list.filter(function(o){return !/deliver/i.test(stage(o));});
+  list.sort(function(a,b){return (dt(b)||'').localeCompare(dt(a)||'');});
+  var tot={picanha:0,topSirloin:0,nyStrip:0,tenderloin:0};
+  list.forEach(function(o){ CUTS.forEach(function(c){ tot[c[0]]+=Number(o[c[0]]||0); }); });
+  var totPkg=0,totCase=0,totLb=0;
+  $('cut-rows').innerHTML=CUTS.map(function(c){
+    var pk=tot[c[0]]; if(pk<=0) return '';
+    var cases=Math.ceil(pk/(PPC[c[0]]||1));
+    var lb=pk*c[2];
+    totPkg+=pk; totCase+=cases; totLb+=lb;
+    return '<tr><td class="cut">'+c[1]+'</td><td class="big">'+pk+'</td><td class="r">'+cases+'</td><td class="r">'+Math.round(lb)+' lb</td></tr>';
+  }).join('')|| '<tr><td colspan="4" class="loading">Nothing to pull.</td></tr>';
+  $('f-pkg').textContent=totPkg; $('f-case').textContent=totCase; $('f-lb').textContent=Math.round(totLb)+' lb';
+  $('k-ord').textContent=list.length;
+  $('k-pkg').textContent=totPkg;
+  $('k-lb').textContent=Math.round(totLb)+' lb';
+  var oc=$('orders');
+  if(!list.length){ oc.innerHTML='<div class="loading">'+(mode==='open'?'No open orders to fulfill.':'No orders yet.')+'</div>'; return; }
+  oc.innerHTML=list.map(function(o){
+    var items=CUTS.filter(function(c){return Number(o[c[0]]||0)>0;}).map(function(c){return Number(o[c[0]])+' '+c[1];}).join(' · ')||'—';
+    var ref='PM-'+String(o.id||'').slice(-5).toUpperCase();
+    return '<div class="ord"><div class="h"><span class="nm">'+(o.name||'—')+'</span><span class="meta">'+ref+(o.zone?(' · '+o.zone):'')+(stage(o)?(' · '+stage(o)):'')+'</span></div>'+
+      '<div class="items">'+items+'</div></div>';
+  }).join('');
+}
+function load(){
+  loadProducts().then(function(){
+    return fetch('/api/orders').then(function(r){return r.json();});
+  }).then(function(d){ ALL=(d&&d.orders)||[]; render(); })
+  .catch(function(){ $('cut-rows').innerHTML='<tr><td colspan="4" class="loading">Connection error.</td></tr>'; $('orders').innerHTML=''; });
+}
+$('t-open').addEventListener('click',function(){mode='open';$('t-open').classList.add('sel');$('t-all').classList.remove('sel');render();});
+$('t-all').addEventListener('click',function(){mode='all';$('t-all').classList.add('sel');$('t-open').classList.remove('sel');render();});
+load();
+})();
+</script>
+</body>
+</html>
