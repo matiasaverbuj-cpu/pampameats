@@ -241,7 +241,7 @@ function openModal(id, focusRemind){
   Array.prototype.forEach.call($('m-stages').querySelectorAll('[data-stage]'),function(el){
     el.addEventListener('click',function(){ setStage(el.getAttribute('data-stage')); });
   });
-  var hasEmail=/^[^@s]+@[^@s]+.[^@s]+$/.test(o.email||'');
+  var hasEmail=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(o.email||'');
   $('m-remind').disabled=!hasEmail || bal(o)<=0.005;
   $('m-remind').style.opacity=($('m-remind').disabled)?'.45':'1';
   note('', hasEmail?'':'No valid email on file — add one in the order to send a reminder.');
@@ -304,7 +304,7 @@ function buildReminder(o){
 }
 function sendReminder(){
   if(!CUR) return;
-  if(!/^[^@s]+@[^@s]+.[^@s]+$/.test(CUR.email||'')){ note('err','No valid email on file.'); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(CUR.email||'')){ note('err','No valid email on file.'); return; }
   var r=buildReminder(CUR);
   note('','Sending reminder to '+CUR.email+'…');
   post('/api/po-send',{to:CUR.email,subject:r.subject,html:r.html,text:r.text}).then(function(res){
