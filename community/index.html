@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Pampa Meats community — real tables, real families enjoying premium Argentine Angus kosher beef across NY & NJ. Share your experience.">
+<meta name="theme-color" content="#000000">
+<title>Pampa Meats — Community</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:radial-gradient(1100px 560px at 50% -160px,#16130c 0%,#0A0A0A 58%) no-repeat #0A0A0A;background-attachment:fixed;color:#F5EFE5;line-height:1.7;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+::selection{background:#C9A55C;color:#0A0A0A}
+a{color:inherit;text-decoration:none}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:18px 32px;border-bottom:0.5px solid #2A2A2A;background:rgba(0,0,0,.82);backdrop-filter:saturate(140%) blur(8px);position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;letter-spacing:3px;color:#C9A55C}
+.nav-back{font-size:11px;letter-spacing:1.5px;color:#8A7548}
+.nav-back:hover{color:#C9A55C}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+.head{text-align:center;padding:64px 24px 8px}
+.head img{max-width:120px;width:34%;height:auto;margin:0 auto 22px;display:block}
+.eyebrow{font-size:10px;letter-spacing:4px;color:#8A7548;margin-bottom:14px}
+.head h1{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(32px,5.5vw,50px);margin:0 0 14px;color:#F5EFE5}
+.head p{font-size:15px;color:#B8A985;max-width:560px;margin:0 auto;line-height:1.9}
+.divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:30px 0}
+.divider span{height:0.5px;width:60px;background:#3a352b}.divider .d{color:#C9A55C}
+.sec-t{text-align:center;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A7548;margin:54px 0 6px}
+.sec-h{text-align:center;font-family:'Cormorant Garamond',serif;font-size:30px;color:#F5EFE5;margin:0 0 26px}
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.q{background:linear-gradient(180deg,#141414,#101010);border:0.5px solid #262626;border-radius:14px;padding:24px 22px;box-shadow:0 16px 38px -26px rgba(0,0,0,.9);transition:transform .2s ease,border-color .2s ease}
+.q:hover{transform:translateY(-3px);border-color:#3a3320}
+.q .stars{color:#C9A55C;letter-spacing:3px;font-size:14px;margin-bottom:10px}
+.q .txt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:#EDE3CC;line-height:1.5;margin:0 0 14px}
+.q .who{font-size:12px;letter-spacing:1px;color:#8A7548;text-transform:uppercase}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:8px}
+.cell{aspect-ratio:1/1;border:0.5px solid #2A2A2A;border-radius:12px;background:#0F0F0F;display:flex;align-items:center;justify-content:center;text-align:center;color:#5a5446;font-size:12px;letter-spacing:1px;overflow:hidden;position:relative}
+.cell img{width:100%;height:100%;object-fit:cover}
+.cell .ph{padding:16px;line-height:1.6}
+.cell .ph i{display:block;font-size:26px;color:#3a352b;margin-bottom:8px}
+.cta{background:linear-gradient(180deg,#15120c,#0d0b07);border:0.5px solid #C9A55C;border-radius:16px;padding:38px 28px;text-align:center;margin:40px 0}
+.cta h3{font-family:'Cormorant Garamond',serif;font-size:28px;margin:0 0 10px;color:#fff}
+.cta p{font-size:14px;color:#B8A985;max-width:480px;margin:0 auto 22px}
+.btn{display:inline-block;background:#C9A55C;color:#1A1208;font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;padding:15px 34px;border-radius:3px;transition:all .2s}
+.btn:hover{background:#D9B66C;transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:#C9A55C;border:1px solid #C9A55C;margin-left:8px}
+.btn.ghost:hover{background:#C9A55C;color:#1A1208}
+.foot{text-align:center;padding:54px 24px 60px;border-top:0.5px solid #1F1F1F;margin-top:56px;color:#8A7548}
+.foot .meta{font-size:10px;letter-spacing:3px}
+.note{text-align:center;font-size:11px;color:#5a5446;margin-top:14px;font-style:italic}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a href="/" class="nav-logo">PAMPA MEATS</a>
+<a href="/" class="nav-back">&larr; BACK TO SITE</a>
+</nav>
+
+<div class="head">
+<img src="/logo.png" alt="Pampa Meats">
+<div class="eyebrow">THE PAMPA COMMUNITY</div>
+<h1 class="serif">Real tables. Real families.</h1>
+<p>From our pampas to your Shabbat table. Pampa Meats is more than beef &mdash; it&rsquo;s the families across New York &amp; New Jersey who make every cut worth it. This is your space to share it.</p>
+</div>
+<div class="divider"><span></span><span class="d">&#9670;</span><span></span></div>
+
+<div class="wrap">
+
+<div class="sec-t">What our customers say</div>
+<div class="sec-h serif">From the table</div>
+<div class="quotes">
+<div class="q"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="txt">&ldquo;The picanha was the best we&rsquo;ve had at our Shabbat table &mdash; and finally Glatt kosher, Beit Yosef. This is the real thing.&rdquo;</p><div class="who">Family in Brooklyn, NY</div></div>
+<div class="q"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="txt">&ldquo;Delivered frozen, perfectly packed. The tenderloin melted. We&rsquo;re ordering again for the chag.&rdquo;</p><div class="who">Customer in Lakewood, NJ</div></div>
+<div class="q"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="txt">&ldquo;Argentine Angus quality you cannot find kosher anywhere else here. Our guests kept asking where it was from.&rdquo;</p><div class="who">Host in Teaneck, NJ</div></div>
+</div>
+
+<div class="sec-t">Share your plate</div>
+<div class="sec-h serif">The community wall</div>
+<div class="gallery">
+<div class="cell"><div class="ph"><i class="serif">&#9670;</i>Your photo here</div></div>
+<div class="cell"><div class="ph"><i class="serif">&#9670;</i>Your photo here</div></div>
+<div class="cell"><div class="ph"><i class="serif">&#9670;</i>Your photo here</div></div>
+<div class="cell"><div class="ph"><i class="serif">&#9670;</i>Your photo here</div></div>
+</div>
+<div class="note">Send us your table photos and we&rsquo;ll feature them here.</div>
+
+<div class="cta">
+<h3 class="serif">Share your Pampa moment</h3>
+<p>Cooked something beautiful? Tell us how it went and send a photo &mdash; you might be featured on the community wall.</p>
+<a class="btn" href="mailto:customerservice@pampameats.com?subject=My%20Pampa%20Meats%20experience">Share your experience</a>
+<a class="btn ghost" href="/order">Order again</a>
+</div>
+
+</div>
+
+<div class="foot">
+<div class="meta">PAMPA MEATS &middot; PREMIUM ARGENTINE ANGUS &middot; GLATT KOSHER, BEIT YOSEF &middot; NY &amp; NJ</div>
+</div>
+</body>
+</html>
