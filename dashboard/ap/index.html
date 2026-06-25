@@ -123,6 +123,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 <div class="formcard">
 <div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Load a vendor invoice</div>
 <div class="field"><label>Supplier</label><select id="f-vendor" style="width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:11px 12px;font-size:14px"><option value="">RB (default)</option></select></div>
+<div class="field"><label>What you bought (items, qty, price)</label><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th style="text-align:left;color:#8A7548;font-size:10px;padding:4px">Item</th><th style="text-align:right;color:#8A7548;font-size:10px;padding:4px;width:64px">Qty</th><th style="text-align:right;color:#8A7548;font-size:10px;padding:4px;width:90px">Unit $</th><th style="text-align:right;color:#8A7548;font-size:10px;padding:4px;width:96px">Subtotal</th></tr></thead><tbody id="li-rows"></tbody></table><button type="button" id="li-add" style="margin-top:8px;background:#1A1A1A;border:0.5px solid #3a3a3a;color:#C9A55C;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer">+ Add item</button><div style="font-size:11px;color:#6E6347;margin-top:6px">Optional. Adding items auto-fills the Amount field.</div></div>
 <div class="row3">
 <div class="field"><label>Vendor invoice #</label><input id="f-inv" type="text" placeholder="e.g. 180429"></div>
 <div class="field"><label>Amount $</label><input id="f-amt" type="number" min="0" step="0.01" placeholder="0.00"></div>
@@ -232,7 +233,7 @@ var amt=parseFloat($('f-amt').value);
 if(!(amt>0)){ banner('err','Enter the bill amount.'); return; }
 $('f-save').disabled=true;
 fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-vendorId:$('f-vendor').value||'', invoiceNum:$('f-inv').value.trim(), amount:amt, invoiceDate:$('f-idate').value||'', dueDate:$('f-due').value||'', notes:$('f-notes').value.trim()
+vendorId:$('f-vendor').value||'', invoiceNum:$('f-inv').value.trim(), amount:amt, invoiceDate:$('f-idate').value||'', dueDate:$('f-due').value||'', notes:(liText()+$('f-notes').value.trim())
 })}).then(function(r){return r.json();}).then(function(d){
 if(!(d&&d.ok)){ $('f-save').disabled=false; banner('err','Could not save ('+((d&&d.reason)||'error')+').'); return; }
 var finish=function(){
@@ -253,6 +254,19 @@ if(pendingFile && d.id){
 });
 
 load();
+function liAddRow(){var tb=document.getElementById('li-rows');if(!tb)return;var tr=document.createElement('tr');tr.innerHTML='<td style="padding:3px"><input class="li-i" type="text" placeholder="e.g. Picanha case" style="width:100%;background:#0C0C0C;border:0.5px solid #2A2A2A;border-radius:6px;color:#F5EFE5;padding:7px"></td><td style="padding:3px"><input class="li-q" type="number" min="0" step="1" placeholder="0" style="width:100%;background:#0C0C0C;border:0.5px solid #2A2A2A;border-radius:6px;color:#F5EFE5;padding:7px;text-align:right"></td><td style="padding:3px"><input class="li-p" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%;background:#0C0C0C;border:0.5px solid #2A2A2A;border-radius:6px;color:#F5EFE5;padding:7px;text-align:right"></td><td class="li-s" style="padding:3px;text-align:right;color:#C9A55C">$0</td>';tb.appendChild(tr);}function liRecalc(){var rows=[].slice.call(document.querySelectorAll('#li-rows tr'));var total=0;rows.forEach(function(tr){var q=parseFloat(tr.querySelector('.li-q').value)||0;var p=parseFloat(tr.querySelector('.li-p').value)||0;var s=q*p;total+=s;tr.querySelector('.li-s').textContent='
+</script>
+</body>
+</html>
++(Math.round(s*100)/100);});if(total>0){var amt=document.getElementById('f-amt');if(amt)amt.value=(Math.round(total*100)/100);}}function liText(){var rows=[].slice.call(document.querySelectorAll('#li-rows tr'));var parts=[];rows.forEach(function(tr){var i=tr.querySelector('.li-i').value.trim();var q=parseFloat(tr.querySelector('.li-q').value)||0;var p=parseFloat(tr.querySelector('.li-p').value)||0;if(i&&q>0){parts.push(q+'x '+i+' @ 
+</script>
+</body>
+</html>
++p+' = 
+</script>
+</body>
+</html>
++(Math.round(q*p*100)/100));}});return parts.length?('Items: '+parts.join('; ')+' | '):'';}var _la=document.getElementById('li-add');if(_la)_la.addEventListener('click',liAddRow);var _lr=document.getElementById('li-rows');if(_lr)_lr.addEventListener('input',liRecalc);liAddRow();liAddRow();
 })();
 </script>
 </body>
