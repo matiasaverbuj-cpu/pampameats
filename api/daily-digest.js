@@ -11,7 +11,7 @@ const T_EXP    = 'tblDSgTEyRHmiRIfX';
 const T_PROD   = 'tblp3S8Up7nOhbLsD';
 
 // First runs go to Mati only to validate the format. Add partners later (or set DIGEST_TO env).
-const DEFAULT_TO = ['matias.averbuj@gmail.com'];
+const DEFAULT_TO = ['matias.averbuj@gmail.com', 'natebuchs@gmail.com'];
 // Partners (ready to enable): jaybuchsbaum@gmail.com, janbuchsbaum@gmail.com, Markmtb@mac.com
 
 async function atFetch(table, token) {
