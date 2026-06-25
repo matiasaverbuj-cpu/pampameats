@@ -121,7 +121,8 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 </div>
 
 <div class="formcard">
-<div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Load a vendor invoice (RB)</div>
+<div class="clabel" style="padding:0 0 12px"><i class="ti ti-plus"></i> Load a vendor invoice</div>
+<div class="field"><label>Supplier</label><select id="f-vendor" style="width:100%;background:#0C0C0C;border:0.5px solid #2E2E2E;border-radius:8px;color:#F5EFE5;padding:11px 12px;font-size:14px"><option value="">RB (default)</option></select></div>
 <div class="row3">
 <div class="field"><label>Vendor invoice #</label><input id="f-inv" type="text" placeholder="e.g. 180429"></div>
 <div class="field"><label>Amount $</label><input id="f-amt" type="number" min="0" step="0.01" placeholder="0.00"></div>
@@ -159,6 +160,7 @@ function uploadPdf(recordId,file){
   });
 }
 
+function fillVendors(list){ var sel=$('f-vendor'); if(!sel||!list.length) return; var cur=sel.value; sel.innerHTML=list.map(function(s){return '<option value="'+s.id+'">'+s.name+'</option>';}).join(''); if(cur) sel.value=cur; }
 function render(bills){
 var tb=$('rows');
 var total=0,due=0;
@@ -185,7 +187,7 @@ tb.appendChild(tr);
 
 function load(){
 fetch('/api/bills').then(function(r){return r.json();}).then(function(d){
-if(d&&d.ok){ render(d.bills||[]); }
+if(d&&d.ok){ render(d.bills||[]); fillVendors(d.suppliers||[]); }
 else { $('rows').innerHTML='<tr><td colspan="9" class="loading">Could not load ('+((d&&d.reason)||'error')+').</td></tr>'; }
 }).catch(function(){ $('rows').innerHTML='<tr><td colspan="9" class="loading">Connection error.</td></tr>'; });
 }
@@ -230,7 +232,7 @@ var amt=parseFloat($('f-amt').value);
 if(!(amt>0)){ banner('err','Enter the bill amount.'); return; }
 $('f-save').disabled=true;
 fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-invoiceNum:$('f-inv').value.trim(), amount:amt, invoiceDate:$('f-idate').value||'', dueDate:$('f-due').value||'', notes:$('f-notes').value.trim()
+vendorId:$('f-vendor').value||'', invoiceNum:$('f-inv').value.trim(), amount:amt, invoiceDate:$('f-idate').value||'', dueDate:$('f-due').value||'', notes:$('f-notes').value.trim()
 })}).then(function(r){return r.json();}).then(function(d){
 if(!(d&&d.ok)){ $('f-save').disabled=false; banner('err','Could not save ('+((d&&d.reason)||'error')+').'); return; }
 var finish=function(){
