@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
-<title>Pampa Meats Â· A/P</title>
+<title>Pampa Meats · A/P</title>
 <link rel="icon" type="image/png" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,12 +88,12 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 </head>
 <body>
 <div class="top">
-<div class="brand">PAMPA MEATS <span>Â· A/P</span></div>
+<div class="brand">PAMPA MEATS <span>· A/P</span></div>
 <a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
 </div>
 <div class="wrap">
 <div class="hd">
-<div class="eyebrow">PURCHASING &amp; PAYABLES Â· A/P</div>
+<div class="eyebrow">PURCHASING &amp; PAYABLES · A/P</div>
 <h1 class="serif">Purchasing &amp; Payables</h1>
 <p>Order from RB, load the vendor invoice (PDF + amount), and track what you owe.</p>
 </div>
@@ -105,7 +105,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 
 <div id="banner" class="banner"></div>
 
-<div class="sec-t">Payables â what you owe</div>
+<div class="sec-t">Payables — what you owe</div>
 <div class="kpis">
 <div class="kpi"><div class="l">Bills</div><div class="v" id="k-count">0</div></div>
 <div class="kpi"><div class="l">Total billed</div><div class="v" id="k-total">$0</div></div>
@@ -116,7 +116,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 <div class="clabel"><i class="ti ti-file-invoice"></i> Vendor bills</div>
 <table>
 <thead><tr><th>Bill #</th><th>Invoice #</th><th>Invoice date</th><th>Due</th><th class="r">Amount</th><th class="r">Balance</th><th>Status</th><th>Invoice PDF</th><th></th></tr></thead>
-<tbody id="rows"><tr><td colspan="9" class="loading">Loadingâ¦</td></tr></tbody>
+<tbody id="rows"><tr><td colspan="9" class="loading">Loading…</td></tr></tbody>
 </table>
 </div>
 
@@ -137,7 +137,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 <input id="f-file" type="file" accept="application/pdf,image/*" style="display:none">
 </div>
 <button class="btn" id="f-save">Add bill</button>
-<div style="font-size:11px;color:#6E6347;margin-top:10px">You can also upload the PDF later from the table (ð button on each bill).</div>
+<div style="font-size:11px;color:#6E6347;margin-top:10px">You can also upload the PDF later from the table (📎 button on each bill).</div>
 </div>
 </div>
 
@@ -175,7 +175,7 @@ var tr=document.createElement('tr');
 var pdfCell = b.attachmentUrl
   ? '<a class="pdf-view" href="'+b.attachmentUrl+'" target="_blank" rel="noopener"><i class="ti ti-file-check"></i> View</a>'
   : '<button class="pdfb" data-up="'+b.id+'"><i class="ti ti-paperclip"></i> Upload</button>';
-tr.innerHTML='<td>'+(b.billNum||'')+'</td><td>'+(b.invoiceNum||'â')+'</td>'+
+tr.innerHTML='<td>'+(b.billNum||'')+'</td><td>'+(b.invoiceNum||'—')+'</td>'+
 '<td>'+(b.invoiceDate||'')+'</td><td>'+(b.dueDate||'')+'</td>'+
 '<td class="r">'+money(b.amount)+'</td><td class="r">'+money(b.balance)+'</td>'+
 '<td><span class="pill '+(b.status||'Unpaid')+'">'+(b.status||'Unpaid')+'</span></td>'+
@@ -201,7 +201,7 @@ if(pay && !pay.disabled){
   pay.disabled=true;
   fetch('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,amountPaid:Number(amt),status:'Paid',paidDate:new Date().toISOString().slice(0,10)})})
   .then(function(r){return r.json();}).then(function(d){
-    if(d&&d.ok){ banner('ok','Bill marked paid â'); load(); }
+    if(d&&d.ok){ banner('ok','Bill marked paid ✓'); load(); }
     else { pay.disabled=false; banner('err','Could not update ('+((d&&d.reason)||'error')+').'); }
   }).catch(function(){ pay.disabled=false; banner('err','Connection error.'); });
   return;
@@ -212,10 +212,10 @@ if(up){ rowUploadId=up.getAttribute('data-up'); $('f-file-row').click(); }
 
 $('f-file-row').addEventListener('change',function(){
 var f=this.files&&this.files[0]; if(!f||!rowUploadId) return;
-banner('ok','Uploading PDFâ¦');
+banner('ok','Uploading PDF…');
 uploadPdf(rowUploadId,f).then(function(d){
   this.value='';
-  if(d&&d.ok){ banner('ok','Invoice PDF attached â'); load(); }
+  if(d&&d.ok){ banner('ok','Invoice PDF attached ✓'); load(); }
   else { banner('err','Upload failed ('+((d&&d.reason)||'error')+').'); }
 }.bind(this)).catch(function(){ banner('err','Upload connection error.'); });
 });
@@ -243,12 +243,12 @@ var finish=function(){
   load();
 };
 if(pendingFile && d.id){
-  banner('ok','Bill added â uploading PDFâ¦');
+  banner('ok','Bill added — uploading PDF…');
   uploadPdf(d.id,pendingFile).then(function(u){
-    banner(u&&u.ok?'ok':'err', u&&u.ok?'Bill + invoice PDF saved â ('+d.billNum+')':'Bill saved, but PDF upload failed.');
+    banner(u&&u.ok?'ok':'err', u&&u.ok?'Bill + invoice PDF saved ✓ ('+d.billNum+')':'Bill saved, but PDF upload failed.');
     finish();
   }).catch(function(){ banner('err','Bill saved, PDF upload connection error.'); finish(); });
-} else { banner('ok','Bill added â ('+d.billNum+')'); finish(); }
+} else { banner('ok','Bill added ✓ ('+d.billNum+')'); finish(); }
 }).catch(function(){ $('f-save').disabled=false; banner('err','Connection error.'); });
 });
 
