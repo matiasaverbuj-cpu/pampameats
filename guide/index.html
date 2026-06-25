@@ -3,123 +3,203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
-<title>Pampa Meats — How to add an order</title>
+<title>Pampa Meats — Partner Guide</title>
 <link rel="icon" type="image/png" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.6;-webkit-font-smoothing:antialiased;font-size:21px}
-.top{display:flex;align-items:center;gap:14px;padding:22px 24px;border-bottom:1px solid #242424;background:#000}
-.top img{height:40px;width:auto}
-.top .t{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
-.wrap{max-width:680px;margin:0 auto;padding:34px 20px 70px}
-.hero{text-align:center;margin-bottom:34px}
-.hero h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:42px;line-height:1.1;margin:0 0 12px;color:#fff}
-.hero p{font-size:20px;color:#B8A985;margin:0}
-.step{display:flex;gap:20px;align-items:flex-start;background:#121212;border:2px solid #262626;border-radius:18px;padding:24px 22px;margin-bottom:18px}
-.step .num{flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:#C9A55C;color:#1A1208;font-weight:700;font-size:28px;display:flex;align-items:center;justify-content:center}
-.step .body{padding-top:4px}
-.step .body .h{font-size:23px;font-weight:700;color:#fff;margin:0 0 4px}
-.step .body p{margin:0;font-size:20px;color:#D8CDB4}
-.step .body .tap{display:inline-block;margin-top:8px;background:#1d1a12;border:1px solid #C9A55C;color:#C9A55C;border-radius:10px;padding:6px 14px;font-weight:600;font-size:18px}
-.done{text-align:center;background:#13361f;border:2px solid #2bbd6b;border-radius:18px;padding:26px;margin-top:8px}
-.done .big{font-size:60px}
-.done h2{font-family:'Cormorant Garamond',serif;font-size:32px;margin:6px 0;color:#fff}
-.done p{font-size:19px;color:#CDEBD6;margin:0}
-.tipbox{background:#1A1612;border:1px dashed #5a4a1f;border-radius:14px;padding:18px 20px;margin-top:22px;font-size:18px;color:#E8DFC9}
-.tipbox b{color:#C9A55C}
-.cta{display:block;text-align:center;margin:30px auto 0;background:#C9A55C;color:#1A1208;font-weight:700;font-size:22px;padding:20px;border-radius:16px;text-decoration:none;max-width:420px}
-.foot{text-align:center;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#3a352b;margin-top:36px}
-
-/* ===== PAMPA POLISH ===== */
 html{scroll-behavior:smooth}
-body{background:radial-gradient(1100px 520px at 50% -160px,#16130c 0%,#0A0A0A 60%) no-repeat #0A0A0A;background-attachment:fixed}
+body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:radial-gradient(1100px 560px at 50% -160px,#16130c 0%,#0A0A0A 58%) no-repeat #0A0A0A;background-attachment:fixed;color:#F5EFE5;line-height:1.6;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
 ::selection{background:#C9A55C;color:#0A0A0A}
-*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:transparent}*::-webkit-scrollbar-thumb{background:#2b2b2b;border-radius:8px}*::-webkit-scrollbar-thumb:hover{background:#5a4a22}
-.top{box-shadow:0 1px 0 rgba(201,165,92,.12),0 8px 24px -16px rgba(0,0,0,.9);backdrop-filter:saturate(140%) blur(8px)}
-.card,.kpi,.panel,.ord,.tool,.age,.step{box-shadow:0 14px 34px -22px rgba(0,0,0,.9);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
-.kpi{background:linear-gradient(180deg,#181818,#0f0f0f)}
-.kpi:hover,.ord:hover,.tool:hover,.step:hover{transform:translateY(-2px);border-color:#3a3320}
-.btn,.state-pill,.tabs button,.st,.cta{transition:all .18s ease}
-.btn:hover,.cta:hover{box-shadow:0 6px 18px -8px rgba(201,165,92,.45)}
-.btn.gold:hover{box-shadow:0 8px 22px -8px rgba(201,165,92,.6)}
-tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(201,165,92,.05)}
-a.back:hover,.top a.back:hover{box-shadow:0 4px 14px -6px rgba(201,165,92,.5)}
-input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12)}
+a{color:inherit;text-decoration:none}
+.top{display:flex;align-items:center;gap:14px;padding:18px 26px;border-bottom:0.5px solid #242424;background:rgba(0,0,0,.82);backdrop-filter:saturate(140%) blur(8px);position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(201,165,92,.12),0 8px 24px -16px rgba(0,0,0,.9)}
+.top img{height:34px;width:auto}
+.top .t{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:3px;color:#C9A55C}
+.top .t span{display:block;font-family:'Inter';font-size:9px;letter-spacing:3px;color:#6E6347;margin-top:2px;text-transform:uppercase}
+.wrap{max-width:760px;margin:0 auto;padding:40px 22px 80px}
+.hero{text-align:center;margin-bottom:14px}
+.hero .eyebrow{font-size:11px;letter-spacing:4px;color:#8A7548;margin-bottom:14px;text-transform:uppercase}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(34px,6vw,52px);line-height:1.05;margin:0 0 14px;color:#fff}
+.hero p{font-size:16px;color:#B8A985;margin:0 auto;max-width:440px}
+.meta-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:22px 0 8px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:#121212;border:0.5px solid #2A2A2A;border-radius:30px;padding:8px 16px;font-size:12.5px;color:#D8CDB4}
+.pill i{color:#C9A55C;font-size:16px}
+.sec-label{display:flex;align-items:center;gap:12px;margin:46px 0 8px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A7548}
+.sec-label::before,.sec-label::after{content:"";flex:1;height:0.5px;background:linear-gradient(90deg,transparent,#2A2A2A,transparent)}
+/* timeline */
+.timeline{position:relative;margin:18px 0 0;padding-left:8px}
+.timeline::before{content:"";position:absolute;left:35px;top:18px;bottom:34px;width:2px;background:linear-gradient(180deg,#C9A55C, #5a4a22 70%, transparent)}
+.step{position:relative;display:flex;gap:20px;align-items:flex-start;padding:0 0 22px 0}
+.node{flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:linear-gradient(180deg,#1c180f,#100d07);border:1.5px solid #C9A55C;color:#C9A55C;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 0 0 5px #0A0A0A,0 10px 24px -10px rgba(201,165,92,.4)}
+.card{flex:1;background:linear-gradient(180deg,#141414,#101010);border:0.5px solid #262626;border-radius:14px;padding:18px 20px;box-shadow:0 16px 38px -26px rgba(0,0,0,.9);transition:transform .2s ease,border-color .2s ease}
+.card:hover{transform:translateY(-2px);border-color:#3a3320}
+.card .ic{float:right;width:42px;height:42px;border-radius:11px;background:#1a160d;border:0.5px solid #3a3320;display:flex;align-items:center;justify-content:center;color:#C9A55C;font-size:22px;margin-left:14px}
+.card h3{font-size:18px;font-weight:700;color:#fff;margin:2px 0 5px}
+.card p{margin:0;font-size:14.5px;color:#C2B79B}
+.card p b{color:#F5EFE5;font-weight:600}
+.tap{display:inline-block;margin-top:11px;background:#1d1a12;border:1px solid #C9A55C;color:#C9A55C;border-radius:9px;padding:6px 13px;font-weight:600;font-size:13px;letter-spacing:.3px}
+.tap i{font-size:14px;vertical-align:-2px}
+/* done */
+.done{display:flex;gap:18px;align-items:center;background:linear-gradient(180deg,#10301c,#0c2517);border:1px solid #2bbd6b;border-radius:16px;padding:20px 22px;margin-top:6px}
+.done .big{flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:#13361f;border:1.5px solid #2bbd6b;color:#8AF0A8;font-size:30px;display:flex;align-items:center;justify-content:center}
+.done h3{margin:0 0 3px;font-family:'Cormorant Garamond',serif;font-size:24px;color:#fff}
+.done p{margin:0;font-size:14px;color:#CDEBD6}
+/* two ways */
+.ways{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.way{background:linear-gradient(180deg,#141414,#101010);border:0.5px solid #262626;border-radius:14px;padding:20px;box-shadow:0 16px 38px -26px rgba(0,0,0,.9)}
+.way .wic{width:46px;height:46px;border-radius:12px;background:#1a160d;border:0.5px solid #3a3320;display:flex;align-items:center;justify-content:center;color:#C9A55C;font-size:24px;margin-bottom:12px}
+.way .k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548;margin-bottom:5px}
+.way h3{margin:0 0 7px;font-size:17px;color:#fff;font-weight:700}
+.way p{margin:0;font-size:13.5px;color:#B8A985}
+.way .lnk{display:inline-block;margin-top:11px;color:#C9A55C;font-size:13px;font-weight:600;border-bottom:1px solid #5a4a22;padding-bottom:1px}
+/* tip */
+.tip{display:flex;gap:14px;align-items:flex-start;background:#1A1612;border:1px dashed #5a4a1f;border-radius:14px;padding:18px 20px;margin-top:30px}
+.tip i{color:#C9A55C;font-size:24px;flex:0 0 auto;margin-top:2px}
+.tip .x{font-size:14.5px;color:#E8DFC9}
+.tip .x b{color:#C9A55C}
+.cta{display:flex;align-items:center;justify-content:center;gap:10px;margin:34px auto 0;background:#C9A55C;color:#1A1208;font-weight:700;font-size:16px;letter-spacing:.5px;padding:18px;border-radius:14px;max-width:360px;transition:all .18s ease;box-shadow:0 12px 28px -12px rgba(201,165,92,.5)}
+.cta:hover{background:#D9B66C;transform:translateY(-1px)}
+.foot{text-align:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#3a352b;margin-top:42px}
+@media(max-width:560px){
+.wrap{padding:30px 16px 70px}
+.timeline::before{left:27px}
+.node{width:44px;height:44px;font-size:20px}
+.card .ic{display:none}
+.ways{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="top"><img src="/logo.png" alt="Pampa Meats"><div class="t">PAMPA MEATS</div></div>
+<div class="top">
+<img src="/logo.png" alt="Pampa Meats">
+<div class="t">PAMPA MEATS<span>Partner Guide</span></div>
+</div>
 <div class="wrap">
+
 <div class="hero">
-<h1>How to add an order</h1>
-<p>Super simple — about 1 minute. You've got this. 👍</p>
+<div class="eyebrow">Partner Guide</div>
+<h1 class="serif">How to add an order</h1>
+<p>Takes about a minute. Works right from your phone — no paper, nothing to forget.</p>
+<div class="meta-row">
+<span class="pill"><i class="ti ti-clock"></i> ~1 minute</span>
+<span class="pill"><i class="ti ti-device-mobile"></i> Phone friendly</span>
+<span class="pill"><i class="ti ti-refresh"></i> Syncs for everyone</span>
 </div>
+</div>
+
+<div class="sec-label">7 simple steps</div>
+
+<div class="timeline">
+
 <div class="step">
-<div class="num">1</div>
-<div class="body">
-<div class="h">Open the website</div>
-<p>Go to <b>pampameats.com/dashboard</b> and type the password.</p>
+<div class="node serif">1</div>
+<div class="card">
+<div class="ic"><i class="ti ti-lock"></i></div>
+<h3>Open the dashboard</h3>
+<p>Go to <b>pampameats.com/dashboard</b> and enter the password.</p>
 </div>
 </div>
+
 <div class="step">
-<div class="num">2</div>
-<div class="body">
-<div class="h">Tap the gold "A/R" box</div>
-<p>It's the big box that says <b>A/R — Sales &amp; Receivables</b>.</p>
+<div class="node serif">2</div>
+<div class="card">
+<div class="ic"><i class="ti ti-cash"></i></div>
+<h3>Open A/R</h3>
+<p>Tap the gold box that says <b>A/R — Sales &amp; Receivables</b>.</p>
 <span class="tap">A/R</span>
 </div>
 </div>
+
 <div class="step">
-<div class="num">3</div>
-<div class="body">
-<div class="h">Tap "New customer order"</div>
-<p>The first button at the top.</p>
-<span class="tap">New customer order</span>
+<div class="node serif">3</div>
+<div class="card">
+<div class="ic"><i class="ti ti-plus"></i></div>
+<h3>New customer order</h3>
+<p>Tap the <b>New customer order</b> button at the top.</p>
+<span class="tap"><i class="ti ti-plus"></i> New customer order</span>
 </div>
 </div>
+
 <div class="step">
-<div class="num">4</div>
-<div class="body">
-<div class="h">Tap your name</div>
-<p>Under <b>"Taken by"</b>, tap <b>your name</b> (so we know who took the order).</p>
-<span class="tap">Taken by → your name</span>
+<div class="node serif">4</div>
+<div class="card">
+<div class="ic"><i class="ti ti-user"></i></div>
+<h3>Who's taking it</h3>
+<p>Under <b>Taken by</b>, tap <b>your name</b> — so we know who took the order.</p>
+<span class="tap">Taken by &rarr; your name</span>
 </div>
 </div>
+
 <div class="step">
-<div class="num">5</div>
-<div class="body">
-<div class="h">Type the customer's name and phone</div>
-<p>Just the name and the phone number. That's all.</p>
+<div class="node serif">5</div>
+<div class="card">
+<div class="ic"><i class="ti ti-id"></i></div>
+<h3>Customer details</h3>
+<p>Type the customer's <b>name</b> and <b>phone</b>. That's all you need.</p>
 </div>
 </div>
+
 <div class="step">
-<div class="num">6</div>
-<div class="body">
-<div class="h">Pick the cuts with + and −</div>
-<p>For each cut (Picanha, Top Sirloin, New York Strip, Tenderloin), tap <b>+</b> to add packages or <b>−</b> to remove.</p>
-<span class="tap">＋ / −</span>
+<div class="node serif">6</div>
+<div class="card">
+<div class="ic"><i class="ti ti-meat"></i></div>
+<h3>Choose the cuts</h3>
+<p>Use <b>+</b> and <b>&minus;</b> for each cut — Picanha, Top Sirloin, New York Strip, Tenderloin.</p>
+<span class="tap">＋ / &minus;</span>
 </div>
 </div>
+
 <div class="step">
-<div class="num">7</div>
-<div class="body">
-<div class="h">Tap "Save"</div>
-<p>The order is in! It shows up for everyone automatically.</p>
-<span class="tap">Save</span>
+<div class="node serif">7</div>
+<div class="card">
+<div class="ic"><i class="ti ti-device-floating"></i></div>
+<h3>Save</h3>
+<p>Tap <b>Save</b>. The order is in — and shows up for everyone instantly.</p>
+<span class="tap"><i class="ti ti-check"></i> Save</span>
 </div>
 </div>
+
+</div>
+
 <div class="done">
-<div class="big">✅</div>
-<h2>That's it!</h2>
-<p>The order is saved. No paper, no WhatsApp to remember.</p>
+<div class="big"><i class="ti ti-check"></i></div>
+<div>
+<h3 class="serif">That's it — order saved</h3>
+<p>It appears on the dashboard and in A/R right away. No paper, no WhatsApp to remember.</p>
 </div>
-<div class="tipbox"><b>Golden rule:</b> add the order <b>the moment</b> the customer asks. One minute now saves a lot later — and nothing gets lost.</div>
-<a class="cta" href="/dashboard">Open the website →</a>
-<div class="foot">Pampa Meats · You can do this 💪</div>
+</div>
+
+<div class="sec-label">Two ways an order gets in</div>
+<div class="ways">
+<div class="way">
+<div class="wic"><i class="ti ti-user-plus"></i></div>
+<div class="k">Option A · You add it</div>
+<h3>Add it yourself</h3>
+<p>Follow the 7 steps above whenever a customer asks you directly. Best for phone calls and in-person orders.</p>
+</div>
+<div class="way">
+<div class="wic"><i class="ti ti-shopping-cart"></i></div>
+<div class="k">Option B · Customer adds it</div>
+<h3>Let the customer order</h3>
+<p>Share the store link — the customer picks their cuts and reserves. The order lands in the system automatically.</p>
+<a class="lnk" href="/order">pampameats.com/order &rarr;</a>
+</div>
+</div>
+
+<div class="tip">
+<i class="ti ti-bulb"></i>
+<div class="x"><b>Golden rule:</b> add the order <b>the moment</b> the customer asks. One minute now saves a lot later — and nothing gets lost.</div>
+</div>
+
+<a class="cta" href="/dashboard"><i class="ti ti-arrow-right"></i> Open the dashboard</a>
+
+<div class="foot">Pampa Meats · KLA Management Group</div>
 </div>
 </body>
 </html>
