@@ -70,6 +70,7 @@ export default async function handler(req, res) {
       res.status(200).json({ ok: false, reason: 'airtable_' + r.status, detail: (data && data.error) || null });
       return;
     }
+    try { var rk=process.env.RESEND_API_KEY; if(rk){ var cuts=[picanha?('Picanha x'+picanha):'',topSirloin?('Top Sirloin x'+topSirloin):'',nyStrip?('NY Strip x'+nyStrip):'',tenderloin?('Tenderloin x'+tenderloin):''].filter(Boolean).join(', '); await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:('Bearer '+rk),'Content-Type':'application/json'},body:JSON.stringify({from:'Pampa Meats <reports@pampameats.com>',to:['natebuchs@gmail.com'],subject:('New Pampa Meats order - '+name),text:('New order - '+name+' - '+phone+' - zone '+(zone||'NA')+' - '+(cuts||'no cuts')+' - dashboard: https://www.pampameats.com/dashboard/ar')})}); } } catch(e){}
     res.status(200).json({ ok: true, id: data.id });
   } catch (e) {
     res.status(200).json({ ok: false, reason: String(e) });
