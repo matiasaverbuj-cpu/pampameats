@@ -1,10 +1,11 @@
 // Pampa Meats — Accounts Payable (vendor bills). PROTECTED by middleware (Basic Auth / DASH_PASS).
-// GET  -> list bills.
-// POST -> create a bill, or update one ({id, ...}) e.g. mark paid.
+// GET  -> list bills + suppliers (for the vendor dropdown).
+// POST -> create a bill (optional vendorId), or update one ({id, ...}) e.g. mark paid.
 // Requires env var AIRTABLE_TOKEN with data.records:write scope.
 
 const BASE = 'app1muH8br0JSsvOa';
 const TABLE = 'tblJX0e2VyUS2cBNM';
+const SUPPLIERS = 'tbl942qKjQMWaf1Kw';
 const ROSENBLATT_ID = 'recqf7yKGuHgbyPwc';
 
 export default async function handler(req, res) {
@@ -14,17 +15,30 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const r = await fetch(`https://api.airtable.com/v0/${BASE}/${TABLE}?pageSize=100`, { headers: auth });
-      const data = await r.json();
-      if (!r.ok) { res.status(200).json({ ok: false, reason: 'airtable_' + r.status }); return; }
+      const [rb, rs] = await Promise.all([
+        fetch(`https://api.airtable.com/v0/${BASE}/${TABLE}?pageSize=100`, { headers: auth }),
+        fetch(`https://api.airtable.com/v0/${BASE}/${SUPPLIERS}?pageSize=100`, { headers: auth })
+      ]);
+      const data = await rb.json();
+      if (!rb.ok) { res.status(200).json({ ok: false, reason: 'airtable_' + rb.status }); return; }
+      const sdata = rs.ok ? await rs.json() : { records: [] };
+      const supMap = {};
+      const suppliers = (sdata.records || []).map(rec => {
+        const name = (rec.fields && rec.fields['Name']) || 'Supplier';
+        supMap[rec.id] = name;
+        return { id: rec.id, name };
+      });
       const bills = (data.records || []).map(rec => {
         const f = rec.fields || {};
         const amount = Number(f['Amount']) || 0;
         const paid = Number(f['Amount Paid']) || 0;
         const att = Array.isArray(f['Attachment']) ? f['Attachment'] : [];
+        const ven = Array.isArray(f['Vendor']) ? f['Vendor'] : [];
         return {
           id: rec.id,
           billNum: f['Bill #'] || '',
+          vendorId: ven[0] || '',
+          vendorName: (ven[0] && supMap[ven[0]]) || '',
           invoiceNum: f['Invoice #'] || '',
           invoiceDate: f['Invoice Date'] || '',
           dueDate: f['Due Date'] || '',
@@ -38,7 +52,7 @@ export default async function handler(req, res) {
           attachmentName: (att[0] && att[0].filename) || ''
         };
       });
-      res.status(200).json({ ok: true, bills });
+      res.status(200).json({ ok: true, bills, suppliers });
     } catch (e) { res.status(200).json({ ok: false, reason: String(e) }); }
     return;
   }
@@ -48,12 +62,12 @@ export default async function handler(req, res) {
     if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
     body = body || {};
 
-    // Update (e.g. mark paid)
     if (body.id) {
       const fields = {};
       if (body.amountPaid != null && body.amountPaid !== '') fields['Amount Paid'] = Number(body.amountPaid) || 0;
       if (body.status) fields['Status'] = String(body.status);
       if (body.paidDate) fields['Paid Date'] = String(body.paidDate);
+      if (body.notes != null) fields['Notes'] = String(body.notes);
       if (Object.keys(fields).length === 0) { res.status(400).json({ ok: false, reason: 'no_fields' }); return; }
       try {
         const r = await fetch(`https://api.airtable.com/v0/${BASE}/${TABLE}/${body.id}`, {
@@ -67,13 +81,13 @@ export default async function handler(req, res) {
       return;
     }
 
-    // Create
     const amount = Number(body.amount) || 0;
     const now = new Date().toISOString().slice(0, 10);
     const billNum = body.billNum || ('BILL-' + now.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase());
+    const vendorId = body.vendorId || ROSENBLATT_ID;
     const fields = {
       'Bill #': billNum,
-      'Vendor': [ROSENBLATT_ID],
+      'Vendor': [vendorId],
       'Amount': amount,
       'Status': 'Unpaid'
     };
