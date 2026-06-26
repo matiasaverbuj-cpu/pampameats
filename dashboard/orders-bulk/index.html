@@ -23,7 +23,7 @@ a{color:inherit;text-decoration:none}
 .top .brand span{color:#6E6347;font-weight:400}
 .top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500}
 .top a.back:hover{background:#C9A55C;color:#1A1208}
-.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 120px}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 16px 120px}
 .hd{margin:4px 0 14px}
 .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
 .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
@@ -32,17 +32,18 @@ a{color:inherit;text-decoration:none}
 .bar label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8A7548}
 .bar select{background:#0E0E0E;border:0.5px solid #2E2E2E;color:#F5EFE5;border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit}
 .card{background:#121212;border:0.5px solid #262626;border-radius:12px;padding:6px 6px;overflow-x:auto;box-shadow:0 14px 34px -22px rgba(0,0,0,.9)}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:880px}
-th{text-align:left;font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 8px;border-bottom:1px solid #C9A55C;white-space:nowrap}
-th.num,td.num{text-align:center;width:78px}
-td{padding:6px 8px;border-bottom:0.5px solid #1C1C1C;vertical-align:middle}
-td input,td select{width:100%;background:#0C0C0C;border:0.5px solid #2A2A2A;border-radius:7px;color:#F5EFE5;padding:9px 9px;font-size:13px;font-family:inherit}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:1320px}
+th{text-align:left;font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:#8A7548;font-weight:600;padding:10px 7px;border-bottom:1px solid #C9A55C;white-space:nowrap}
+th.num,td.num{text-align:center;width:74px}
+td{padding:6px 7px;border-bottom:0.5px solid #1C1C1C;vertical-align:middle}
+td input,td select{width:100%;background:#0C0C0C;border:0.5px solid #2A2A2A;border-radius:7px;color:#F5EFE5;padding:9px 8px;font-size:13px;font-family:inherit}
 td input:focus,td select:focus{outline:none;border-color:#C9A55C;box-shadow:0 0 0 3px rgba(201,165,92,.12)}
-td input.num{text-align:center;width:64px}
-td.st{width:42px;text-align:center;font-size:18px}
+td input.num{text-align:center}
+td.st{width:40px;text-align:center;font-size:18px}
+td.lb{text-align:right;color:#C9A55C;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr.saved input,tr.saved select{opacity:.5}
 tr.saved{background:rgba(43,189,107,.06)}
-.rownum{color:#6E6347;font-size:11px;text-align:center;width:30px}
+.rownum{color:#6E6347;font-size:11px;text-align:center;width:28px}
 .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .btn{background:#1A1A1A;border:0.5px solid #3a3a3a;color:#C9A55C;border-radius:9px;padding:11px 16px;font-size:14px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;transition:all .15s}
 .btn:hover{border-color:#C9A55C}
@@ -64,7 +65,7 @@ tr.saved{background:rgba(43,189,107,.06)}
 <div class="hd">
 <div class="eyebrow">BULK ORDER ENTRY · LIKE A SPREADSHEET</div>
 <h1 class="serif">Order Sheet</h1>
-<p>Type many customer orders at once and save them all in one click. Each saved row becomes an order in the system automatically.</p>
+<p>Type many customer orders at once and save them all in one click. Same columns as your sheet — each saved row becomes an order in the system.</p>
 </div>
 
 <div class="bar">
@@ -83,14 +84,17 @@ tr.saved{background:rgba(43,189,107,.06)}
 <thead>
 <tr>
 <th class="rownum">#</th>
-<th>Customer name</th>
-<th>Phone</th>
-<th>Zone</th>
+<th>First name</th>
+<th>Last name</th>
+<th>Cell phone</th>
+<th>Email</th>
+<th>Address</th>
+<th>Date of order</th>
+<th class="num">Fillet</th>
 <th class="num">Picanha</th>
-<th class="num">Top Sirloin</th>
 <th class="num">NY Strip</th>
-<th class="num">Tenderloin</th>
-<th>Notes</th>
+<th class="num">Top Sirloin</th>
+<th class="lb">≈ lb</th>
 <th class="st"></th>
 </tr>
 </thead>
@@ -102,7 +106,7 @@ tr.saved{background:rgba(43,189,107,.06)}
 <button class="btn" id="addRow"><i class="ti ti-plus"></i> Add row</button>
 <button class="btn" id="clearSaved"><i class="ti ti-eraser"></i> Remove saved rows</button>
 </div>
-<div class="hint">Fill at least <b>name + phone + one cut</b> per row. Quantities are in <b>packages</b>. Empty rows are ignored. Zone is optional (NY / NJ).</div>
+<div class="hint">Fill at least <b>name + phone + one cut</b> per row. Quantities are in <b>packages (units)</b>; ≈ lb is calculated for you. Empty rows are ignored.</div>
 <div class="msg" id="msg"></div>
 </div>
 
@@ -114,7 +118,8 @@ tr.saved{background:rgba(43,189,107,.06)}
 <script>
 (function(){
 var $=function(id){return document.getElementById(id);};
-var CUTS=[["picanha","Picanha"],["topSirloin","Top Sirloin"],["nyStrip","NY Strip"],["tenderloin","Tenderloin"]];
+// cut key -> [label, lb per unit] matching the source sheet
+var CUTS=[["tenderloin","Fillet",2.5],["picanha","Picanha",2.5],["nyStrip","NY Strip",5.5],["topSirloin","Top Sirloin",5]];
 var tb=$("rows");
 var rowSeq=0;
 
@@ -122,15 +127,18 @@ function makeRow(){
   rowSeq++;
   var tr=document.createElement("tr");
   tr.setAttribute("data-row","1");
-  var cells="";
-  cells+='<td class="rownum">'+rowSeq+'</td>';
-  cells+='<td><input type="text" data-f="name" placeholder="Name" autocomplete="off"></td>';
-  cells+='<td><input type="tel" data-f="phone" placeholder="Phone" autocomplete="off"></td>';
-  cells+='<td><select data-f="zone"><option value="">—</option><option value="NY">NY</option><option value="NJ">NJ</option></select></td>';
-  CUTS.forEach(function(c){ cells+='<td class="num"><input class="num" type="number" min="0" step="1" data-f="'+c[0]+'" placeholder="0"></td>'; });
-  cells+='<td><input type="text" data-f="rnotes" placeholder="Optional" autocomplete="off"></td>';
-  cells+='<td class="st" data-st="1"></td>';
-  tr.innerHTML=cells;
+  var c="";
+  c+='<td class="rownum">'+rowSeq+'</td>';
+  c+='<td><input type="text" data-f="first" placeholder="First" autocomplete="off"></td>';
+  c+='<td><input type="text" data-f="last" placeholder="Last" autocomplete="off"></td>';
+  c+='<td><input type="tel" data-f="phone" placeholder="Phone" autocomplete="off"></td>';
+  c+='<td><input type="email" data-f="email" placeholder="Email" autocomplete="off"></td>';
+  c+='<td><input type="text" data-f="address" placeholder="Street / city / ZIP" autocomplete="off"></td>';
+  c+='<td><input type="text" data-f="dorder" placeholder="e.g. May 7" autocomplete="off"></td>';
+  CUTS.forEach(function(cut){ c+='<td class="num"><input class="num" type="number" min="0" step="1" data-f="'+cut[0]+'" placeholder="0"></td>'; });
+  c+='<td class="lb" data-lb="1">0 lb</td>';
+  c+='<td class="st" data-st="1"></td>';
+  tr.innerHTML=c;
   tb.appendChild(tr);
   updateCount();
 }
@@ -138,22 +146,25 @@ function val(tr,f){ var el=tr.querySelector('[data-f="'+f+'"]'); return el?el.va
 function num(v){ var n=parseInt(v,10); return (n>0)?n:0; }
 
 function rowData(tr){
-  var name=val(tr,"name").trim();
-  var phone=val(tr,"phone").trim();
   var qty={picanha:num(val(tr,"picanha")),topSirloin:num(val(tr,"topSirloin")),nyStrip:num(val(tr,"nyStrip")),tenderloin:num(val(tr,"tenderloin"))};
   var sum=qty.picanha+qty.topSirloin+qty.nyStrip+qty.tenderloin;
-  return {name:name,phone:phone,zone:val(tr,"zone"),rnotes:val(tr,"rnotes").trim(),qty:qty,sum:sum};
+  var lb=0; CUTS.forEach(function(cut){ lb+=num(val(tr,cut[0]))*cut[2]; });
+  return {first:val(tr,"first").trim(),last:val(tr,"last").trim(),phone:val(tr,"phone").trim(),email:val(tr,"email").trim(),address:val(tr,"address").trim(),dorder:val(tr,"dorder").trim(),qty:qty,sum:sum,lb:lb};
 }
-function isEmpty(d){ return !d.name && !d.phone && d.sum===0; }
+function isEmpty(d){ return !d.first && !d.last && !d.phone && !d.email && d.sum===0; }
 
+function recalcRow(tr){
+  var d=rowData(tr);
+  var cell=tr.querySelector('[data-lb]'); if(cell) cell.textContent=(Math.round(d.lb*10)/10)+" lb";
+}
 function updateCount(){
   var rows=[].slice.call(tb.querySelectorAll('tr[data-row]'));
   var ready=0;
-  rows.forEach(function(tr){ if(tr.classList.contains("saved")) return; var d=rowData(tr); if(d.name&&d.phone&&d.sum>0) ready++; });
+  rows.forEach(function(tr){ if(tr.classList.contains("saved")) return; var d=rowData(tr); if((d.first||d.last)&&d.phone&&d.sum>0) ready++; });
   $("count").textContent=ready+" order"+(ready===1?"":"s")+" ready to save";
 }
 
-tb.addEventListener("input",updateCount);
+tb.addEventListener("input",function(e){ var tr=e.target.closest("tr"); if(tr) recalcRow(tr); updateCount(); });
 
 $("addRow").addEventListener("click",function(){ makeRow(); });
 $("clearSaved").addEventListener("click",function(){
@@ -164,8 +175,9 @@ $("clearSaved").addEventListener("click",function(){
 function saveRow(tr){
   var d=rowData(tr);
   var takenBy=$("takenBy").value||"Partner";
-  var notes="Loaded by "+takenBy+" (Order Sheet)"+(d.rnotes?(" · "+d.rnotes):"");
-  var body={name:d.name,phone:d.phone,state:d.zone,notes:notes,qty:d.qty};
+  var name=(d.first+" "+d.last).trim();
+  var notes="Loaded by "+takenBy+" (Order Sheet)"+(d.dorder?(" · Order date: "+d.dorder):"");
+  var body={name:name,phone:d.phone,email:d.email,address:d.address,notes:notes,qty:d.qty};
   return fetch("/api/order-create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
     .then(function(r){return r.json();})
     .then(function(res){ return !!(res&&res.ok); })
@@ -179,7 +191,7 @@ $("saveAll").addEventListener("click",function(){
   rows.forEach(function(tr){
     var d=rowData(tr);
     if(isEmpty(d)) return;
-    if(!d.name || !d.phone || d.sum===0){ skipped++; tr.querySelector('[data-st]').innerHTML='<span style="color:#E9A8A2" title="Needs name, phone and at least one cut">!</span>'; return; }
+    if(!(d.first||d.last) || !d.phone || d.sum===0){ skipped++; tr.querySelector('[data-st]').innerHTML='<span style="color:#E9A8A2" title="Needs name, phone and at least one cut">!</span>'; return; }
     toSave.push(tr);
   });
   if(!toSave.length){ m.className="msg err"; m.textContent="Nothing to save. Fill name + phone + at least one cut."+(skipped?(" ("+skipped+" incomplete row"+(skipped===1?"":"s")+" highlighted)"):""); return; }
@@ -201,7 +213,7 @@ $("saveAll").addEventListener("click",function(){
   });
 });
 
-var i; for(i=0;i<6;i++){ makeRow(); }
+var i; for(i=0;i<8;i++){ makeRow(); }
 })();
 </script>
 </body>
