@@ -126,10 +126,10 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 <div class="row3">
 <div class="field"><label>Vendor invoice #</label><input id="f-inv" type="text" placeholder="e.g. 180429"></div>
 <div class="field"><label>Amount $</label><input id="f-amt" type="number" min="0" step="0.01" placeholder="0.00"></div>
-<div class="field"><label>Invoice date</label><input id="f-idate" type="date"></div>
+<div class="field"><label>Invoice date (MM/DD/YYYY)</label><input id="f-idate" type="text" inputmode="numeric" placeholder="MM/DD/YYYY"></div>
 </div>
 <div class="row3">
-<div class="field"><label>Due date</label><input id="f-due" type="date"></div>
+<div class="field"><label>Due date (MM/DD/YYYY)</label><input id="f-due" type="text" inputmode="numeric" placeholder="MM/DD/YYYY"></div>
 <div class="field" style="grid-column:span 2"><label>Notes</label><input id="f-notes" type="text" placeholder="PO ref, terms, etc."></div>
 </div>
 <div class="field"><label>Invoice PDF (optional)</label>
