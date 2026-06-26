@@ -255,5 +255,45 @@ if(pendingFile && d.id){
 load();
 })();
 </script>
+<!--pampa-lineitems-->
+<script>
+(function(){
+function $(id){return document.getElementById(id);}
+function money(n){n=parseFloat(n)||0;return n.toFixed(2);}
+var amt=$("f-amt"); if(!amt) return;
+var wrap=document.createElement("div");
+wrap.style.cssText="margin:10px 0;padding:12px;border:1px solid #2A2A2A;border-radius:10px;background:#0F0F0F";
+var ttl=document.createElement("div"); ttl.textContent="Line items (optional)"; ttl.style.cssText="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8A7548;margin-bottom:8px"; wrap.appendChild(ttl);
+var tbl=document.createElement("div"); wrap.appendChild(tbl);
+var foot=document.createElement("div"); foot.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px;flex-wrap:wrap";
+var addBtn=document.createElement("button"); addBtn.type="button"; addBtn.textContent="+ Add line";
+addBtn.style.cssText="background:transparent;color:#C9A55C;border:1px solid #C9A55C;border-radius:6px;padding:7px 12px;font:600 12px Inter,sans-serif;cursor:pointer";
+var tot=document.createElement("div"); tot.style.cssText="font:600 14px Inter,sans-serif;color:#F5EFE5";
+var applyBtn=document.createElement("button"); applyBtn.type="button"; applyBtn.textContent="Apply to bill";
+applyBtn.style.cssText="background:#C9A55C;color:#1A1208;border:0;border-radius:6px;padding:8px 14px;font:600 12px Inter,sans-serif;cursor:pointer";
+foot.appendChild(addBtn); foot.appendChild(tot); foot.appendChild(applyBtn); wrap.appendChild(foot);
+amt.parentNode.insertBefore(wrap, amt.nextSibling);
+var rows=[];
+function recalc(){var sum=0; rows.forEach(function(r){var st=(parseFloat(r.qty.value)||0)*(parseFloat(r.price.value)||0); r.sub.textContent=money(st); sum+=st;}); tot.textContent="Items total: $"+money(sum); return sum;}
+function addRow(){
+var row=document.createElement("div"); row.style.cssText="display:grid;grid-template-columns:1fr 56px 76px 66px 22px;gap:6px;margin-bottom:6px;align-items:center";
+var item=document.createElement("input"); item.placeholder="Item";
+var qty=document.createElement("input"); qty.placeholder="Qty"; qty.inputMode="decimal";
+var price=document.createElement("input"); price.placeholder="Price"; price.inputMode="decimal";
+var sub=document.createElement("div"); sub.textContent="0.00"; sub.style.cssText="color:#B8A985;font-size:13px;text-align:right";
+var del=document.createElement("button"); del.type="button"; del.textContent="×"; del.style.cssText="background:transparent;color:#8A7548;border:0;font-size:18px;cursor:pointer;line-height:1";
+[item,qty,price].forEach(function(el){el.style.cssText="background:#141414;border:1px solid #2A2A2A;border-radius:6px;padding:7px;color:#F5EFE5;font:13px Inter,sans-serif;width:100%";el.addEventListener("input",recalc);});
+var rec={item:item,qty:qty,price:price,sub:sub};
+del.onclick=function(){rows=rows.filter(function(x){return x!==rec;}); row.remove(); recalc();};
+row.appendChild(item);row.appendChild(qty);row.appendChild(price);row.appendChild(sub);row.appendChild(del);
+tbl.appendChild(row); rows.push(rec); recalc();}
+addBtn.onclick=addRow; addRow();
+applyBtn.onclick=function(){var sum=recalc(); amt.value=money(sum); try{amt.dispatchEvent(new Event("input",{bubbles:true}));}catch(e){}
+var notes=$("f-notes");
+if(notes){var parts=rows.filter(function(r){return r.item.value||r.qty.value||r.price.value;}).map(function(r){return (r.qty.value||"")+"x "+(r.item.value||"")+" @ "+money(r.price.value)+" = "+money((parseFloat(r.qty.value)||0)*(parseFloat(r.price.value)||0));});
+if(parts.length){notes.value=(notes.value?notes.value+" | ":"")+parts.join("; "); try{notes.dispatchEvent(new Event("input",{bubbles:true}));}catch(e){}}}
+applyBtn.textContent="Applied ✓"; setTimeout(function(){applyBtn.textContent="Apply to bill";},1500);};
+})();
+</script>
 </body>
 </html>
