@@ -116,7 +116,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 <div class="pt" id="docType">QUOTE</div>
 <div class="meta">
 <div>No. <input id="docNum" type="text"></div>
-<div>Date <input id="docDate" type="date"></div>
+<div>Date <input id="docDate" type="text" inputmode="numeric" placeholder="MM/DD/YYYY"></div>
 </div>
 </div>
 </div>
@@ -280,7 +280,7 @@ else { flash('Save failed: '+((d&&d.reason)||'unknown'),true); }
 }catch(e){ flash('Network error saving.',true); }
 });
 function flash(t,err){ var m=document.getElementById('msg'); m.className='msg no-print'+(err?' err':''); m.textContent=t; }
-document.getElementById('docDate').value=new Date().toISOString().slice(0,10);
+document.getElementById('docDate').value=(function(){var d=new Date();return (d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear();})();
 loadOrders();
 recalc();
 })();
