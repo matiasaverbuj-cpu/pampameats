@@ -4,7 +4,7 @@
 // Until RESEND_API_KEY is set, returns {ok:false, reason:'email_not_configured'} so the UI can
 // fall back to copy/print + WhatsApp.
 
-const FROM = 'Pampa Meats Purchasing <purchasing@pampameats.com>';
+const FROM = 'Purchasing <purchasing@pampameats.com>';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ ok: false, reason: 'method_not_allowed' }); return; }
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   const subject = String(body.subject || 'Pampa Meats — Purchase Order').trim();
   const html = String(body.html || '').trim();
   const text = String(body.text || '').trim();
-  if (!to || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) { res.status(400).json({ ok: false, reason: 'bad_recipient' }); return; }
+  if (!to || !/^[^@ ]+@[^@ ]+[.][^@ ]+$/.test(to)) { res.status(400).json({ ok: false, reason: 'bad_recipient' }); return; }
   if (!html && !text) { res.status(400).json({ ok: false, reason: 'empty_body' }); return; }
 
   try {
