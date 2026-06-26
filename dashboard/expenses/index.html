@@ -112,7 +112,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 <div class="row3">
 <div class="field"><label>Category</label><select id="f-cat"><option>Delivery</option><option>Packaging</option><option>Fuel</option><option>Marketing</option><option>Supplies</option><option>Fees</option><option>Other</option></select></div>
 <div class="field"><label>Amount $</label><input id="f-amt" type="number" min="0" step="0.01" placeholder="0.00"></div>
-<div class="field"><label>Date</label><input id="f-date" type="date"></div>
+<div class="field"><label>Date</label><input id="f-date" type="text" inputmode="numeric" placeholder="MM/DD/YYYY"></div>
 </div>
 <div class="field"><label>Description</label><input id="f-desc" type="text" placeholder="e.g. cold boxes, gas, IG ad..."></div>
 <div class="field"><label>Receipt</label><div class="drop" id="drop" style="border:1.5px dashed #3A3A3A;border-radius:10px;padding:18px;text-align:center;color:#8A7548;font-size:13px;cursor:pointer">Drag a receipt here, or click (photo/PDF)</div><input id="f-file" type="file" accept="image/*,application/pdf" style="display:none"></div>
