@@ -275,5 +275,27 @@ Promise.all([
 });
 })();
 </script>
+<!--pampa-tile-icons-->
+<script>
+(function(){
+if(document.getElementById("pampaTileIcons"))return;
+var mk=document.createElement("span");mk.id="pampaTileIcons";mk.style.display="none";document.body.appendChild(mk);
+var m={"/dashboard/ar":"🧾","/dashboard/ap":"🛒","/dashboard/sales":"📈","/dashboard/customers":"👥","/dashboard/pick":"📦","/dashboard/orders-bulk":"📥","/dashboard/weigh":"⚖️","/dashboard/quote":"📄","/dashboard/labels":"🏷️","/dashboard/inventory":"📊","/dashboard/planner":"🧮","/dashboard/gp":"💰","/dashboard/vendors":"🤝","/dashboard/products":"🥩","/dashboard/expenses":"💸","/dashboard/intake":"➕"};
+var links=document.querySelectorAll("a[href]");
+links.forEach(function(a){
+var href=a.getAttribute("href")||"";
+if(href.length>1 && href.charAt(href.length-1)==="/")href=href.slice(0,-1);
+var icon=null,best=0;
+Object.keys(m).forEach(function(k){if((href===k||href.indexOf(k)>=0)&&k.length>best){icon=m[k];best=k.length;}});
+if(!icon)return;
+if(a.querySelector(".pico"))return;
+var d=document.createElement("div");d.className="pico";d.textContent=icon;d.style.cssText="font-size:30px;line-height:1;margin-bottom:10px";
+a.insertBefore(d,a.firstChild);
+a.style.transition="transform .15s ease, border-color .15s ease";
+a.addEventListener("mouseenter",function(){a.style.transform="translateY(-3px)";});
+a.addEventListener("mouseleave",function(){a.style.transform="";});
+});
+})();
+</script>
 </body>
 </html>
