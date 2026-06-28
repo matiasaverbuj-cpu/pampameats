@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Pampa Meats — System Guide</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',Arial,sans-serif;background:#f0ede8;color:#1f1b16;line-height:1.6}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+/* cover */
+.cover{background:#12121a;color:#fff;border-radius:0 0 18px 18px;padding:54px 40px 46px;text-align:center;margin-bottom:40px}
+.cover .logo{font-size:14px;letter-spacing:5px;color:#C9A55C;font-weight:700}
+.cover h1{font-size:34px;margin:14px 0 8px;font-weight:700;letter-spacing:.5px}
+.cover p{color:#b9b2a4;font-size:15px;max-width:560px;margin:0 auto}
+.cover .pill{display:inline-block;margin-top:18px;background:#C9A55C;color:#1a1208;font-size:12px;font-weight:700;letter-spacing:1px;padding:8px 18px;border-radius:30px;text-transform:uppercase}
+/* section */
+.sec{background:#fff;border-radius:16px;padding:26px 28px 30px;margin-bottom:26px;box-shadow:0 10px 30px -20px rgba(0,0,0,.4)}
+.sec .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#12121a;color:#C9A55C;border-radius:8px;font-weight:700;font-size:15px;margin-right:10px;vertical-align:middle}
+.sec h2{display:inline-block;font-size:22px;vertical-align:middle;color:#12121a}
+.sub{color:#7a7367;font-size:13px;margin:4px 0 18px 40px}
+.cols{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.colL{flex:1 1 380px;min-width:300px}
+.colR{flex:1 1 300px;min-width:280px}
+.steps{counter-reset:s;list-style:none}
+.steps li{counter-increment:s;position:relative;padding:8px 0 8px 38px;border-bottom:1px solid #efe9dd;font-size:14.5px}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:#C9A55C;color:#1a1208;border-radius:50%;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.eg{background:#fbf6ec;border-left:4px solid #C9A55C;border-radius:8px;padding:13px 15px;margin-top:14px;font-size:13.5px;color:#5a4a28}
+.eg b{color:#1a1208;text-transform:uppercase;font-size:11px;letter-spacing:1px;display:block;margin-bottom:4px;color:#9a7320}
+/* browser window mockup */
+.win{background:#0c0c12;border-radius:12px;overflow:hidden;box-shadow:0 18px 44px -22px rgba(0,0,0,.7);border:1px solid #23232e}
+.bar{background:#1c1c26;padding:9px 12px;display:flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%}
+.url{flex:1;background:#0c0c12;color:#8e8a98;font-size:11px;padding:5px 12px;border-radius:20px;margin-left:8px;font-family:monospace}
+.screen{background:radial-gradient(800px 300px at 50% -120px,#17130b,#0A0A0A);padding:20px 18px;color:#F5EFE5;min-height:140px}
+.scr-logo{font-family:Georgia,serif;letter-spacing:3px;color:#C9A55C;font-size:13px;margin-bottom:14px}
+/* generic mock pieces */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.tile{background:#141414;border:.5px solid #2a2a2a;border-radius:9px;padding:12px 10px;text-align:center}
+.tile .t{color:#C9A55C;font-size:18px;margin-bottom:5px}
+.tile .l{font-size:10.5px;color:#cfc4ad;letter-spacing:.3px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px}
+.kpi{background:#141414;border:.5px solid #2a2a2a;border-radius:9px;padding:11px}
+.kpi .n{color:#C9A55C;font-size:18px;font-weight:700}
+.kpi .c{color:#8e876f;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:#121212;border:.5px solid #262626;border-radius:8px;margin-bottom:7px;font-size:12.5px;color:#e7ddc7}
+.row .muted{color:#8e876f;font-size:11px}
+.badge{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600}
+.b-new{background:#3a2a10;color:#f0b04a}.b-paid{background:#143020;color:#5fd08a}.b-open{background:#3a1414;color:#e88}
+.btnp{display:inline-block;background:#C9A55C;color:#1a1208;font-weight:700;font-size:12px;padding:9px 16px;border-radius:6px;letter-spacing:.5px}
+.field{background:#121212;border:.5px solid #2a2a2a;border-radius:7px;padding:9px 11px;color:#cfc4ad;font-size:12px;margin-bottom:8px}
+.cut{display:flex;justify-content:space-between;align-items:center;background:#121212;border:.5px solid #262626;border-radius:8px;padding:8px 11px;margin-bottom:7px;font-size:12.5px;color:#e7ddc7}
+.stepper{display:flex;align-items:center;gap:9px}
+.stepper span{width:22px;height:22px;border:1px solid #C9A55C;color:#C9A55C;border-radius:6px;text-align:center;line-height:20px;font-size:13px}
+.stepper b{color:#C9A55C;min-width:14px;text-align:center}
+.lbl{background:#fff;color:#111;border-radius:6px;padding:10px;font-size:11px;text-align:center}
+.barcode{height:34px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 5px,#fff 5px 9px);margin:7px 0 5px;border-radius:2px}
+table.mock{width:100%;border-collapse:collapse;font-size:11.5px}
+table.mock th{background:#1a1a22;color:#C9A55C;text-align:left;padding:7px 9px;font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+table.mock td{border-bottom:.5px solid #222;padding:7px 9px;color:#ddd2bb}
+.note{font-size:12px;color:#8a8276;margin-top:6px;font-style:italic}
+.foot{background:#12121a;color:#cfc9bc;border-radius:16px;padding:30px 34px;margin-top:10px}
+.foot h3{color:#C9A55C;font-size:18px;margin-bottom:12px}
+.foot ul{list-style:none}
+.foot li{padding:7px 0;border-bottom:1px solid #23232e;font-size:14px}
+.foot li:last-child{border-bottom:none}
+.tag{display:inline-block;background:#23232e;color:#C9A55C;font-size:10px;padding:2px 8px;border-radius:5px;margin-right:6px}
+@media(max-width:600px){.cols{flex-direction:column}.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="logo">PAMPA MEATS</div>
+  <h1>Your System — How to Use It</h1>
+  <p>A complete walkthrough of the Pampa Meats back-office, screen by screen, with a real example for each one. No technical background needed.</p>
+  <div class="pill">Premium Argentine Angus · Glatt Kosher · NY &amp; NJ</div>
+</div>
+
+<div class="wrap">
+
+<!-- 1 LOGIN -->
+<div class="sec">
+  <div><span class="num">1</span><h2>How to log in</h2></div>
+  <div class="sub">pampameats.com/dashboard — the password comes by WhatsApp (never by email)</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">pampameats.com/dashboard</span></div>
+        <div class="screen" style="text-align:center;padding:34px 18px">
+          <div class="scr-logo" style="font-size:16px">PAMPA MEATS</div>
+          <div class="field" style="max-width:230px;margin:14px auto 6px;text-align:left">Username — type anything</div>
+          <div class="field" style="max-width:230px;margin:0 auto 14px;text-align:left">••••••••</div>
+          <div class="btnp">Sign in</div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Open <b>pampameats.com/dashboard</b> in any browser (phone or computer).</li>
+        <li>A login box pops up. For <b>Username, type anything</b> (any username works — it's ignored); then type the <b>password</b> Matías sends by WhatsApp.</li>
+        <li>You're in. The main menu opens with every section.</li>
+      </ol>
+      <div class="eg"><b>Important</b>The username doesn't matter — type any word you like. Only the <b>password</b> protects the dashboard. Log in once and your browser remembers it for the day; bookmark it on your phone.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 HOME -->
+<div class="sec">
+  <div><span class="num">2</span><h2>The main menu</h2></div>
+  <div class="sub">Everything lives behind these tiles. Tap one to open it; the "Main menu" button always brings you back.</div>
+  <div class="win">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">pampameats.com/dashboard</span></div>
+    <div class="screen">
+      <div class="scr-logo">PAMPA MEATS · DASHBOARD</div>
+      <div class="kpis">
+        <div class="kpi"><div class="n">$18,420</div><div class="c">Sold</div></div>
+        <div class="kpi"><div class="n">$12,100</div><div class="c">Collected</div></div>
+        <div class="kpi"><div class="n">$6,320</div><div class="c">Owed to you</div></div>
+      </div>
+      <div class="grid">
+        <div class="tile"><div class="t">🧾</div><div class="l">Sales / A&nbsp;R</div></div>
+        <div class="tile"><div class="t">📥</div><div class="l">Order Sheet</div></div>
+        <div class="tile"><div class="t">🛒</div><div class="l">Purchasing / A&nbsp;P</div></div>
+        <div class="tile"><div class="t">📦</div><div class="l">Picking</div></div>
+        <div class="tile"><div class="t">⚖️</div><div class="l">Weigh &amp; Invoice</div></div>
+        <div class="tile"><div class="t">🏷️</div><div class="l">Labels</div></div>
+        <div class="tile"><div class="t">📊</div><div class="l">Inventory</div></div>
+        <div class="tile"><div class="t">💰</div><div class="l">Gross Profit</div></div>
+        <div class="tile"><div class="t">👥</div><div class="l">Customers</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 STORE -->
+<div class="sec">
+  <div><span class="num">3</span><h2>The customer store</h2></div>
+  <div class="sub">pampameats.com/order — the public link you send to customers</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">pampameats.com/order</span></div>
+        <div class="screen">
+          <div class="scr-logo">PLACE YOUR ORDER</div>
+          <div class="cut"><span>Picanha · $12/lb</span><span class="stepper"><span>−</span><b>2</b><span>+</span></span></div>
+          <div class="cut"><span>NY Strip · $14/lb</span><span class="stepper"><span>−</span><b>1</b><span>+</span></span></div>
+          <div class="cut"><span>Tenderloin · $22/lb</span><span class="stepper"><span>−</span><b>0</b><span>+</span></span></div>
+          <div class="row" style="margin-top:10px"><span>Estimated total</span><b style="color:#C9A55C">$184.00</b></div>
+          <div style="text-align:center;margin-top:12px"><span class="btnp">Reserve my order</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Send the link <b>pampameats.com/order</b> to a customer (text / WhatsApp / social).</li>
+        <li>They tap <b>+ / −</b> on each cut — the total updates live.</li>
+        <li>They choose <b>NY or NJ</b>, a delivery date, type name / phone / address.</li>
+        <li>They hit <b>Reserve</b> — the order lands in your dashboard automatically.</li>
+      </ol>
+      <div class="eg"><b>Example</b>A customer taps "+" twice on Picanha, picks NJ + Friday, and reserves. You didn't lift a finger — the order is already in your Sales screen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 TAKE ORDER -->
+<div class="sec">
+  <div><span class="num">4</span><h2>Take an order yourself</h2></div>
+  <div class="sub">The "A/R" screen → New customer order (when a customer calls or texts you)</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/ar</span></div>
+        <div class="screen">
+          <div class="scr-logo">NEW CUSTOMER ORDER</div>
+          <div class="field">Taken by: <span style="color:#C9A55C">Nate</span></div>
+          <div class="field">Customer name: David Cohen</div>
+          <div class="field">Phone: +1 917 555 0123</div>
+          <div class="cut"><span>Picanha</span><span class="stepper"><span>−</span><b>2</b><span>+</span></span></div>
+          <div style="text-align:center;margin-top:10px"><span class="btnp">Save</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Dashboard → <b>A/R</b> → <b>New customer order</b>.</li>
+        <li>Choose your name under <b>"Taken by"</b>.</li>
+        <li>Type the customer's name + phone.</li>
+        <li>Tap <b>+</b> on the cuts they want → <b>Save</b>.</li>
+      </ol>
+      <div class="eg"><b>Example</b>A friend calls wanting 2 Picanhas. You fill it in, tap Save, and it's in the system with the price already calculated.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 ORDER SHEET -->
+<div class="sec">
+  <div><span class="num">5</span><h2>Load many orders at once</h2></div>
+  <div class="sub">"Order Sheet" — a spreadsheet for bulk entry (same fields as the Excel you use today)</div>
+  <div class="win">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/orders-bulk</span></div>
+    <div class="screen">
+      <div class="scr-logo">ORDER SHEET · Loaded by Nate</div>
+      <table class="mock">
+        <tr><th>First</th><th>Last</th><th>Phone</th><th>Picanha</th><th>NY Strip</th><th>≈ lb</th></tr>
+        <tr><td>David</td><td>Cohen</td><td>917-555-0123</td><td>2</td><td>1</td><td>11.5</td></tr>
+        <tr><td>Sara</td><td>Levy</td><td>732-555-0199</td><td>1</td><td>0</td><td>2.5</td></tr>
+        <tr><td>Aaron</td><td>Klein</td><td>347-555-0177</td><td>0</td><td>3</td><td>16.5</td></tr>
+      </table>
+      <div style="text-align:center;margin-top:12px"><span class="btnp">Save all orders</span></div>
+    </div>
+  </div>
+  <div class="eg" style="margin-top:16px"><b>Example</b>Nate has a list of 12 orders. Fill one row per customer (name, phone, email, address, date, quantity per cut) — the pounds calculate by themselves — then hit "Save all orders" and all 12 enter the system at once.</div>
+</div>
+
+<!-- 6 PICKING -->
+<div class="sec">
+  <div><span class="num">6</span><h2>Know exactly what to buy</h2></div>
+  <div class="sub">"Picking list" — adds up all open orders and tells you what to pull from our supplier</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/pick</span></div>
+        <div class="screen">
+          <div class="scr-logo">PICKING LIST · 9 open orders</div>
+          <div class="row"><span>NY Strip</span><b style="color:#C9A55C">3 cases</b></div>
+          <div class="row"><span>Picanha</span><b style="color:#C9A55C">2 cases</b></div>
+          <div class="row"><span>Tenderloin</span><b style="color:#C9A55C">14 lb</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Open <b>Picking list</b> — it reads every open order.</li>
+        <li>Read the per-cut totals: cases / packages / pounds.</li>
+        <li>Pull exactly that from the supplier. No guessing, no over-buying.</li>
+      </ol>
+      <div class="eg"><b>Example</b>With 9 open orders it shows "3 cases NY Strip, 2 cases Picanha, 14 lb Tenderloin" — that's your shopping list for the supplier.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 WEIGH -->
+<div class="sec">
+  <div><span class="num">7</span><h2>Charge the exact weight</h2></div>
+  <div class="sub">"Weigh &amp; Invoice" — meat is sold by weight, so the final price depends on the real pounds</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/weigh</span></div>
+        <div class="screen">
+          <div class="scr-logo">WEIGH &amp; INVOICE · David Cohen</div>
+          <div class="cut"><span>Picanha — actual weight</span><b style="color:#C9A55C">12.4 lb</b></div>
+          <div class="row"><span>12.4 lb × $12/lb</span><b style="color:#C9A55C">$148.80</b></div>
+          <div style="text-align:center;margin-top:10px"><span class="btnp">Save final invoice</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Open <b>Weigh &amp; Invoice</b>, pick the order.</li>
+        <li>Type the <b>real weight</b> per cut from the scale.</li>
+        <li>The system multiplies by the price/lb and shows the <b>exact total</b>.</li>
+        <li><b>Save</b> — that becomes the customer's final invoice.</li>
+      </ol>
+      <div class="eg"><b>Example</b>The scale shows 12.4 lb of Picanha. Type 12.4 → it shows $148.80 to charge. Exact, every time.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 LABELS -->
+<div class="sec">
+  <div><span class="num">8</span><h2>Print the labels</h2></div>
+  <div class="sub">"Labels" — a 4x6 label with the customer name and barcode for each box</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/labels</span></div>
+        <div class="screen" style="text-align:center">
+          <div class="scr-logo">LABEL PREVIEW</div>
+          <div class="lbl" style="max-width:220px;margin:0 auto">
+            <div style="font-weight:700;letter-spacing:2px">PAMPA MEATS</div>
+            <div style="font-size:13px;margin:4px 0">David Cohen — PM-10231</div>
+            <div class="barcode"></div>
+            <div style="font-size:10px">Picanha · NY Strip · NJ delivery</div>
+          </div>
+          <div style="margin-top:12px"><span class="btnp">Print</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Open <b>Labels</b> and pick an order.</li>
+        <li>The label preview shows name + barcode.</li>
+        <li>Hit <b>Print</b> and stick it on the box.</li>
+      </ol>
+      <div class="eg"><b>Example</b>Pick David's order → print → the box is labeled and ready to deliver in seconds.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 PURCHASING -->
+<div class="sec">
+  <div><span class="num">9</span><h2>Purchasing — orders &amp; invoices</h2></div>
+  <div class="sub">The "A/P" screen does two things: send Purchase Orders to the supplier, and record the invoices you owe</div>
+
+  <div style="font-weight:700;color:#12121a;font-size:15.5px;margin:6px 0 12px">A. Create a Purchase Order (what you're buying)</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/ap → Create PO</span></div>
+        <div class="screen">
+          <div class="scr-logo">CREATE PURCHASE ORDER</div>
+          <div class="field">Supplier: <span style="color:#C9A55C">Our supplier ▾</span></div>
+          <div class="cut"><span>NY Strip</span><b style="color:#C9A55C">3 cases</b></div>
+          <div class="cut"><span>Picanha</span><b style="color:#C9A55C">2 cases</b></div>
+          <div style="text-align:center;margin-top:8px"><span class="btnp">Send PO</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>Dashboard → <b>A/P</b> → <b>Create PO</b>.</li>
+        <li>Choose the <b>supplier</b> and enter how many cases/units per cut (the Picking list tells you the amounts).</li>
+        <li>Hit <b>Send PO</b> — it emails the order to the supplier from <b>purchasing@pampameats.com</b>.</li>
+      </ol>
+      <div class="eg"><b>Example</b>The Picking list says you need 3 cases NY Strip + 2 Picanha. Create the PO with those amounts, hit Send — the supplier gets a clean order from your Pampa purchasing address.</div>
+    </div>
+  </div>
+
+  <div style="font-weight:700;color:#12121a;font-size:15.5px;margin:22px 0 12px">B. Log the supplier invoice (what you owe)</div>
+  <div class="cols">
+    <div class="colR">
+      <div class="win">
+        <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/ap</span></div>
+        <div class="screen">
+          <div class="scr-logo">LOAD A VENDOR INVOICE</div>
+          <div class="field">Supplier: <span style="color:#C9A55C">Our supplier ▾</span></div>
+          <div class="field">Invoice # 88245 · Amount $2,140.00</div>
+          <div class="field">Invoice date 06/27/2026 · Due 07/27/2026</div>
+          <div style="text-align:center;margin-top:8px"><span class="btnp">Add bill</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="colL">
+      <ol class="steps">
+        <li>On the <b>A/P</b> screen, choose the supplier and type invoice # + amount + dates (MM/DD/YYYY).</li>
+        <li>Attach the PDF and add line items if you want → <b>Add bill</b>.</li>
+        <li>When you pay it, hit <b>Mark paid</b>.</li>
+      </ol>
+      <div class="eg"><b>Example</b>An invoice arrives for $2,140. Load it, attach the PDF, save. Now the system knows exactly what you owe and when it's due.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 MONEY -->
+<div class="sec">
+  <div><span class="num">10</span><h2>Your customers (CRM) &amp; the money</h2></div>
+  <div class="sub">"Customers" is your CRM — every client with their full order history, total spent and balance. "Sales" &amp; "Gross Profit" show the numbers. Every report has an Export to Excel.</div>
+  <div class="win">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">/dashboard/customers</span></div>
+    <div class="screen">
+      <div class="scr-logo">CUSTOMERS</div>
+      <div class="row"><span>David Cohen <span class="muted">· 4 orders</span></span><span>$612 <span class="badge b-paid">paid</span></span></div>
+      <div class="row"><span>Sara Levy <span class="muted">· 2 orders</span></span><span>$190 <span class="badge b-open">owes $90</span></span></div>
+      <div class="row"><span>Aaron Klein <span class="muted">· 6 orders</span></span><span>$1,240 <span class="badge b-paid">paid</span></span></div>
+      <div style="text-align:right;margin-top:10px"><span class="btnp">⬇ Export to Excel</span></div>
+    </div>
+  </div>
+  <div class="eg" style="margin-top:16px"><b>Example</b>Click "Export to Excel" on Customers → you get a spreadsheet with each customer, their orders, total spent and balance. Same export exists on Sales, Inventory, Picking and Gross Profit.</div>
+</div>
+
+<!-- FLOW DIAGRAM -->
+<div class="sec">
+  <div><span class="num">11</span><h2>How it all connects</h2></div>
+  <div class="sub">What the system is really for: one place that takes the order, tells you what to buy, prices it by weight, and tracks the money — from click to cash.</div>
+  <svg viewBox="0 0 860 690" width="100%" style="display:block;margin:6px auto 0" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Helvetica,sans-serif">
+    <defs>
+      <marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C9A55C"/></marker>
+    </defs>
+    <!-- intake row -->
+    <g>
+      <rect x="14" y="14" width="262" height="62" rx="11" fill="#12121a" stroke="#C9A55C" stroke-width="1.3"/>
+      <text x="145" y="40" text-anchor="middle" fill="#F5EFE5" font-size="14" font-weight="bold">Customer orders online</text>
+      <text x="145" y="59" text-anchor="middle" fill="#9c9483" font-size="11">pampameats.com/order</text>
+
+      <rect x="299" y="14" width="262" height="62" rx="11" fill="#12121a" stroke="#C9A55C" stroke-width="1.3"/>
+      <text x="430" y="40" text-anchor="middle" fill="#F5EFE5" font-size="14" font-weight="bold">You take an order</text>
+      <text x="430" y="59" text-anchor="middle" fill="#9c9483" font-size="11">A/R · one by one</text>
+
+      <rect x="584" y="14" width="262" height="62" rx="11" fill="#12121a" stroke="#C9A55C" stroke-width="1.3"/>
+      <text x="715" y="40" text-anchor="middle" fill="#F5EFE5" font-size="14" font-weight="bold">Bulk load</text>
+      <text x="715" y="59" text-anchor="middle" fill="#9c9483" font-size="11">Order Sheet · many at once</text>
+    </g>
+    <!-- converging arrows -->
+    <path d="M145,76 L420,120" stroke="#C9A55C" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+    <path d="M430,76 L430,120" stroke="#C9A55C" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+    <path d="M715,76 L440,120" stroke="#C9A55C" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+    <!-- hub -->
+    <rect x="245" y="126" width="370" height="64" rx="12" fill="#C9A55C"/>
+    <text x="430" y="153" text-anchor="middle" fill="#1a1208" font-size="15" font-weight="bold">Everything lands in your dashboard</text>
+    <text x="430" y="173" text-anchor="middle" fill="#3a2c12" font-size="11.5">one source of truth — no scattered spreadsheets</text>
+    <!-- chain -->
+    <g>
+      <path d="M430,190 L430,214" stroke="#C9A55C" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+      <rect x="210" y="220" width="440" height="56" rx="11" fill="#12121a" stroke="#2e2e3a" stroke-width="1.2"/>
+      <text x="248" y="244" text-anchor="start" fill="#C9A55C" font-size="12" font-weight="bold">1 · PICKING LIST</text>
+      <text x="248" y="263" text-anchor="start" fill="#e7ddc7" font-size="12.5">It adds up open orders → what to buy from the supplier</text>
+
+      <path d="M430,276 L430,300" stroke="#C9A55C" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+      <rect x="210" y="306" width="440" height="56" rx="11" fill="#12121a" stroke="#2e2e3a" stroke-width="1.2"/>
+      <text x="248" y="330" text-anchor="start" fill="#C9A55C" font-size="12" font-weight="bold">2 · PURCHASE ORDER</text>
+      <text x="248" y="349" text-anchor="start" fill="#e7ddc7" font-size="12.5">Order it from the supplier (sent from purchasing@)</text>
+
+      <path d="M430,362 L430,386" stroke="#C9A55C" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+      <rect x="210" y="392" width="440" height="56" rx="11" fill="#12121a" stroke="#2e2e3a" stroke-width="1.2"/>
+      <text x="248" y="416" text-anchor="start" fill="#C9A55C" font-size="12" font-weight="bold">3 · WEIGH &amp; INVOICE</text>
+      <text x="248" y="435" text-anchor="start" fill="#e7ddc7" font-size="12.5">Real weight × price/lb → the exact amount to charge</text>
+
+      <path d="M430,448 L430,472" stroke="#C9A55C" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+      <rect x="210" y="478" width="440" height="56" rx="11" fill="#12121a" stroke="#2e2e3a" stroke-width="1.2"/>
+      <text x="248" y="502" text-anchor="start" fill="#C9A55C" font-size="12" font-weight="bold">4 · LABELS &amp; DELIVER</text>
+      <text x="248" y="521" text-anchor="start" fill="#e7ddc7" font-size="12.5">Print the label, pack the box, deliver to the customer</text>
+
+      <path d="M430,534 L430,558" stroke="#C9A55C" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+      <rect x="210" y="564" width="440" height="60" rx="11" fill="#143020" stroke="#5fd08a" stroke-width="1.3"/>
+      <text x="248" y="589" text-anchor="start" fill="#5fd08a" font-size="12" font-weight="bold">5 · PAYMENT &amp; INSIGHT</text>
+      <text x="248" y="608" text-anchor="start" fill="#d6f0e0" font-size="12.5">Payment recorded → CRM history + Gross Profit updated</text>
+    </g>
+    <!-- loop back -->
+    <path d="M650,592 C760,592 760,45 562,45" stroke="#5fd08a" stroke-width="1.4" fill="none" stroke-dasharray="5 5" marker-end="url(#ah)"/>
+    <text x="772" y="320" text-anchor="middle" fill="#5fd08a" font-size="10.5" transform="rotate(90 772 320)">repeat customer → next order</text>
+  </svg>
+  <div class="eg" style="margin-top:18px"><b>In one line</b>The system turns a customer's click into a packed, correctly-priced, paid order — and remembers every customer so the next sale is even easier.</div>
+</div>
+
+<!-- FOOT / NEEDS -->
+<div class="foot">
+  <h3>What we need to go fully live</h3>
+  <ul>
+    <li><span class="tag">MARK</span> A <b>US phone number</b> to use as the business WhatsApp</li>
+    <li><span class="tag">MARK</span> A <b>dedicated bank account + Zelle</b> for Pampa Meats</li>
+    <li><span class="tag">DECISION</span> Connect <b>QuickBooks</b> so invoices &amp; expenses sync to accounting</li>
+    <li><span class="tag">OPTIONAL</span> A <b>Stripe</b> account if we want to take card payments online</li>
+  </ul>
+  <p style="margin-top:16px;color:#9a93b3;font-size:13px">Dan is doing a final test pass now. Once he confirms, we start sharing the store link with customers. Questions? Reply to Matías or ask for a quick live walkthrough.</p>
+</div>
+
+</div>
+</body>
+</html>
