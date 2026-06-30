@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       offset = data.offset;
     } while (offset);
 
-    const orders = records.map(rec => {
+    const orders = records.filter(rec => String((rec.fields && rec.fields['Status']) || '').toLowerCase() !== 'cancelled').map(rec => {
       const f = rec.fields || {};
       return {
         id: rec.id,
