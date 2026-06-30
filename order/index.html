@@ -382,5 +382,18 @@ b.style.cssText="background:#12100a;color:#C9A55C;text-align:center;font:600 11p
 document.body.insertBefore(b, document.body.firstChild);
 })();
 </script>
+<!--pampa-waitlist-->
+<script>
+(function(){
+if(document.getElementById("pampaWaitlist"))return;
+var w=document.createElement("div");w.id="pampaWaitlist";
+w.style.cssText="text-align:center;padding:24px 20px 40px;font-family:Inter,Arial,sans-serif";
+var a=document.createElement("a");
+a.href="mailto:customerservice@pampameats.com?subject=Allocation%20waitlist&body=I%27d%20like%20to%20join%20the%20list%20for%20the%20next%20allocation.%0AName%3A%20%0APhone%3A%20%0ACuts%20I%20want%3A%20";
+a.textContent="Sold out or planning ahead? Join the allocation list →";
+a.style.cssText="color:#C9A55C;font-size:13px;letter-spacing:.4px;text-decoration:none;border-bottom:1px solid #5a4a28;padding-bottom:3px";
+w.appendChild(a);document.body.appendChild(w);
+})();
+</script>
 </body>
 </html>
