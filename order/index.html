@@ -372,5 +372,15 @@ loadDraft();
 render();
 })();
 </script>
+<!--pampa-scarcity-->
+<script>
+(function(){
+if(document.getElementById("pampaScarcity"))return;
+var b=document.createElement("div");b.id="pampaScarcity";
+b.textContent="✦  Limited weekly allocation · Premium Argentine Angus, reserved by the cut";
+b.style.cssText="background:#12100a;color:#C9A55C;text-align:center;font:600 11px/1.5 Inter,Arial,sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:9px 14px;border-bottom:1px solid #2a2418";
+document.body.insertBefore(b, document.body.firstChild);
+})();
+</script>
 </body>
 </html>
