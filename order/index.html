@@ -395,5 +395,38 @@ a.style.cssText="color:#C9A55C;font-size:13px;letter-spacing:.4px;text-decoratio
 w.appendChild(a);document.body.appendChild(w);
 })();
 </script>
+<style id="pampaFieldFocusCss">
+.invalid input,.invalid select,.invalid textarea{border:2px solid #c0392b !important;background:#fff5f4 !important;}
+.pm-hint{color:#c0392b;font-size:12.5px;font-weight:700;margin-top:5px;letter-spacing:.2px;}
+@keyframes pmShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}60%{transform:translateX(5px)}}
+.invalid{animation:pmShake .28s ease}
+</style>
+<script id="pampaFieldFocus">
+(function(){
+  function enhance(){
+    setTimeout(function(){
+      var bads=document.querySelectorAll(".invalid");
+      bads.forEach(function(w){
+        if(!w.querySelector(".pm-hint")){
+          var h=document.createElement("div"); h.className="pm-hint"; h.textContent="⚠ Please complete this"; w.appendChild(h);
+        }
+        var inp=w.querySelector("input,select,textarea");
+        if(inp && !inp.__pmClear){ inp.__pmClear=true;
+          var clr=function(){ w.classList.remove("invalid"); var hh=w.querySelector(".pm-hint"); if(hh) hh.remove(); };
+          inp.addEventListener("input",clr); inp.addEventListener("change",clr);
+        }
+      });
+      var first=document.querySelector(".invalid");
+      if(first){
+        var f=first.querySelector("input,select,textarea")||first;
+        try{ f.focus({preventScroll:true}); }catch(e){}
+        first.scrollIntoView({behavior:"smooth",block:"center"});
+      }
+    },40);
+  }
+  var s=document.getElementById("submitBtn"); if(s) s.addEventListener("click",enhance);
+  var m=document.getElementById("mbBtn"); if(m) m.addEventListener("click",enhance);
+})();
+</script>
 </body>
 </html>
