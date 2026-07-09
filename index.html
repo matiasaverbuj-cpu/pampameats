@@ -517,5 +517,24 @@
 if(nt&&nl){nt.addEventListener("click",function(){nl.classList.toggle("open");});nl.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(){nl.classList.remove("open");});});}
 })();
   </script>
+<style>
+.cuts-grid .cut-card{cursor:pointer}
+.pm-cookbadge{margin-top:12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#C9A55C;opacity:0;transform:translateY(4px);transition:opacity .22s ease,transform .22s ease}
+.cuts-grid .cut-card:hover .pm-cookbadge{opacity:1;transform:none}
+</style>
+<script>
+(function(){
+  var map={picanha:"Medium-rare · 130–135°F","top-sirloin":"Medium-rare · ~130°F",striploin:"Medium-rare · 130–135°F",tenderloin:"Rare–MR · 125–130°F"};
+  document.querySelectorAll(".cuts-grid .cut-card").forEach(function(card){
+    var img=card.querySelector("img"); var key="";
+    if(img){ ["picanha","top-sirloin","striploin","tenderloin"].forEach(function(k){ if((img.getAttribute("src")||"").indexOf(k)>=0) key=k; }); }
+    var info=card.querySelector(".cut-info")||card;
+    var badge=document.createElement("div"); badge.className="pm-cookbadge";
+    badge.textContent=(map[key]?(map[key]+"   ·   Cook it →"):"Cook it perfectly →");
+    info.appendChild(badge);
+    card.addEventListener("click",function(){ window.location.href="/cuts"; });
+  });
+})();
+</script>
 </body>
 </html>
