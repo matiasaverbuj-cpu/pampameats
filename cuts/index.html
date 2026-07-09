@@ -169,6 +169,75 @@ a{color:inherit;text-decoration:none}
 })();
 </script>
 
+<style>
+.sm-wrap{margin:6px 0 44px}
+.sm-eyebrow{font-size:10px;letter-spacing:4px;color:#8A7548;text-align:center;margin-bottom:12px}
+.sm-h{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(26px,4.5vw,40px);color:#F5EFE5;text-align:center;margin:0 0 8px}
+.sm-sub{font-size:14px;color:#B8A985;text-align:center;max-width:520px;margin:0 auto 22px;line-height:1.8}
+.sm-card{background:linear-gradient(180deg,#141414,#101010);border:0.5px solid #262626;border-radius:16px;padding:26px 24px;box-shadow:0 16px 38px -26px rgba(0,0,0,.9)}
+.sm-zone rect,.sm-zone ellipse{fill:rgba(201,165,92,0.14);stroke:#C9A55C;stroke-width:1.5;cursor:pointer;transition:fill .18s,stroke .18s}
+.sm-zone:hover rect,.sm-zone:hover ellipse{fill:rgba(201,165,92,0.30)}
+.sm-zone.on rect,.sm-zone.on ellipse{fill:rgba(201,165,92,0.55);stroke:#F0D9A0}
+.sm-zone text{fill:#F5EFE5;font-size:15px;font-family:'Cormorant Garamond',serif;pointer-events:none}
+.sm-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:16px 0 4px}
+.sm-leg{background:#0F0F0F;border:0.5px solid #242424;border-radius:9px;padding:10px 8px;cursor:pointer;color:#EDE3CC;text-align:center;font-family:inherit}
+.sm-leg:hover{border-color:#3a352b}
+.sm-leg.on{border:1.5px solid #C9A55C;background:#15120b}
+.sm-leg b{display:block;font-size:12.5px;font-weight:600;color:#F5EFE5}
+.sm-leg span{font-size:9.5px;color:#8A7548;text-transform:uppercase;letter-spacing:.5px}
+.sm-detail{border-left:3px solid #C9A55C;background:#12100a;border-radius:8px;padding:15px 17px;margin-top:14px}
+.sm-detail .n{font-family:'Cormorant Garamond',serif;font-size:22px;color:#F5EFE5}
+.sm-detail .es{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548;margin:3px 0 10px}
+.sm-detail .meta{font-size:13.5px;color:#D8CDB3;line-height:1.8}
+.sm-detail .meta b{color:#C9A55C;font-weight:600}
+</style>
+<div class="sm-wrap">
+  <div class="sm-eyebrow">THE ANATOMY OF FLAVOR</div>
+  <h2 class="sm-h">Where your cut comes from</h2>
+  <p class="sm-sub">Every Pampa cut is a hindquarter cut. Tap a number to see where it sits on the animal.</p>
+  <div class="sm-card">
+    <svg viewBox="0 0 760 400" width="100%" style="display:block" role="img" aria-label="Steer cut map">
+      <path d="M 92 250 C 60 245 55 225 78 212 C 70 205 72 196 88 194 L 92 178 C 108 170 120 176 126 186 L 138 166 L 150 190 C 175 182 190 165 205 158 C 235 138 275 150 300 156 L 560 150 C 600 148 622 158 636 182 C 648 200 646 222 640 242 L 612 242 L 614 330 L 588 330 L 590 256 L 300 262 L 298 330 L 274 330 L 276 260 L 130 256 Z" fill="#1b140f" stroke="#4a4034" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M 636 182 C 662 205 664 250 652 288" fill="none" stroke="#4a4034" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="101" cy="205" r="2.6" fill="#C9A55C"/>
+      <g class="sm-zone" data-cut="striploin"><rect x="330" y="158" width="112" height="42" rx="9"/><text x="386" y="185" text-anchor="middle">1</text></g>
+      <g class="sm-zone" data-cut="sirloin"><rect x="450" y="156" width="82" height="42" rx="9"/><text x="491" y="183" text-anchor="middle">2</text></g>
+      <g class="sm-zone" data-cut="picanha"><rect x="540" y="154" width="66" height="40" rx="9"/><text x="573" y="180" text-anchor="middle">3</text></g>
+      <g class="sm-zone" data-cut="tenderloin"><ellipse cx="432" cy="224" rx="64" ry="20"/><text x="432" y="230" text-anchor="middle">4</text></g>
+    </svg>
+    <div class="sm-legend" id="smLegend"></div>
+    <div class="sm-detail" id="smDetail"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var cuts={
+    striploin:{n:1,name:"New York Strip",es:"Bife Angosto",loc:"Short loin, upper back",temp:"Medium-rare · 130–135°F",note:"Bold, beefy and beautifully marbled — the steakhouse classic."},
+    sirloin:{n:2,name:"Top Sirloin",es:"Cuadril",loc:"Heart of the rump",temp:"Medium-rare · ~130°F",note:"Lean and full-flavored — the everyday hero for the whole table."},
+    picanha:{n:3,name:"Picanha",es:"Tapa de Cuadril",loc:"Cap of the rump",temp:"Medium-rare · 130–135°F",note:"The crown of the asado, with its signature fat cap."},
+    tenderloin:{n:4,name:"Tenderloin / Filet",es:"Lomo",loc:"Beneath the loin",temp:"Rare–MR · 125–130°F",note:"The most tender cut there is — buttery and elegant."}
+  };
+  var order=["striploin","sirloin","picanha","tenderloin"];
+  var sel="picanha";
+  var zones=document.querySelectorAll(".sm-zone");
+  var legend=document.getElementById("smLegend");
+  order.forEach(function(k){
+    var el=document.createElement("div"); el.className="sm-leg"; el.dataset.cut=k;
+    el.innerHTML="<b>"+cuts[k].n+". "+cuts[k].name+"</b><span>"+cuts[k].es+"</span>";
+    el.addEventListener("click",function(){ sel=k; paint(); });
+    legend.appendChild(el);
+  });
+  zones.forEach(function(z){ z.addEventListener("click",function(){ sel=z.dataset.cut; paint(); }); });
+  function paint(){
+    var c=cuts[sel];
+    zones.forEach(function(z){ z.classList.toggle("on", z.dataset.cut===sel); });
+    [].forEach.call(legend.children,function(el){ el.classList.toggle("on", el.dataset.cut===sel); });
+    document.getElementById("smDetail").innerHTML="<div class='n'>"+c.name+"</div><div class='es'>"+c.es+"</div><div class='meta'><b>Where:</b> "+c.loc+"<br><b>Best:</b> "+c.temp+"<br>"+c.note+"</div>";
+  }
+  paint();
+})();
+</script>
+
 <div class="cuts">
 
   <div class="cut">
