@@ -64,6 +64,111 @@ a{color:inherit;text-decoration:none}
 <div class="divider"><span></span><span class="d">&#9670;</span><span></span></div>
 
 <div class="wrap">
+<style>
+.ck-wrap{margin:6px 0 44px}
+.ck-eyebrow{font-size:10px;letter-spacing:4px;color:#8A7548;text-align:center;margin-bottom:12px}
+.ck-h{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(26px,4.5vw,40px);color:#F5EFE5;text-align:center;margin:0 0 8px}
+.ck-sub{font-size:14px;color:#B8A985;text-align:center;max-width:520px;margin:0 auto 26px;line-height:1.8}
+.ck-card{background:linear-gradient(180deg,#141414,#101010);border:0.5px solid #262626;border-radius:16px;padding:28px 26px;box-shadow:0 16px 38px -26px rgba(0,0,0,.9)}
+.ck-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548;margin-bottom:12px}
+.ck-cuts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:26px}
+.ck-cut{background:#0F0F0F;border:0.5px solid #242424;border-radius:10px;padding:13px 15px;cursor:pointer;text-align:left;color:#EDE3CC;font-family:inherit;transition:all .15s}
+.ck-cut:hover{border-color:#3a352b}
+.ck-cut.on{border:1.5px solid #C9A55C;background:#15120b}
+.ck-cut b{display:block;font-size:15px;font-weight:600;color:#F5EFE5}
+.ck-cut span{font-size:11px;color:#8A7548;letter-spacing:.5px;text-transform:uppercase}
+.ck-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ck-row .k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A7548}
+.ck-row .v{margin-left:auto;font-size:15px;color:#C9A55C;font-weight:600}
+.ck-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:8px 0 24px}
+.ck-seg{height:10px;border-radius:3px;opacity:.32;transition:opacity .15s}
+.ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.ck-metric{background:#0F0F0F;border:0.5px solid #242424;border-radius:10px;padding:14px 16px}
+.ck-metric .k{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548;margin-bottom:6px}
+.ck-metric .v{font-family:'Cormorant Garamond',serif;font-size:27px;color:#C9A55C}
+.ck-block{background:#0F0F0F;border:0.5px solid #242424;border-radius:10px;padding:13px 16px;margin-bottom:12px}
+.ck-block .k{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548;margin-bottom:5px}
+.ck-block .v{font-size:14.5px;color:#EDE3CC}
+.ck-note{border-left:3px solid #C9A55C;background:#12100a;border-radius:8px;padding:12px 15px;font-size:13.5px;color:#D8CDB3;margin-bottom:12px}
+.ck-tip b{color:#C9A55C;text-transform:uppercase;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:4px}
+.ck-slider{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;background:#3a352b;outline:none;margin:2px 0}
+.ck-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#C9A55C;cursor:pointer;border:2px solid #0A0A0A}
+.ck-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#C9A55C;cursor:pointer;border:2px solid #0A0A0A}
+.ck-btnwrap{text-align:center;margin-top:20px}
+.ck-btn{display:inline-block;background:#C9A55C;color:#1A1208;font-weight:600;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 34px;border-radius:3px;text-decoration:none}
+</style>
+<div class="ck-wrap">
+  <div class="ck-eyebrow">COOK IT PERFECTLY</div>
+  <h2 class="ck-h">Find your perfect cook</h2>
+  <p class="ck-sub">Choose a cut and your doneness &mdash; see the exact temperature, method and timing.</p>
+  <div class="ck-card">
+    <div class="ck-label">Choose your cut</div>
+    <div class="ck-cuts" id="ckCuts"></div>
+    <div class="ck-row"><span class="k">Doneness</span><span class="v" id="ckDon">Medium-rare</span></div>
+    <input type="range" class="ck-slider" id="ckSlider" min="0" max="4" step="1" value="1">
+    <div class="ck-strip" id="ckStrip"></div>
+    <div class="ck-grid">
+      <div class="ck-metric"><div class="k">Internal temp</div><div class="v" id="ckTemp">130&ndash;135&deg;F</div></div>
+      <div class="ck-metric"><div class="k">Rest before slicing</div><div class="v" id="ckRest">5&ndash;10 min</div></div>
+    </div>
+    <div class="ck-block"><div class="k">Best method</div><div class="v" id="ckMethod">Grill or roast, fat cap on</div></div>
+    <div class="ck-note" id="ckNote"></div>
+    <div class="ck-block ck-tip"><b>Pampa tip</b><span class="v" id="ckTip"></span></div>
+    <div class="ck-btnwrap"><a class="ck-btn" href="/order">Reserve this cut &rarr;</a></div>
+  </div>
+</div>
+<script>
+(function(){
+  var cuts={
+    picanha:{name:"Picanha",es:"Tapa de Cuadril",method:"Grill or roast, fat cap on",rest:"5–10 min",tip:"Score the fat cap, sear it first to render, then finish over indirect heat and slice against the grain.",rec:1,delicate:false},
+    nystrip:{name:"New York Strip",es:"Bife Angosto",method:"High-heat grill or pan-sear",rest:"5 min",tip:"Get the grill screaming hot for a deep crust, flip once, and rest before cutting so the juices stay in.",rec:1,delicate:false},
+    topsirloin:{name:"Top Sirloin",es:"Cuadril",method:"Grill or roast whole",rest:"5–8 min",tip:"Lean cut — pull it a touch early and let carryover heat finish so it stays juicy.",rec:1,delicate:true},
+    tenderloin:{name:"Tenderloin / Filet",es:"Lomo",method:"Sear and finish, or roast",rest:"5 min",tip:"Delicate and quick — a hot sear then a gentle finish. Keep it rare to medium-rare.",rec:1,delicate:true}
+  };
+  var order=["picanha","nystrip","topsirloin","tenderloin"];
+  var levels=[
+    {name:"Rare",temp:"120–125°F",sw:"#8f2f2a"},
+    {name:"Medium-rare",temp:"130–135°F",sw:"#a83f30"},
+    {name:"Medium",temp:"140–145°F",sw:"#b96a4a"},
+    {name:"Medium-well",temp:"150–155°F",sw:"#a5765a"},
+    {name:"Well done",temp:"160°F+",sw:"#7c5641"}
+  ];
+  var sel="picanha";
+  var cutsEl=document.getElementById("ckCuts");
+  order.forEach(function(k){
+    var b=document.createElement("div");
+    b.className="ck-cut"; b.dataset.cut=k;
+    b.innerHTML="<b>"+cuts[k].name+"</b><span>"+cuts[k].es+"</span>";
+    b.addEventListener("click",function(){ sel=k; paint(); });
+    cutsEl.appendChild(b);
+  });
+  var stripEl=document.getElementById("ckStrip");
+  levels.forEach(function(l,i){
+    var s=document.createElement("div");
+    s.className="ck-seg"; s.dataset.i=i; s.style.background=l.sw;
+    stripEl.appendChild(s);
+  });
+  var sl=document.getElementById("ckSlider");
+  function paint(){
+    var c=cuts[sel], di=parseInt(sl.value,10), l=levels[di];
+    [].forEach.call(cutsEl.children,function(b){ b.classList.toggle("on", b.dataset.cut===sel); });
+    [].forEach.call(stripEl.children,function(s){ s.style.opacity=(parseInt(s.dataset.i,10)===di)?"1":".32"; });
+    document.getElementById("ckDon").textContent=l.name;
+    document.getElementById("ckTemp").textContent=l.temp;
+    document.getElementById("ckRest").textContent=c.rest;
+    document.getElementById("ckMethod").textContent=c.method;
+    document.getElementById("ckTip").textContent=c.tip;
+    var note=document.getElementById("ckNote");
+    if(di===c.rec){ note.textContent="Chef’s pick for this cut."; note.style.borderLeftColor="#7aa86a"; note.style.color="#cfe6c0"; }
+    else if(di>c.rec && c.delicate){ note.textContent="This is a lean cut — we recommend medium-rare to keep it tender."; note.style.borderLeftColor="#C9A55C"; note.style.color="#E4D3A8"; }
+    else if(di>c.rec){ note.textContent="Great — for the fullest flavor we suggest medium-rare."; note.style.borderLeftColor="#C9A55C"; note.style.color="#E4D3A8"; }
+    else { note.textContent="A touch rarer than our pick — go for it if that’s your style."; note.style.borderLeftColor="#C9A55C"; note.style.color="#D8CDB3"; }
+  }
+  sl.addEventListener("input",paint);
+  paint();
+})();
+</script>
+
 <div class="cuts">
 
   <div class="cut">
