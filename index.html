@@ -385,7 +385,41 @@
       </div>
     </div>
   </section>
-  <section id="rabbi" class="rabbi-section">
+  <style>
+.jr-wrap{max-width:1100px;margin:0 auto;padding:72px 24px}
+.jr-eyebrow{text-align:center;font-size:11px;letter-spacing:4px;color:#8A7548;text-transform:uppercase;margin-bottom:14px}
+.jr-h{text-align:center;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(28px,5vw,44px);color:#F5EFE5;margin:0 0 46px}
+.jr-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+.jr-step{text-align:center;padding:0 10px}
+.jr-num{width:56px;height:56px;border-radius:50%;border:1px solid #C9A55C;color:#C9A55C;font-family:'Cormorant Garamond',serif;font-size:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.jr-t{font-family:'Cormorant Garamond',serif;font-size:23px;color:#F5EFE5;margin-bottom:8px}
+.jr-d{font-size:13.5px;color:#B8A985;line-height:1.7;max-width:230px;margin:0 auto}
+.jr-on .jr-step{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.jr-on .jr-step.in{opacity:1;transform:none}
+</style>
+<div class="jr-wrap" id="jrWrap">
+  <div class="jr-eyebrow">From the pampas to your table</div>
+  <h2 class="jr-h">The journey of every cut</h2>
+  <div class="jr-steps">
+    <div class="jr-step"><div class="jr-num">01</div><div class="jr-t">The Pampas</div><div class="jr-d">Grass-raised Angus from Argentina&rsquo;s open plains.</div></div>
+    <div class="jr-step"><div class="jr-num">02</div><div class="jr-t">Beit Yosef</div><div class="jr-d">Prepared under strict Glatt kosher supervision.</div></div>
+    <div class="jr-step"><div class="jr-num">03</div><div class="jr-t">Cold chain</div><div class="jr-d">Kept frozen and pristine every mile of the way.</div></div>
+    <div class="jr-step"><div class="jr-num">04</div><div class="jr-t">Your table</div><div class="jr-d">Delivered to your door across New York and New Jersey.</div></div>
+  </div>
+</div>
+<script>
+(function(){
+  var wrap=document.getElementById("jrWrap"); if(!wrap) return;
+  wrap.classList.add("jr-on");
+  var steps=wrap.querySelectorAll(".jr-step");
+  steps.forEach(function(s,i){ s.style.transitionDelay=(i*0.12)+"s"; });
+  if(!("IntersectionObserver" in window)){ steps.forEach(function(s){ s.classList.add("in"); }); return; }
+  var io=new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); },{threshold:0.2});
+  steps.forEach(function(s){ io.observe(s); });
+})();
+</script>
+
+<section id="rabbi" class="rabbi-section">
     <div class="rabbi-content">
       <div class="section-eyebrow">RABBINICAL SUPERVISION</div>
       <div class="rabbi-photo-placeholder"><img src="/rabbi.jpg" alt="Rabbi Yitzchak R. Nehmad" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
