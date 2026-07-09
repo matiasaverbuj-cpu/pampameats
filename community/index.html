@@ -92,5 +92,26 @@ a{color:inherit;text-decoration:none}
 <div class="foot">
 <div class="meta">PAMPA MEATS &middot; PREMIUM ARGENTINE ANGUS &middot; NY &amp; NJ</div>
 </div>
+<style>
+.gallery .cell{cursor:pointer;transition:transform .15s,border-color .15s}
+.gallery .cell:hover{transform:translateY(-2px)}
+#pmLightbox{position:fixed;inset:0;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px}
+#pmLightbox.open{display:flex}
+#pmLightbox img{max-width:92%;max-height:86%;border-radius:8px;border:0.5px solid #3a352b;box-shadow:0 24px 70px rgba(0,0,0,.7)}
+#pmLightbox .x{position:absolute;top:18px;right:26px;color:#C9A55C;font-size:36px;cursor:pointer;font-family:Georgia,serif;line-height:1}
+</style>
+<script>
+(function(){
+  var lb=document.createElement("div"); lb.id="pmLightbox";
+  lb.innerHTML="<span class='x' aria-label='Close'>&times;</span><img alt='Pampa Meats customer plate'>";
+  document.body.appendChild(lb);
+  var big=lb.querySelector("img");
+  lb.addEventListener("click",function(){ lb.classList.remove("open"); });
+  document.querySelectorAll(".gallery img").forEach(function(im){
+    im.style.cursor="pointer";
+    im.addEventListener("click",function(e){ e.stopPropagation(); big.src=im.currentSrc||im.src; lb.classList.add("open"); });
+  });
+})();
+</script>
 </body>
 </html>
