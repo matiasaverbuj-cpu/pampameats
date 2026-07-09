@@ -122,5 +122,21 @@
   <div class="footer">
     <div class="meta"><a href="/">HOME</a> &middot; <a href="/order">ORDER</a> &middot; <a href="/#rabbi">RABBI</a> &middot; PAMPA MEATS &middot; NEW YORK &amp; NEW JERSEY &middot; 2026</div>
   </div>
+<style>
+.js-acc .qa{cursor:pointer}
+.js-acc .qa .a{overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease,opacity .25s ease}
+.js-acc .qa.open .a{max-height:1000px;opacity:1}
+.js-acc .qa .q{position:relative;padding-right:30px}
+.js-acc .qa .q::after{content:"+";position:absolute;right:2px;top:0;color:#C9A55C;font-weight:400}
+.js-acc .qa.open .q::after{content:"-"}
+</style>
+<script>
+(function(){
+  document.body.classList.add("js-acc");
+  var qas=document.querySelectorAll(".qa");
+  qas.forEach(function(qa){ var q=qa.querySelector(".q"); if(q){ q.addEventListener("click",function(){ qa.classList.toggle("open"); }); } });
+  if(qas[0]) qas[0].classList.add("open");
+})();
+</script>
 </body>
 </html>
