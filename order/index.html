@@ -148,6 +148,71 @@ input:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12)}
 <div class="wrap">
 <section class="step">
 <div class="step-label"><span class="step-num serif">I</span><span class="step-title serif">Select your cuts</span></div>
+<style>
+.bx-wrap{margin:8px 0 30px}
+.bx-eyebrow{font-size:10px;letter-spacing:3px;color:#8A7548;text-transform:uppercase;margin-bottom:4px}
+.bx-h{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(22px,3.6vw,30px);color:#F5EFE5;margin:0 0 4px}
+.bx-sub{font-size:13px;color:#B8A985;margin:0 0 16px;line-height:1.6}
+.bx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.bx-card{background:linear-gradient(180deg,#141414,#101010);border:0.5px solid #2a2a2a;border-radius:14px;padding:18px 18px 20px;display:flex;flex-direction:column}
+.bx-card.feat{border:1.5px solid #C9A55C}
+.bx-tag{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:#C9A55C;margin-bottom:8px}
+.bx-name{font-family:'Cormorant Garamond',serif;font-size:22px;color:#F5EFE5;margin-bottom:6px}
+.bx-items{font-size:12.5px;color:#B8A985;line-height:1.7;flex:1;margin-bottom:16px}
+.bx-btn{background:#C9A55C;color:#1A1208;font-weight:600;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:12px 10px;border-radius:3px;border:none;cursor:pointer;font-family:inherit;width:100%}
+.bx-btn:hover{background:#D8B46A}
+</style>
+<div class="bx-wrap" id="pmBoxes">
+  <div class="bx-eyebrow">Curated Boxes</div>
+  <div class="bx-h">Not sure? Start with a box</div>
+  <div class="bx-sub">Chosen by our butcher &mdash; one tap fills your order. Adjust anything below.</div>
+  <div class="bx-grid">
+    <div class="bx-card feat">
+      <div class="bx-tag">Most popular</div>
+      <div class="bx-name">The Asado Box</div>
+      <div class="bx-items">Picanha &middot; New York Strip &middot; Top Sirloin &middot; Tenderloin<br><span style="color:#8A7548">One of each — the full parrilla</span></div>
+      <button class="bx-btn" data-box="asado">Add to order</button>
+    </div>
+    <div class="bx-card">
+      <div class="bx-tag">Feeds the table</div>
+      <div class="bx-name">Family &amp; Shabbat</div>
+      <div class="bx-items">2&times; Top Sirloin &middot; New York Strip &middot; Picanha<br><span style="color:#8A7548">Generous cuts for a big table</span></div>
+      <button class="bx-btn" data-box="family">Add to order</button>
+    </div>
+    <div class="bx-card">
+      <div class="bx-tag">For a celebration</div>
+      <div class="bx-name">The Premium</div>
+      <div class="bx-items">Tenderloin &middot; Picanha &middot; New York Strip<br><span style="color:#8A7548">Filet and picanha, front and center</span></div>
+      <button class="bx-btn" data-box="premium">Add to order</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var boxes={
+    asado:{picanha:1,nyStrip:1,topSirloin:1,tenderloin:1},
+    family:{picanha:1,nyStrip:1,topSirloin:2,tenderloin:0},
+    premium:{picanha:1,nyStrip:1,topSirloin:0,tenderloin:1}
+  };
+  function setQty(key,target){
+    var span=document.getElementById("q-"+key);
+    var cur=parseInt((span&&span.textContent)||"0",10)||0;
+    var diff=target-cur;
+    if(diff===0) return;
+    var btn=document.querySelector('button[data-k="'+key+'"][data-d="'+(diff>0?"1":"-1")+'"]');
+    if(!btn) return;
+    for(var i=0;i<Math.abs(diff);i++){ btn.click(); }
+  }
+  document.querySelectorAll(".bx-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var q=boxes[b.dataset.box]; if(!q) return;
+      setQty("picanha",q.picanha); setQty("topSirloin",q.topSirloin); setQty("nyStrip",q.nyStrip); setQty("tenderloin",q.tenderloin);
+      var c=document.getElementById("cuts"); if(c) c.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
+})();
+</script>
+
 <div class="cuts" id="cuts"></div>
 <div class="cuts-note">Prices are per pound; package weights are approximate, so the final total is confirmed by exact weight. Each cut is hand-trimmed &mdash; size and marbling vary naturally.</div>
 </section>
