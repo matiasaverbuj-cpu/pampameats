@@ -122,12 +122,18 @@ async function handlePayLink(req) {
 }
 
 async function markPaidFromSession(s, atoken) {
-  if (!s || s.payment_status !== 'paid') return;
+  if (!s || s.status !== 'complete') return;
   const oid = (s.metadata && s.metadata.oid) || '';
   const amount = (s.amount_total || 0) / 100;
   const pi = (typeof s.payment_intent === 'string') ? s.payment_intent : ((s.payment_intent && s.payment_intent.id) || '');
   if (!oid || !atoken) return;
-  await fetch(AT + BASE + '/tbli7bDbuXmjnp02M/' + oid, { method: 'PATCH', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: { 'Amount Paid': amount, 'Status': 'Paid', 'Stripe PI': pi, 'Stripe Status': 'Captured', 'Payment Method': 'Credit card' }, typecast: true }) });
+  let fields;
+  if (s.payment_status === 'paid') {
+    fields = { 'Amount Paid': amount, 'Status': 'Paid', 'Stripe PI': pi, 'Stripe Status': 'Captured', 'Payment Method': 'Credit card' };
+  } else {
+    fields = { 'Stripe PI': pi, 'Auth Hold': amount, 'Stripe Status': 'Authorized', 'Status': 'Confirmed' };
+  }
+  await fetch(AT + BASE + '/tbli7bDbuXmjnp02M/' + oid, { method: 'PATCH', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fields, typecast: true }) });
 }
 
 async function handlePayDone(req) {
@@ -164,12 +170,90 @@ async function handleStripeWebhook(req) {
   return new Response(JSON.stringify({ received: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
+async function stripeGetOrderPI(atoken, oid) {
+  try {
+    const r = await fetch(AT + BASE + '/tbli7bDbuXmjnp02M/' + oid, { headers: { Authorization: 'Bearer ' + atoken } });
+    const j = await r.json();
+    return (j.fields && (j.fields['Stripe PI'] || '')) || '';
+  } catch (e) { return ''; }
+}
+
+async function handlePayAuthorize(req) {
+  const sk = process.env.STRIPE_SECRET_KEY;
+  if (!sk) return jsonRes({ ok: false, reason: 'stripe_not_configured' });
+  let b = {};
+  try { b = await req.json(); } catch (e) {}
+  const oid = String(b.oid || '');
+  const est = Number(b.amount || 0);
+  const hold = Math.round(est * 1.15 * 100);
+  if (!hold || hold < 50) return jsonRes({ ok: false, reason: 'bad_amount' });
+  const origin = new URL(req.url).origin;
+  const form = new URLSearchParams();
+  form.set('mode', 'payment');
+  form.set('payment_intent_data[capture_method]', 'manual');
+  form.set('success_url', origin + '/api/pay-done?session_id={CHECKOUT_SESSION_ID}');
+  form.set('cancel_url', origin + '/order');
+  form.set('line_items[0][price_data][currency]', 'usd');
+  form.set('line_items[0][price_data][product_data][name]', 'Pampa Meats order (hold: estimate + 15%). Final charge by exact weight.');
+  form.set('line_items[0][price_data][unit_amount]', String(hold));
+  form.set('line_items[0][quantity]', '1');
+  if (oid) { form.set('metadata[oid]', oid); form.set('payment_intent_data[metadata][oid]', oid); }
+  try {
+    const r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: 'Bearer ' + sk, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form.toString() });
+    const j = await r.json();
+    if (!r.ok) return jsonRes({ ok: false, reason: 'stripe_error', detail: (j.error && j.error.message) || null });
+    return jsonRes({ ok: true, url: j.url, id: j.id });
+  } catch (e) { return jsonRes({ ok: false, reason: String(e) }); }
+}
+
+async function handlePayCollect(req) {
+  const sk = process.env.STRIPE_SECRET_KEY;
+  const atoken = process.env.AIRTABLE_TOKEN;
+  if (!sk) return jsonRes({ ok: false, reason: 'stripe_not_configured' });
+  let b = {};
+  try { b = await req.json(); } catch (e) {}
+  const oid = String(b.oid || '');
+  const amount = Math.round(Number(b.amount || 0) * 100);
+  if (!amount || amount < 50) return jsonRes({ ok: false, reason: 'bad_amount' });
+  const pi = oid ? await stripeGetOrderPI(atoken, oid) : '';
+  if (pi) {
+    try {
+      const cap = new URLSearchParams();
+      cap.set('amount_to_capture', String(amount));
+      const r = await fetch('https://api.stripe.com/v1/payment_intents/' + pi + '/capture', { method: 'POST', headers: { Authorization: 'Bearer ' + sk, 'Content-Type': 'application/x-www-form-urlencoded' }, body: cap.toString() });
+      const j = await r.json();
+      if (!r.ok) return jsonRes({ ok: false, reason: 'capture_failed', detail: (j.error && j.error.message) || null });
+      if (atoken) { await fetch(AT + BASE + '/tbli7bDbuXmjnp02M/' + oid, { method: 'PATCH', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: { 'Amount Paid': amount / 100, 'Status': 'Paid', 'Stripe Status': 'Captured', 'Payment Method': 'Credit card' }, typecast: true }) }); }
+      return jsonRes({ ok: true, captured: true, amount: amount / 100 });
+    } catch (e) { return jsonRes({ ok: false, reason: String(e) }); }
+  }
+  const label = String(b.label || 'Pampa Meats order').slice(0, 120);
+  const origin = new URL(req.url).origin;
+  const form = new URLSearchParams();
+  form.set('mode', 'payment');
+  form.set('success_url', origin + '/api/pay-done?session_id={CHECKOUT_SESSION_ID}');
+  form.set('cancel_url', origin + '/dashboard/weigh');
+  form.set('line_items[0][price_data][currency]', 'usd');
+  form.set('line_items[0][price_data][product_data][name]', label);
+  form.set('line_items[0][price_data][unit_amount]', String(amount));
+  form.set('line_items[0][quantity]', '1');
+  if (oid) { form.set('metadata[oid]', oid); form.set('payment_intent_data[metadata][oid]', oid); }
+  try {
+    const r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: 'Bearer ' + sk, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form.toString() });
+    const j = await r.json();
+    if (!r.ok) return jsonRes({ ok: false, reason: 'stripe_error', detail: (j.error && j.error.message) || null });
+    return jsonRes({ ok: true, url: j.url, id: j.id });
+  } catch (e) { return jsonRes({ ok: false, reason: String(e) }); }
+}
+
 export default async function middleware(req) {
   const pathname = new URL(req.url).pathname;
   const key = process.env.DASH_PASS;
   const atoken = process.env.AIRTABLE_TOKEN;
 
   if (pathname === '/api/order-create' || pathname === '/api/daily-digest') return;
+
+  if (pathname === '/api/pay-authorize' && req.method === 'POST') return handlePayAuthorize(req);
 
   if (pathname === '/api/pay-done') return handlePayDone(req);
   if (pathname === '/api/stripe-webhook' && req.method === 'POST') return handleStripeWebhook(req);
@@ -224,6 +308,7 @@ export default async function middleware(req) {
 
   if (authed) {
     if (pathname === '/api/pay-link' && req.method === 'POST') return handlePayLink(req);
+    if (pathname === '/api/pay-collect' && req.method === 'POST') return handlePayCollect(req);
     return;
   }
 
