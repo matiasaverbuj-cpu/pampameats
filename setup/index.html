@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pampa Meats — Set your password</title>
+<style>
+:root{--bg:#0A0A0A;--gold:#C9A55C;--panel:#151515;--line:#2a2a2a;--txt:#EDE8DF;--mut:#9a9488}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 50% -10%, #1a1712, #0A0A0A 60%);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:36px 30px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.brand{text-align:center;letter-spacing:5px;color:var(--gold);font-weight:700;font-size:20px}
+.sub{text-align:center;color:var(--mut);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:6px 0 20px}
+.hi{text-align:center;color:var(--txt);font-size:14px;margin-bottom:8px}
+label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin:16px 0 6px}
+input{width:100%;padding:13px 14px;background:#0e0e0e;border:1px solid var(--line);border-radius:10px;color:var(--txt);font-size:15px;outline:none}
+input:focus{border-color:var(--gold)}
+button{width:100%;margin-top:24px;padding:14px;background:var(--gold);color:#0A0A0A;border:0;border-radius:10px;font-weight:700;font-size:15px;letter-spacing:.5px;cursor:pointer}
+button:disabled{opacity:.6;cursor:default}
+.msg{margin-top:16px;font-size:13px;text-align:center;min-height:18px}
+.msg.err{color:#e0736b}.msg.ok{color:#7fc99a}
+.foot{margin-top:22px;text-align:center;color:var(--mut);font-size:11px;letter-spacing:.5px}
+.foot a{color:var(--gold);text-decoration:none}
+</style></head><body>
+<form class="card" id="f" autocomplete="on">
+  <div class="brand">PAMPA MEATS</div>
+  <div class="sub">Create your password</div>
+  <div class="hi">Welcome. Set a password to access the system.</div>
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" autocomplete="username" required>
+  <label for="p1">New password (min 6)</label>
+  <input id="p1" name="password" type="password" autocomplete="new-password" required>
+  <label for="p2">Repeat password</label>
+  <input id="p2" type="password" autocomplete="new-password" required>
+  <button id="btn" type="submit">Create and enter</button>
+  <div class="msg" id="msg"></div>
+  <div class="foot">Already set up? <a href="/login">Sign in here</a></div>
+</form>
+<script>
+var q=new URLSearchParams(location.search);
+var pEmail=q.get('e')||'', pToken=q.get('t')||'';
+if(pEmail) document.getElementById('email').value=pEmail;
+var f=document.getElementById('f'),msg=document.getElementById('msg'),btn=document.getElementById('btn');
+f.addEventListener('submit',function(e){
+  e.preventDefault();
+  var em=document.getElementById('email').value.trim();
+  var p1=document.getElementById('p1').value, p2=document.getElementById('p2').value;
+  msg.className='msg';msg.textContent='';
+  if(p1.length<6){msg.className='msg err';msg.textContent='Password must be at least 6 characters.';return;}
+  if(p1!==p2){msg.className='msg err';msg.textContent='The two passwords do not match.';return;}
+  if(!pToken){msg.className='msg err';msg.textContent='Missing setup token. Please use the exact link we emailed you.';return;}
+  btn.disabled=true;btn.textContent='Creating...';
+  fetch('/api/setup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,token:pToken,password:p1})})
+   .then(function(r){return r.json()})
+   .then(function(d){
+     if(d && d.ok){ msg.className='msg ok'; msg.textContent='All set! Loading your dashboard...'; window.location.href='/dashboard'; }
+     else { var m='Could not set your password.'; if(d){ if(d.reason==='bad_token')m='This setup link is invalid or was already used.'; else if(d.reason==='not_found')m='Email not recognized. Check the address.'; else if(d.reason==='bad_input')m='Check your email and password (min 6 characters).'; else if(d.reason==='inactive')m='This account is not active. Contact the team.'; } msg.className='msg err'; msg.textContent=m; btn.disabled=false; btn.textContent='Create and enter'; }
+   })
+   .catch(function(){ msg.className='msg err'; msg.textContent='Connection error. Please try again.'; btn.disabled=false; btn.textContent='Create and enter'; });
+});
+</script>
+</body></html>
