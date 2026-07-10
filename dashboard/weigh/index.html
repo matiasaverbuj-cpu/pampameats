@@ -97,6 +97,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
 </div>
 <div class="actions">
 <button class="btn gold" id="saveBtn"><i class="ti ti-device-floating"></i> Save final invoice to order</button>
+<button class="btn" id="cardBtn"><i class="ti ti-credit-card"></i> Cobrar con tarjeta</button>
 <a class="btn" id="invLink" href="/dashboard/quote"><i class="ti ti-file-invoice"></i> Open invoice / PDF</a>
 </div>
 <div class="msg" id="msg"></div>
@@ -166,6 +167,25 @@ function loadOrders(){
 $('orderSel').addEventListener('change',function(){ var i=this.value; if(i==='')return; fill(ORDERS[parseInt(i,10)]); });
 $('reload').addEventListener('click',function(){ loadOrders(); });
 $('fullBtn').addEventListener('click',function(){ $('paid').value=(recalc()).toFixed(2); });
+$('cardBtn').addEventListener('click',function(){
+  var m = $('msg');
+  if(!CUR||!CUR.id){ m.className='msg err'; m.textContent='Select an order first.'; return; }
+  var total = recalc();
+  if(!total || total < 0.5){ m.className='msg err'; m.textContent='Enter weights first — total is 0.'; return; }
+  m.className='msg'; m.textContent='Generating card link…';
+  var label = 'Pampa Meats — ' + (CUR.name||'order');
+  fetch('/api/pay-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({oid:CUR.id,amount:total,label:label})})
+   .then(function(r){return r.json();})
+   .then(function(d){
+     if(d && d.ok && d.url){
+       m.className='msg ok';
+       m.innerHTML='Card link ready ('+money(total)+'): <a href="'+d.url+'" target="_blank" style="color:#C9A55C;font-weight:bold">Open</a> &middot; <button type="button" id="copyPay" class="btn" style="padding:4px 10px">Copy link</button>';
+       var cp=document.getElementById('copyPay');
+       if(cp) cp.addEventListener('click',function(){ navigator.clipboard.writeText(d.url).then(function(){ cp.textContent='Copied'; }); });
+     } else { m.className='msg err'; m.textContent='Could not create link ('+((d&&(d.detail||d.reason))||'error')+')'; }
+   })
+   .catch(function(){ m.className='msg err'; m.textContent='Connection error.'; });
+});
 $('saveBtn').addEventListener('click',function(){
   var m=$('msg');
   if(!CUR||!CUR.id){ m.className='msg err'; m.textContent='Select an order first.'; return; }
