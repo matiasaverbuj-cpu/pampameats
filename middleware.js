@@ -246,12 +246,108 @@ async function handlePayCollect(req) {
   } catch (e) { return jsonRes({ ok: false, reason: String(e) }); }
 }
 
+const WA_GRAPH = 'https://graph.facebook.com/v20.0/';
+const WA_SYS = 'You are the friendly ordering assistant for Pampa Meats, a premium Argentine Angus, Glatt Kosher (Beit Yosef) beef company that delivers frozen to New York and New Jersey. Speak only English. Be warm, concise and helpful, like a boutique butcher concierge. You can take orders, answer questions about cuts, prices, kosher certification and delivery, and connect a customer to a person. Cuts and prices, sold by the pound as catch-weight with the final price confirmed by exact weight: Picanha 42.99 per lb, New York Strip 39.99 per lb, Top Sirloin 26.99 per lb, Tenderloin or Filet 59.99 per lb. To place an order collect which cuts and how many of each, the full name, a delivery address in NY or NJ, and a preferred delivery date, then confirm the summary before finalizing. When an order is confirmed, output on its own line a block exactly like: [ORDER] name=Full Name; picanha=0; topSirloin=0; nyStrip=0; tenderloin=0; address=Street City; state=NY; date=YYYY-MM-DD [/ORDER] then tell the customer the order is received and the team will confirm exact weight, total and payment shortly. If a customer wants to talk to a person or asks something you cannot handle, output on its own line: [CALLBACK] reason=short reason [/CALLBACK] then tell the customer a team member, preferably Ilia, will call shortly. Never invent facts. Payment is by secure card link after weighing. Delivery is frozen cold-chain, NY and NJ only. All beef is Glatt Kosher, Beit Yosef, rabbinically supervised.';
+
+async function waVerify(req) {
+  const u = new URL(req.url);
+  if (u.searchParams.get('hub.mode') === 'subscribe' && u.searchParams.get('hub.verify_token') === process.env.WA_VERIFY_TOKEN) {
+    return new Response(u.searchParams.get('hub.challenge') || '', { status: 200, headers: { 'Content-Type': 'text/plain' } });
+  }
+  return new Response('forbidden', { status: 403 });
+}
+async function waSend(to, body) {
+  const tok = process.env.WA_TOKEN, pid = process.env.WA_PHONE_ID;
+  if (!tok || !pid || !to) return;
+  try { await fetch(WA_GRAPH + pid + '/messages', { method: 'POST', headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' }, body: JSON.stringify({ messaging_product: 'whatsapp', to: to, type: 'text', text: { body: String(body).slice(0, 4000) } }) }); } catch (e) {}
+}
+function waBlock(s, open, close) {
+  const i = s.indexOf(open); if (i < 0) return '';
+  const j = s.indexOf(close, i + open.length); if (j < 0) return '';
+  return s.slice(i + open.length, j).trim();
+}
+function waStrip(s, open, close) {
+  const i = s.indexOf(open); if (i < 0) return s;
+  const j = s.indexOf(close, i + open.length); if (j < 0) return s;
+  return s.slice(0, i) + s.slice(j + close.length);
+}
+function waParseKV(s) {
+  const obj = {}, parts = s.split(';');
+  for (let i = 0; i < parts.length; i++) { const p = parts[i], e = p.indexOf('='); if (e > 0) obj[p.slice(0, e).trim()] = p.slice(e + 1).trim(); }
+  return obj;
+}
+async function waHistory(atoken, phone) {
+  try {
+    const formula = '{Phone}=' + JSON.stringify(phone);
+    const r = await fetch(AT + BASE + '/tblBhoVagZqhRPbaM?maxRecords=1&filterByFormula=' + encodeURIComponent(formula), { headers: { Authorization: 'Bearer ' + atoken } });
+    const jj = await r.json();
+    const rec = jj.records && jj.records[0];
+    let hist = [];
+    if (rec && rec.fields && rec.fields.History) { try { hist = JSON.parse(rec.fields.History); } catch (e) {} }
+    return { id: rec ? rec.id : null, hist: Array.isArray(hist) ? hist : [] };
+  } catch (e) { return { id: null, hist: [] }; }
+}
+async function waSaveHistory(atoken, phone, id, hist, last) {
+  const fields = { Phone: phone, History: JSON.stringify(hist.slice(-12)), 'Last Message': last, Updated: new Date().toISOString() };
+  try {
+    if (id) await fetch(AT + BASE + '/tblBhoVagZqhRPbaM/' + id, { method: 'PATCH', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fields, typecast: true }) });
+    else await fetch(AT + BASE + '/tblBhoVagZqhRPbaM', { method: 'POST', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fields, typecast: true }) });
+  } catch (e) {}
+}
+async function waCreateOrder(atoken, phone, kv) {
+  const fields = { Name: kv.name || 'WhatsApp customer', Phone: phone, Picanha: parseInt(kv.picanha, 10) || 0, 'Top Sirloin': parseInt(kv.topSirloin, 10) || 0, Striploin: parseInt(kv.nyStrip, 10) || 0, Tenderloin: parseInt(kv.tenderloin, 10) || 0, Address: kv.address || '', Status: 'New', Source: 'WhatsApp', Notes: 'Order taken by WhatsApp AI bot.' };
+  const st = (kv.state || '').toUpperCase();
+  if (st === 'NY') { fields['Delivery State'] = 'New York (NY)'; fields.Zone = 'NY'; }
+  if (st === 'NJ') { fields['Delivery State'] = 'New Jersey (NJ)'; fields.Zone = 'NJ'; }
+  if (kv.date) fields['Delivery Date'] = kv.date;
+  try { const r = await fetch(AT + BASE + '/tbli7bDbuXmjnp02M', { method: 'POST', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: fields, typecast: true }) }); const jj = await r.json(); return jj.id || ''; } catch (e) { return ''; }
+}
+async function waAsk(hist, userText) {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return 'Thanks for messaging Pampa Meats. A team member will reply shortly.';
+  const msgs = hist.concat([{ role: 'user', content: userText }]);
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-3-5-haiku-latest', max_tokens: 800, system: WA_SYS, messages: msgs }) });
+    const jj = await r.json();
+    return (jj.content && jj.content[0] && jj.content[0].text) || 'Sorry, could you say that again?';
+  } catch (e) { return 'Sorry, something went wrong. A team member will follow up.'; }
+}
+async function waIncoming(req) {
+  const atoken = process.env.AIRTABLE_TOKEN;
+  let body = {};
+  try { body = await req.json(); } catch (e) {}
+  try {
+    const entry = (body.entry && body.entry[0]) || {};
+    const change = (entry.changes && entry.changes[0]) || {};
+    const value = change.value || {};
+    const msg = (value.messages && value.messages[0]) || null;
+    if (msg && msg.type === 'text' && msg.from) {
+      const phone = msg.from, text = (msg.text && msg.text.body) || '';
+      const H = await waHistory(atoken, phone);
+      let reply = await waAsk(H.hist, text);
+      const ob = waBlock(reply, '[ORDER]', '[/ORDER]');
+      const cb = waBlock(reply, '[CALLBACK]', '[/CALLBACK]');
+      if (ob) await waCreateOrder(atoken, phone, waParseKV(ob));
+      if (cb) { const office = process.env.WA_OFFICE; if (office) { const kv = waParseKV(cb); await waSend(office, 'Callback request from ' + phone + '. Please call the customer (preferably Ilia). ' + (kv.reason || '')); } }
+      reply = waStrip(reply, '[ORDER]', '[/ORDER]');
+      reply = waStrip(reply, '[CALLBACK]', '[/CALLBACK]');
+      reply = reply.trim() || 'Got it. Our team will follow up shortly.';
+      await waSend(phone, reply);
+      const nh = H.hist.concat([{ role: 'user', content: text }, { role: 'assistant', content: reply }]);
+      await waSaveHistory(atoken, phone, H.id, nh, text);
+    }
+  } catch (e) {}
+  return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+}
+
 export default async function middleware(req) {
   const pathname = new URL(req.url).pathname;
   const key = process.env.DASH_PASS;
   const atoken = process.env.AIRTABLE_TOKEN;
 
   if (pathname === '/api/order-create' || pathname === '/api/daily-digest') return;
+
+  if (pathname === '/api/wa-webhook') { if (req.method === 'GET') return waVerify(req); if (req.method === 'POST') return waIncoming(req); }
 
   if (pathname === '/api/pay-authorize' && req.method === 'POST') return handlePayAuthorize(req);
 
