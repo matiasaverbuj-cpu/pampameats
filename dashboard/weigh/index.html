@@ -172,12 +172,13 @@ $('cardBtn').addEventListener('click',function(){
   if(!CUR||!CUR.id){ m.className='msg err'; m.textContent='Select an order first.'; return; }
   var total = recalc();
   if(!total || total < 0.5){ m.className='msg err'; m.textContent='Enter weights first — total is 0.'; return; }
-  m.className='msg'; m.textContent='Generating card link…';
+  m.className='msg'; m.textContent='Processing payment…';
   var label = 'Pampa Meats — ' + (CUR.name||'order');
-  fetch('/api/pay-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({oid:CUR.id,amount:total,label:label})})
+  fetch('/api/pay-collect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({oid:CUR.id,amount:total,label:label})})
    .then(function(r){return r.json();})
    .then(function(d){
-     if(d && d.ok && d.url){
+     if(d && d.ok && d.captured){ m.className='msg ok'; m.textContent='Charged '+money(d.amount||total)+' to the card on file. Order marked Paid.'; loadOrders(); return; }
+       if(d && d.ok && d.url){
        m.className='msg ok';
        m.innerHTML='Card link ready ('+money(total)+'): <a href="'+d.url+'" target="_blank" style="color:#C9A55C;font-weight:bold">Open</a> &middot; <button type="button" id="copyPay" class="btn" style="padding:4px 10px">Copy link</button>';
        var cp=document.getElementById('copyPay');
