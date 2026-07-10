@@ -88,6 +88,39 @@ async function findUser(atoken, email) {
   return (j.records && j.records[0]) || null;
 }
 
+async function handlePayLink(req) {
+  const sk = process.env.STRIPE_SECRET_KEY;
+  if (!sk) return jsonRes({ ok: false, reason: 'stripe_not_configured' });
+  let b = {};
+  try { b = await req.json(); } catch (e) {}
+  const oid = String(b.oid || '');
+  const amount = Math.round(Number(b.amount || 0) * 100);
+  const label = String(b.label || 'Pampa Meats order').slice(0, 120);
+  if (!amount || amount < 50) return jsonRes({ ok: false, reason: 'bad_amount' });
+  const origin = new URL(req.url).origin;
+  const form = new URLSearchParams();
+  form.set('mode', 'payment');
+  form.set('success_url', origin + '/dashboard/weigh?paid=1');
+  form.set('cancel_url', origin + '/dashboard/weigh?canceled=1');
+  form.set('line_items[0][price_data][currency]', 'usd');
+  form.set('line_items[0][price_data][product_data][name]', label);
+  form.set('line_items[0][price_data][unit_amount]', String(amount));
+  form.set('line_items[0][quantity]', '1');
+  if (oid) { form.set('metadata[oid]', oid); form.set('payment_intent_data[metadata][oid]', oid); }
+  try {
+    const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + sk, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString()
+    });
+    const j = await r.json();
+    if (!r.ok) return jsonRes({ ok: false, reason: 'stripe_error', detail: (j.error && j.error.message) || null });
+    return jsonRes({ ok: true, url: j.url, id: j.id });
+  } catch (e) {
+    return jsonRes({ ok: false, reason: String(e) });
+  }
+}
+
 export default async function middleware(req) {
   const pathname = new URL(req.url).pathname;
   const key = process.env.DASH_PASS;
@@ -133,14 +166,19 @@ export default async function middleware(req) {
     return jsonRes({ ok: true, name: f.Name || '', role: f.Role || 'Partner' }, await makeSession(email, key));
   }
 
-  if (key && await validSession(getCookie(req, 'pm_session'), key)) return;
+  let authed = !!(key && await validSession(getCookie(req, 'pm_session'), key));
 
   const auth = req.headers.get('authorization') || '';
   if (key && auth.startsWith('Basic ')) {
     try {
       const decoded = atob(auth.slice(6));
-      if (decoded.slice(decoded.indexOf(':') + 1) === key) return;
+      if (decoded.slice(decoded.indexOf(':') + 1) === key) authed = true;
     } catch (e) {}
+  }
+
+  if (authed) {
+    if (pathname === '/api/pay-link' && req.method === 'POST') return handlePayLink(req);
+    return;
   }
 
   if (pathname.startsWith('/api/')) {
