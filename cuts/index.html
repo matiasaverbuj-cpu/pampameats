@@ -54,6 +54,7 @@ a{color:inherit;text-decoration:none}
 <a href="/" class="nav-logo">PAMPA MEATS</a>
 <a href="/" class="nav-back">&larr; BACK TO SITE</a>
 </nav>
+<div class="cuts-hero"><div class="cuts-hero-in"><div class="cuts-hero-eyebrow">The Cuts</div><h1 class="cuts-hero-h">Know your cut. Cook it perfectly.</h1></div></div>
 
 <div class="head">
 <img src="/logo.png" alt="Pampa Meats">
@@ -308,5 +309,38 @@ a{color:inherit;text-decoration:none}
 <div class="foot">
 <div class="meta">PAMPA MEATS &middot; PREMIUM ARGENTINE ANGUS &middot; NY &amp; NJ</div>
 </div>
+<style>
+.cuts-hero{position:relative;min-height:60vh;background:linear-gradient(180deg,rgba(10,10,10,.48),rgba(10,10,10,.82)),url('/picanha-hero.jpg');background-size:cover;background-position:center 42%;display:flex;align-items:flex-end;justify-content:center;text-align:center;padding:0 24px 7vh}
+.cuts-hero-eyebrow{font-size:11px;letter-spacing:5px;color:#C9A55C;text-transform:uppercase;margin-bottom:16px}
+.cuts-hero-h{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,6vw,58px);color:#F5EFE5;margin:0;line-height:1.12;text-shadow:0 2px 40px rgba(0,0,0,.7)}
+.head img,.head .eyebrow,.head h1{display:none}
+.cuts.reveal .cut{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.cuts.reveal .cut.in{opacity:1;transform:none}
+.sm-reveal .sm-zone{opacity:0}
+.sm-reveal .sm-zone.shown{opacity:1}
+</style>
+<script>
+(function(){
+  var io=window.IntersectionObserver;
+  var cutsWrap=document.querySelector('.cuts');
+  if(cutsWrap){
+    cutsWrap.classList.add('reveal');
+    var cards=cutsWrap.querySelectorAll('.cut');
+    cards.forEach(function(c,i){ c.style.transitionDelay=(i*0.09)+'s'; });
+    if(io){ var o1=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');o1.unobserve(e.target);}});},{threshold:0.14});
+      cards.forEach(function(c){o1.observe(c);}); }
+    else { cards.forEach(function(c){c.classList.add('in');}); }
+  }
+  var photo=document.querySelector('.sm-photo');
+  if(photo){
+    photo.classList.add('sm-reveal');
+    var zones=photo.querySelectorAll('.sm-zone');
+    function showZones(){ zones.forEach(function(z,i){ setTimeout(function(){ z.classList.add('shown'); }, i*200); }); }
+    if(io){ var o2=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){ showZones(); o2.unobserve(e.target);}});},{threshold:0.35});
+      o2.observe(photo); }
+    else { showZones(); }
+  }
+})();
+</script>
 </body>
 </html>
