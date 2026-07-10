@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pampa Meats — Customer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Inter',-apple-system,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.serif{font-family:'Cormorant Garamond',Georgia,serif}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
+.brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
+.brand span{color:#6E6347;font-weight:400}
+.back{font-size:12px;letter-spacing:.5px;color:#C9A55C;border:0.5px solid #3a352b;padding:7px 12px;border-radius:6px}
+.wrap{max-width:920px;margin:0 auto;padding:26px 22px 60px}
+.hd .nm{font-family:'Cormorant Garamond',serif;font-size:34px;color:#F5EFE5}
+.hd .meta{font-size:13px;color:#B8A985;margin-top:8px;line-height:1.9}
+.hd .meta b{color:#8A7548;font-weight:500}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin:22px 0 8px}
+.kpi{background:#141414;border:0.5px solid #262626;border-radius:12px;padding:16px}
+.kpi .k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548;margin-bottom:8px}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:25px;color:#C9A55C}
+.sec-t{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8A7548;margin:28px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;color:#8A7548;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:8px 10px;border-bottom:0.5px solid #242424}
+td{padding:10px;border-bottom:0.5px solid #1c1c1c;color:#EDE3CC}
+.pill{font-size:11px;padding:3px 9px;border-radius:20px;background:#1c1a12;color:#C9A55C;border:0.5px solid #3a352b;white-space:nowrap}
+.intx{background:#141414;border:0.5px solid #262626;border-radius:12px;padding:13px 16px;margin-bottom:10px}
+.intx .ih{display:flex;justify-content:space-between;font-size:11px;color:#8A7548;letter-spacing:.5px;margin-bottom:5px}
+.intx .ib{font-size:14px;color:#EDE3CC}
+.form{background:#12100a;border:0.5px solid #3a352b;border-radius:12px;padding:16px;margin-bottom:22px}
+.form label{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7548;margin:0 0 5px}
+.form select,.form textarea,.form input{width:100%;background:#0F0F0F;border:0.5px solid #2a2a2a;border-radius:8px;color:#F5EFE5;padding:10px 12px;font-family:inherit;font-size:14px;margin-bottom:12px}
+.form textarea{min-height:70px;resize:vertical}
+.btn{background:#C9A55C;color:#1A1208;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:12px 22px;border-radius:6px;border:none;cursor:pointer}
+.muted{color:#8A7548;font-size:13px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+</style>
+</head><body>
+<div class="top"><a class="brand" href="/dashboard">PAMPA <span>MEATS</span></a><a class="back" href="/dashboard/customers">&larr; Customers</a></div>
+<div class="wrap">
+  <div class="hd"><div class="nm serif" id="cnm">Customer</div><div class="meta" id="cmeta"></div></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="sec-t">Order history</div>
+  <div id="orders"><div class="muted">Loading...</div></div>
+  <div class="sec-t">Interactions</div>
+  <div class="form">
+    <label>Channel</label>
+    <select id="f-ch"><option>WhatsApp</option><option>Call</option><option>Email</option><option>Note</option></select>
+    <label>Note</label>
+    <textarea id="f-note" placeholder="What happened? (e.g. Called about reorder, prefers Fridays)"></textarea>
+    <div class="row2"><div><label>Logged by</label><input id="f-by" placeholder="Your name"></div><div style="display:flex;align-items:flex-end"><button class="btn" id="addBtn" style="width:100%">Add interaction</button></div></div>
+  </div>
+  <div id="intx"><div class="muted">Loading...</div></div>
+</div>
+<script>
+(function(){
+  var key=(new URLSearchParams(location.search).get('c')||'').trim();
+  var usd=function(n){return '$'+Math.round(n||0).toLocaleString('en-US');};
+  var CUTS=[['picanha','Picanha'],['topSirloin','Top Sirloin'],['nyStrip','NY Strip'],['tenderloin','Tenderloin']];
+  function esc(s){return String(s==null?'':s);}
+  function kpi(k,v){return '<div class="kpi"><div class="k">'+k+'</div><div class="v serif">'+v+'</div></div>';}
+  function loadOrders(){
+    fetch('/api/orders',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      var all=(d.orders||[]).filter(function(o){return String(o.phone||'').trim()===key;});
+      if(!all.length){ document.getElementById('cnm').textContent='Customer not found'; document.getElementById('orders').innerHTML='<div class="muted">No orders for this phone.</div>'; return; }
+      all.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''));});
+      var latest=all[0];
+      document.getElementById('cnm').textContent=latest.name||'Customer';
+      var spent=0,bal=0,fav={};
+      all.forEach(function(o){ spent+=(+o.total||0); bal+=(+o.balance||0); CUTS.forEach(function(c){ fav[c[0]]=(fav[c[0]]||0)+(+o[c[0]]||0); }); });
+      var favName='-',favMax=0; CUTS.forEach(function(c){ if(fav[c[0]]>favMax){favMax=fav[c[0]];favName=c[1];} });
+      document.getElementById('cmeta').innerHTML='<b>Phone:</b> '+esc(latest.phone)+' &nbsp; <b>Email:</b> '+esc(latest.email||'-')+'<br><b>Address:</b> '+esc(latest.address||'-')+' ('+esc(latest.zone||'-')+')';
+      document.getElementById('kpis').innerHTML=kpi('Orders',all.length)+kpi('Total spent',usd(spent))+kpi('Balance',usd(bal))+kpi('Favorite cut',favName)+kpi('Last order',latest.date||'-');
+      var rows=all.map(function(o){
+        var cuts=CUTS.filter(function(c){return (+o[c[0]]||0)>0;}).map(function(c){return c[1]+' x'+o[c[0]];}).join(', ')||'-';
+        return '<tr><td>'+esc(o.date||'')+'</td><td>'+cuts+'</td><td>'+usd(o.total)+'</td><td><span class="pill">'+esc(o.status||'-')+'</span></td></tr>';
+      }).join('');
+      document.getElementById('orders').innerHTML='<table><tr><th>Date</th><th>Cuts</th><th>Total</th><th>Status</th></tr>'+rows+'</table>';
+    }).catch(function(){ document.getElementById('orders').innerHTML='<div class="muted">Connection error.</div>'; });
+  }
+  function loadIntx(){
+    fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_list',customer:key})}).then(function(r){return r.json();}).then(function(d){
+      var items=(d.items||[]);
+      if(!items.length){ document.getElementById('intx').innerHTML='<div class="muted">No interactions logged yet.</div>'; return; }
+      document.getElementById('intx').innerHTML=items.map(function(it){
+        return '<div class="intx"><div class="ih"><span>'+esc(it.channel||'Note')+' &middot; '+esc(it.date||'')+'</span><span>'+esc(it.by||'')+'</span></div><div class="ib">'+esc(it.note||'')+'</div></div>';
+      }).join('');
+    }).catch(function(){ document.getElementById('intx').innerHTML='<div class="muted">Could not load interactions.</div>'; });
+  }
+  document.getElementById('addBtn').addEventListener('click',function(){
+    var note=document.getElementById('f-note').value.trim();
+    if(!note){ document.getElementById('f-note').focus(); return; }
+    var btn=this; btn.disabled=true; btn.textContent='Saving...';
+    fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_add',customer:key,channel:document.getElementById('f-ch').value,note:note,by:document.getElementById('f-by').value.trim()})})
+      .then(function(r){return r.json();}).then(function(){ document.getElementById('f-note').value=''; btn.disabled=false; btn.textContent='Add interaction'; loadIntx(); })
+      .catch(function(){ btn.disabled=false; btn.textContent='Add interaction'; });
+  });
+  if(!key){ document.getElementById('cnm').textContent='No customer selected'; }
+  else { loadOrders(); loadIntx(); }
+})();
+</script>
+</body></html>
