@@ -135,7 +135,7 @@ function render(){
   tb.innerHTML=list.map(function(c){
     var contact=(c.email?c.email:'')+(c.phone?('<span class="sub">'+c.phone+'</span>'):'');
     if(!c.email&&c.phone) contact=c.phone;
-    return '<tr><td class="cust">'+(c.name||'—')+'</td>'+
+    return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+(c.name||'—')+'</a></td>'+
       '<td>'+(contact||'<span class="sub">no contact</span>')+'</td>'+
       '<td class="r">'+c.orders+'</td>'+
       '<td class="r">'+money(c.spent)+'</td>'+
