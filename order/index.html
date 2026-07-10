@@ -415,6 +415,14 @@ body:JSON.stringify({name:name,phone:phone,email:email,address:address,deliveryD
 });
 var data=await r.json();
 if(data && data.ok){
+        var _est=0; CUTS.forEach(function(c){ _est += (qty[c.key]||0)*c.lb*c.price; });
+        if (data.id && _est > 0) {
+          try {
+            var _pr = await fetch('/api/pay-authorize', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ oid: data.id, amount: _est }) });
+            var _pj = await _pr.json();
+            if (_pj && _pj.ok && _pj.url) { window.location.href = _pj.url; return; }
+          } catch(e) {}
+        }
 var lb=0, est=0; CUTS.forEach(function(c){ lb+=qty[c.key]*c.lb; est+=qty[c.key]*c.lb*c.price; });
 var ref = (data.id && data.id.indexOf('rec')===0) ? ('PM-'+data.id.slice(-5).toUpperCase()) : '';
 document.getElementById('cName').textContent=name.split(' ')[0]||'friend';
