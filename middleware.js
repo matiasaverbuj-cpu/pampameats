@@ -100,8 +100,8 @@ async function handlePayLink(req) {
   const origin = new URL(req.url).origin;
   const form = new URLSearchParams();
   form.set('mode', 'payment');
-  form.set('success_url', origin + '/dashboard/weigh?paid=1');
-  form.set('cancel_url', origin + '/dashboard/weigh?canceled=1');
+  form.set('success_url', origin + '/api/pay-done?session_id={CHECKOUT_SESSION_ID}');
+  form.set('cancel_url', origin + '/order');
   form.set('line_items[0][price_data][currency]', 'usd');
   form.set('line_items[0][price_data][product_data][name]', label);
   form.set('line_items[0][price_data][unit_amount]', String(amount));
@@ -121,12 +121,58 @@ async function handlePayLink(req) {
   }
 }
 
+async function markPaidFromSession(s, atoken) {
+  if (!s || s.payment_status !== 'paid') return;
+  const oid = (s.metadata && s.metadata.oid) || '';
+  const amount = (s.amount_total || 0) / 100;
+  const pi = (typeof s.payment_intent === 'string') ? s.payment_intent : ((s.payment_intent && s.payment_intent.id) || '');
+  if (!oid || !atoken) return;
+  await fetch(AT + BASE + '/tbli7bDbuXmjnp02M/' + oid, { method: 'PATCH', headers: { Authorization: 'Bearer ' + atoken, 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: { 'Amount Paid': amount, 'Status': 'Paid', 'Stripe PI': pi, 'Stripe Status': 'Captured', 'Payment Method': 'Credit card' }, typecast: true }) });
+}
+
+async function handlePayDone(req) {
+  const sk = process.env.STRIPE_SECRET_KEY;
+  const atoken = process.env.AIRTABLE_TOKEN;
+  const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment received</title></head><body style="margin:0;background:#0A0A0A;color:#EDE8DF;font-family:Arial,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center"><div style="padding:40px"><div style="color:#C9A55C;letter-spacing:5px;font-weight:bold;font-size:20px">PAMPA MEATS</div><div style="font-size:54px;margin:22px 0 6px;color:#7fc99a">&#10003;</div><h1 style="font-weight:600;margin:0 0 8px">Payment received</h1><p style="color:#9a9488;max-width:360px;margin:0 auto">Thank you — your payment was successful. We will confirm your delivery shortly.</p></div></body></html>';
+  try {
+    const sid = new URL(req.url).searchParams.get('session_id') || '';
+    if (sk && sid) {
+      const r = await fetch('https://api.stripe.com/v1/checkout/sessions/' + sid, { headers: { Authorization: 'Bearer ' + sk } });
+      const s = await r.json();
+      if (r.ok) await markPaidFromSession(s, atoken);
+    }
+  } catch (e) {}
+  return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+}
+
+async function handleStripeWebhook(req) {
+  const sk = process.env.STRIPE_SECRET_KEY;
+  const atoken = process.env.AIRTABLE_TOKEN;
+  let ev = {};
+  try { ev = await req.json(); } catch (e) {}
+  try {
+    const type = ev.type || '';
+    if (type === 'checkout.session.completed' || type === 'checkout.session.async_payment_succeeded') {
+      const sid = (ev.data && ev.data.object && ev.data.object.id) || '';
+      if (sk && sid) {
+        const r = await fetch('https://api.stripe.com/v1/checkout/sessions/' + sid, { headers: { Authorization: 'Bearer ' + sk } });
+        const s = await r.json();
+        if (r.ok) await markPaidFromSession(s, atoken);
+      }
+    }
+  } catch (e) {}
+  return new Response(JSON.stringify({ received: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+}
+
 export default async function middleware(req) {
   const pathname = new URL(req.url).pathname;
   const key = process.env.DASH_PASS;
   const atoken = process.env.AIRTABLE_TOKEN;
 
   if (pathname === '/api/order-create' || pathname === '/api/daily-digest') return;
+
+  if (pathname === '/api/pay-done') return handlePayDone(req);
+  if (pathname === '/api/stripe-webhook' && req.method === 'POST') return handleStripeWebhook(req);
 
   if (pathname === '/api/login' && req.method === 'POST') {
     let b = {};
