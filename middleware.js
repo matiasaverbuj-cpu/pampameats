@@ -307,7 +307,7 @@ async function waAsk(hist, userText) {
   if (!key) return 'Thanks for messaging Pampa Meats. A team member will reply shortly.';
   const msgs = hist.concat([{ role: 'user', content: userText }]);
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-3-5-haiku-latest', max_tokens: 800, system: WA_SYS, messages: msgs }) });
+    const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 800, system: WA_SYS, messages: msgs }) });
     const jj = await r.json();
     return (jj.content && jj.content[0] && jj.content[0].text) || 'Sorry, could you say that again?';
   } catch (e) { return 'Sorry, something went wrong. A team member will follow up.'; }
