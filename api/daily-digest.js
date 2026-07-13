@@ -11,7 +11,7 @@ const T_EXP    = 'tblDSgTEyRHmiRIfX';
 const T_PROD   = 'tblp3S8Up7nOhbLsD';
 
 // First runs go to Mati only to validate the format. Add partners later (or set DIGEST_TO env).
-const DEFAULT_TO = ['matias.averbuj@gmail.com', 'natebuchs@gmail.com'];
+const DEFAULT_TO = ['matias.averbuj@gmail.com', 'natebuchs@gmail.com', 'jaybuchsbaum@gmail.com', 'janbuchsbaum@gmail.com', 'Markmtb@mac.com'];
 // Partners (ready to enable): jaybuchsbaum@gmail.com, janbuchsbaum@gmail.com, Markmtb@mac.com
 
 async function atFetch(table, token) {
@@ -50,7 +50,8 @@ export default async function handler(req, res) {
     ]);
 
     const now = Date.now();
-    let revenue = 0, collected = 0, outstanding = 0, new24 = 0, new24val = 0;
+    let revenue = 0, collected = 0, outstanding = 0, new24 = 0, new24val = 0, cogs = 0;
+    const CUTS = [{q:'Picanha',cost:19,sell:42.99,w:2.5},{q:'Top Sirloin',cost:21.50,sell:26.99,w:5},{q:'Striploin',cost:21.50,sell:39.99,w:6.5},{q:'Tenderloin',cost:23,sell:59.99,w:2.5}];
     orders.forEach(rec => {
       const f = rec.fields || {};
       const nm = String(f['Name'] || '').trim();
@@ -59,15 +60,15 @@ export default async function handler(req, res) {
       const paid = Number(f['Amount Paid']) || 0;
       const bal = (f['Balance'] != null) ? Number(f['Balance']) : (total - paid);
       revenue += total; collected += paid; outstanding += Math.max(0, bal);
+      { let _cw=0,_sw=0; CUTS.forEach(c=>{const q=Number(f[c.q])||0;_cw+=q*c.w*c.cost;_sw+=q*c.w*c.sell;}); cogs += _sw>0 ? total*(_cw/_sw) : total*0.55; }
       if (rec.createdTime && (now - new Date(rec.createdTime).getTime()) <= 24 * 3600 * 1000) { new24++; new24val += total; }
     });
 
-    let cogs = 0, apOutstanding = 0, apUnpaid = 0;
+    let apOutstanding = 0, apUnpaid = 0;
     bills.forEach(rec => {
       const f = rec.fields || {};
       const amt = Number(f['Amount']) || 0;
       const paid = Number(f['Amount Paid']) || 0;
-      cogs += amt;
       const status = f['Status'] || 'Unpaid';
       if (status !== 'Paid') { apOutstanding += Math.max(0, amt - paid); apUnpaid++; }
     });
@@ -104,7 +105,7 @@ export default async function handler(req, res) {
 </td></tr>
 <tr><td bgcolor="#1a1a2e" style="border-radius:0 0 12px 12px;padding:16px 24px;font-family:Arial,sans-serif;text-align:center">
 <a href="https://www.pampameats.com/dashboard" style="color:#C9A55C;font-size:13px;text-decoration:none;font-weight:bold">Open the backend &rarr;</a>
-<div style="font-size:10px;color:#6E6347;margin-top:8px">Automated daily &middot; revenue is invoiced totals, COGS is vendor bills. Operational figures.</div>
+<div style="font-size:10px;color:#6E6347;margin-top:8px">Automated daily &middot; revenue is invoiced totals, COGS from cut costs (real margin). Operational figures.</div>
 </td></tr>
 </table>
 </td></tr></table>`;
