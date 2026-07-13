@@ -35,6 +35,7 @@ export default async function handler(req, res) {
   const secret = process.env.CRON_SECRET;
 
   // Auth: allow Vercel Cron (Bearer) or manual ?key=
+  if (!secret) { res.status(401).json({ ok: false, reason: 'no_cron_secret' }); return; }
   if (secret) {
     const auth = req.headers.authorization || '';
     const key = (req.query && req.query.key) || '';
