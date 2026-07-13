@@ -128,7 +128,7 @@ async function markPaidFromSession(s, atoken) {
   const pi = (typeof s.payment_intent === 'string') ? s.payment_intent : ((s.payment_intent && s.payment_intent.id) || '');
   if (!oid || !atoken) return;
   let fields;
-  if (s.payment_status === 'paid') {
+  const _flow = (s.metadata && s.metadata.flow) || ''; if (_flow !== 'authorize' && s.payment_status === 'paid') {
     fields = { 'Amount Paid': amount, 'Status': 'Paid', 'Stripe PI': pi, 'Stripe Status': 'Captured', 'Payment Method': 'Credit card' };
   } else {
     fields = { 'Stripe PI': pi, 'Auth Hold': amount, 'Stripe Status': 'Authorized', 'Status': 'Confirmed' };
@@ -191,6 +191,7 @@ async function handlePayAuthorize(req) {
   const form = new URLSearchParams();
   form.set('mode', 'payment');
   form.set('payment_intent_data[capture_method]', 'manual');
+  form.set('metadata[flow]', 'authorize');
   form.set('success_url', origin + '/api/pay-done?session_id={CHECKOUT_SESSION_ID}');
   form.set('cancel_url', origin + '/order');
   form.set('line_items[0][price_data][currency]', 'usd');
@@ -215,7 +216,13 @@ async function handlePayCollect(req) {
   const oid = String(b.oid || '');
   const amount = Math.round(Number(b.amount || 0) * 100);
   if (!amount || amount < 50) return jsonRes({ ok: false, reason: 'bad_amount' });
-  const pi = oid ? await stripeGetOrderPI(atoken, oid) : '';
+  let _ord = {};
+  if (oid && atoken) { try { const _rr = await fetch(AT + BASE + '/tbli7bDbuXmjnp02M/' + oid, { headers: { Authorization: 'Bearer ' + atoken } }); const _jj = await _rr.json(); _ord = (_jj && _jj.fields) || {}; } catch (e) { return jsonRes({ ok: false, reason: 'order_read_failed' }); } }
+  const pi = _ord['Stripe PI'] || '';
+  const _sStatus = String(_ord['Stripe Status'] || '');
+  const _oStatus = String(_ord['Status'] || '');
+  if (/captured/i.test(_sStatus) || /paid/i.test(_oStatus)) return jsonRes({ ok: true, already: true });
+  if (!pi && /authorized/i.test(_sStatus)) return jsonRes({ ok: false, reason: 'hold_pi_missing' });
   if (pi) {
     try {
       const cap = new URLSearchParams();
