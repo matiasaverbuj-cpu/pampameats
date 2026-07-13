@@ -319,10 +319,27 @@ async function waAsk(hist, userText) {
     return (jj.content && jj.content[0] && jj.content[0].text) || 'Sorry, could you say that again?';
   } catch (e) { return 'Sorry, something went wrong. A team member will follow up.'; }
 }
+async function waVerifySig(req, raw) {
+  const secret = process.env.WA_APP_SECRET;
+  if (!secret) return true;
+  const sig = req.headers.get('x-hub-signature-256') || '';
+  if (sig.indexOf('sha256=') !== 0) return false;
+  try {
+    const k = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const mac = await crypto.subtle.sign('HMAC', k, enc.encode(raw));
+    const expected = 'sha256=' + toHex(mac);
+    if (expected.length !== sig.length) return false;
+    let d = 0; for (let i = 0; i < sig.length; i++) d |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+    return d === 0;
+  } catch (e) { return false; }
+}
 async function waIncoming(req) {
   const atoken = process.env.AIRTABLE_TOKEN;
+  let raw = '';
+  try { raw = await req.text(); } catch (e) {}
+  if (!(await waVerifySig(req, raw))) return new Response('forbidden', { status: 403 });
   let body = {};
-  try { body = await req.json(); } catch (e) {}
+  try { body = JSON.parse(raw); } catch (e) {}
   try {
     const entry = (body.entry && body.entry[0]) || {};
     const change = (entry.changes && entry.changes[0]) || {};
