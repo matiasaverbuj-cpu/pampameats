@@ -57,6 +57,7 @@ export default async function handler(req, res) {
       const nm = String(f['Name'] || '').trim();
       const total = Number(f['Order Total']) || 0;
       if (/test/i.test(nm) || (!nm && total === 0)) return; // skip test / empty rows
+      if (/cancel/i.test(String(f['Status']||''))) return; // skip Cancelled orders
       const paid = Number(f['Amount Paid']) || 0;
       const bal = (f['Balance'] != null) ? Number(f['Balance']) : (total - paid);
       revenue += total; collected += paid; outstanding += Math.max(0, bal);
