@@ -7,6 +7,7 @@ const BASE = 'app1muH8br0JSsvOa';
 const USERS = 'tblcwjfmxGhzCDd0g';
 const AT = 'https://api.airtable.com/v0/';
 const enc = new TextEncoder();
+const CRM_USERS = ['ivillarreal@klagroupinc.com'];
 
 export const config = {
   matcher: ['/dashboard', '/dashboard/(.*)', '/api/(.*)']
@@ -73,6 +74,9 @@ function getCookie(req, name) {
     if (p.indexOf(name + '=') === 0) return p.slice(name.length + 1);
   }
   return '';
+}
+function sessionEmailOf(token) {
+  try { const dot = token.indexOf('.'); if (dot < 0) return ''; const payload = fromHex(token.slice(0, dot)); const bar = payload.lastIndexOf('|'); return bar < 0 ? '' : payload.slice(0, bar); } catch (e) { return ''; }
 }
 function jsonRes(obj, session) {
   const h = { 'Content-Type': 'application/json' };
@@ -427,6 +431,20 @@ export default async function middleware(req) {
   }
 
   if (authed) {
+    try {
+      const _tok = getCookie(req, 'pm_session');
+      const _em = (_tok ? sessionEmailOf(_tok) : '').toLowerCase();
+      if (CRM_USERS.indexOf(_em) >= 0) {
+        if (pathname.indexOf('/api/') === 0) {
+          if (pathname === '/api/orders' || pathname === '/api/order-update') return;
+          return new Response(JSON.stringify({ ok: false, reason: 'forbidden' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+        }
+        const _p = pathname.replace(/\/+$/, '');
+        if (_p === '/dashboard/customers' || _p === '/dashboard/customer') return;
+        return Response.redirect(new URL('/dashboard/customers', req.url), 302);
+      }
+    } catch (e) {}
+
     if (pathname === '/api/pay-link' && req.method === 'POST') return handlePayLink(req);
     if (pathname === '/api/pay-collect' && req.method === 'POST') return handlePayCollect(req);
     return;
