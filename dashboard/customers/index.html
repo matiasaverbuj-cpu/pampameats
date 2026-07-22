@@ -60,7 +60,7 @@ tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(201,165,
 <div class="hd">
 <div class="eyebrow">CRM · CUSTOMERS</div>
 <h1 class="serif">Customers</h1>
-<p>Tu cartera de clientes, armada desde cada pedido — con seguimiento, feedback y a quien contactar hoy.</p>
+<p>Your customer base, built from every order — with follow-ups, feedback and who to contact today.</p>
 </div>
 <div class="kpis">
 <div class="kpi"><div class="l">Customers</div><div class="v" id="k-count">0</div></div>
@@ -69,7 +69,7 @@ tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(201,165,
 <div class="kpi due"><div class="l">Owes you</div><div class="v" id="k-owe">$0</div></div>
 </div>
 <div class="tabs">
-<button id="t-followup" class="sel">Para contactar hoy</button>
+<button id="t-followup" class="sel">To contact today</button>
 <button id="t-all">All</button>
 <button id="t-owe">Owe money</button>
 <button id="t-lapsed">Lapsed (30d+)</button>
@@ -121,17 +121,17 @@ function renderStd(){
   $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function classify(c){
-  if(c.nextFollowup){ if(String(c.nextFollowup).slice(0,10)<=TODAY) return {p:0,cls:'due',txt:'Contacto planificado'}; return {p:3,cls:'ok',txt:'Agendado '+String(c.nextFollowup).slice(0,10)}; }
-  if(!c.lastContact) return {p:1,cls:'never',txt:'Sin contactar'};
-  if(c.daysSince!=null && c.daysSince>=30) return {p:2,cls:'lapsed',txt:'Sin comprar '+c.daysSince+'d'};
-  return {p:4,cls:'ok',txt:'Al dia'};
+  if(c.nextFollowup){ if(String(c.nextFollowup).slice(0,10)<=TODAY) return {p:0,cls:'due',txt:'Planned contact due'}; return {p:3,cls:'ok',txt:'Scheduled '+String(c.nextFollowup).slice(0,10)}; }
+  if(!c.lastContact) return {p:1,cls:'never',txt:'Never contacted'};
+  if(c.daysSince!=null && c.daysSince>=30) return {p:2,cls:'lapsed',txt:'No order '+c.daysSince+'d'};
+  return {p:4,cls:'ok',txt:'Up to date'};
 }
 function renderFollowups(){
-  if(!FUP){ $('card').innerHTML='<div class="loading">Cargando cola…</div>'; return; }
+  if(!FUP){ $('card').innerHTML='<div class="loading">Loading queue…</div>'; return; }
   var list=FUP.slice();
   list.forEach(function(c){ c._r=classify(c); });
   list.sort(function(a,b){ if(a._r.p!==b._r.p) return a._r.p-b._r.p; if(a._r.p===0) return String(a.nextFollowup).localeCompare(String(b.nextFollowup)); return (b.daysSince||0)-(a.daysSince||0); });
-  if(!list.length){ $('card').innerHTML='<div class="loading">No hay clientes con compras aun.</div>'; return; }
+  if(!list.length){ $('card').innerHTML='<div class="loading">No customers with orders yet.</div>'; return; }
   var rows=list.map(function(c){
     var wa=digits(c.phone)?('<a class="wa" href="https://wa.me/'+digits(c.phone)+'" target="_blank">WhatsApp</a>'):'';
     var star=c.vip?'<span class="vipstar">\u2B50</span> ':'';
@@ -143,7 +143,7 @@ function renderFollowups(){
       '<td class="r">'+money(c.totalSpent)+'</td>'+
       '<td>'+wa+'</td></tr>';
   }).join('');
-  $('card').innerHTML='<table><thead><tr><th>Cliente</th><th>Prioridad</th><th>Ult. contacto</th><th>Proximo</th><th class="r">Dias s/compra</th><th class="r">Gastado</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+  $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Priority</th><th>Last contact</th><th>Next</th><th class="r">Days since order</th><th class="r">Spent</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function render(){ if(mode==='followup') renderFollowups(); else renderStd(); }
 function loadFollowups(){
