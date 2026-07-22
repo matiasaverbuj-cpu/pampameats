@@ -139,9 +139,9 @@ function renderStd(){
     return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+(esc(c.name)||'—')+'</a></td>'+
       '<td>'+(contact||'<span class="sub">no contact</span>')+'</td>'+
       '<td class="r">'+c.orders+'</td><td class="r">'+money(c.spent)+'</td>'+
-      '<td class="r" style="color:#E9A8A2">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last||'—')+'</td></tr>';
+      '<td class="r" style="color:#E9A8A2">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last||'—')+'</td><td>'+(digits(c.phone)?('<a class="wa" href="https://wa.me/'+digits(c.phone)+'" target="_blank">WhatsApp</a>'):'')+'</td></tr>';
   }).join('');
-  $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function classify(c){
   if(c.nextFollowup){ if(String(c.nextFollowup).slice(0,10)<=TODAY) return {p:0,cls:'due',txt:'Planned contact due'}; return {p:6,cls:'ok',txt:'Scheduled '+String(c.nextFollowup).slice(0,10)}; }
