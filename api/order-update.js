@@ -146,6 +146,7 @@ export default async function handler(req, res) {
   if (body.paymentMethod) fields['Payment Method'] = String(body.paymentMethod);
   if (body.paidDate) fields['Paid Date'] = String(body.paidDate);
   if (body.status) fields['Status'] = String(body.status);
+  if (body.delivered != null) fields['Delivered'] = !!body.delivered;
   if (Object.keys(fields).length === 0) { res.status(400).json({ ok:false, reason:'no_fields' }); return; }
   try {
     const r = await fetch(API + BASE + '/' + TABLE + '/' + id, { method:'PATCH', headers: { Authorization:'Bearer '+token, 'Content-Type':'application/json' }, body: JSON.stringify({ fields: fields, typecast:true }) });
