@@ -106,9 +106,9 @@ function loadOrders(){
     document.getElementById('stage').innerHTML=st;
     var rows=all.map(function(o){
       var cuts=CUTS.filter(function(c){return (+o[c[0]]||0)>0;}).map(function(c){return c[1]+' x'+o[c[0]];}).join(', ')||'-';
-      return '<tr><td>'+esc(o.date||'')+'</td><td>'+cuts+'</td><td>'+usd(o.total)+'</td><td><span class="pill">'+esc(o.status||'-')+'</span></td></tr>';
+      return '<tr><td>'+esc(o.date||'')+'</td><td>'+cuts+'</td><td>'+usd(o.total)+'</td><td><span class="pill">'+esc(o.status||'-')+'</span></td><td style="text-align:center"><input type="checkbox" class="dlv" data-id="'+esc(o.id||'')+'" '+(o.delivered?'checked':'')+'></td></tr>';
     }).join('');
-    document.getElementById('orders').innerHTML='<table><tr><th>Date</th><th>Cuts</th><th>Total</th><th>Status</th></tr>'+rows+'</table>';
+    document.getElementById('orders').innerHTML='<table><tr><th>Date</th><th>Cuts</th><th>Total</th><th>Status</th><th>Delivered</th></tr>'+rows+'</table>'; document.querySelectorAll('#orders .dlv').forEach(function(cb){ cb.addEventListener('change',function(){ var id=cb.getAttribute('data-id'); cb.disabled=true; fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,delivered:cb.checked})}).then(function(r){return r.json();}).then(function(res){ cb.disabled=false; if(!res||!res.ok){ cb.checked=!cb.checked; } }).catch(function(){ cb.disabled=false; cb.checked=!cb.checked; }); }); });
   }).catch(function(){ document.getElementById('orders').innerHTML='<div class="muted">Connection error.</div>'; });
 }
 function loadIntx(){
