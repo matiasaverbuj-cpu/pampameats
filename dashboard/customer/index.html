@@ -48,33 +48,33 @@ td{padding:10px;border-bottom:0.5px solid #1c1c1c;color:#EDE3CC}
 <div class="hd"><div class="nm serif" id="cnm">Customer</div><div class="meta" id="cmeta"></div><div class="stagebar" id="stage"></div></div>
 <div class="kpis" id="kpis"></div>
 
-<div class="sec-t">Client Book &mdash; trato personalizado</div>
+<div class="sec-t">Client Book &mdash; personal touch</div>
 <div class="form">
 <div class="row2">
-<div><label>Punto de coccion preferido</label><input id="cb-done" placeholder="ej. Medium rare"></div>
-<div><label>Ocasion tipica</label><input id="cb-occ" placeholder="ej. Shabbat, fiestas"></div>
+<div><label>Preferred doneness</label><input id="cb-done" placeholder="ej. Medium rare"></div>
+<div><label>Typical occasion</label><input id="cb-occ" placeholder="ej. Shabbat, fiestas"></div>
 </div>
-<label>Notas personales (familia, preferencias, alergias, entrega)</label>
-<textarea id="cb-notes" placeholder="Todo lo que ayude a dar un trato personalizado..."></textarea>
-<div style="display:flex;align-items:center;gap:12px"><button class="btn" id="cbSave">Guardar Client Book</button><span class="muted" id="cbMsg"></span></div>
+<label>Personal notes (family, preferences, allergies, delivery)</label>
+<textarea id="cb-notes" placeholder="Anything that helps deliver a personal touch..."></textarea>
+<div style="display:flex;align-items:center;gap:12px"><button class="btn" id="cbSave">Save Client Book</button><span class="muted" id="cbMsg"></span></div>
 </div>
 
 <div class="sec-t">Order history</div>
 <div id="orders"><div class="muted">Loading...</div></div>
 
-<div class="sec-t">Registrar contacto</div>
+<div class="sec-t">Log a contact</div>
 <div class="form">
 <div class="row2">
-<div><label>Canal</label><select id="f-ch"><option>WhatsApp</option><option>Call</option><option>Email</option><option>Note</option></select></div>
-<div><label>Animo / feedback</label><select id="f-rate"><option value="">&mdash;</option><option value="Good">Good</option><option value="Neutral">Neutral</option><option value="Bad">Bad</option></select></div>
+<div><label>Channel</label><select id="f-ch"><option>WhatsApp</option><option>Call</option><option>Email</option><option>Note</option></select></div>
+<div><label>Mood / feedback</label><select id="f-rate"><option value="">&mdash;</option><option value="Good">Good</option><option value="Neutral">Neutral</option><option value="Bad">Bad</option></select></div>
 </div>
-<label>Feedback / nota</label>
-<textarea id="f-note" placeholder="Que paso? (ej. Contento con la picana, quiere reordenar para el proximo asado)"></textarea>
+<label>Feedback / note</label>
+<textarea id="f-note" placeholder="What happened? (e.g. Loved the picanha, wants to reorder for the next asado)"></textarea>
 <div class="row2">
-<div><label>Dia de contacto</label><input id="f-cdate" type="date"></div>
-<div><label>Proximo contacto / compra planificada</label><input id="f-ndate" type="date"></div>
+<div><label>Contact date</label><input id="f-cdate" type="date"></div>
+<div><label>Next contact / planned purchase</label><input id="f-ndate" type="date"></div>
 </div>
-<div class="row2"><div><label>Registrado por</label><input id="f-by" placeholder="Tu nombre"></div><div style="display:flex;align-items:flex-end"><button class="btn" id="addBtn" style="width:100%">Agregar interaccion</button></div></div>
+<div class="row2"><div><label>Logged by</label><input id="f-by" placeholder="Your name"></div><div style="display:flex;align-items:flex-end"><button class="btn" id="addBtn" style="width:100%">Add interaction</button></div></div>
 </div>
 <div id="intx"><div class="muted">Loading...</div></div>
 </div>
@@ -102,7 +102,7 @@ function loadOrders(){
     document.getElementById('kpis').innerHTML=kpi('Orders',all.length)+kpi('Total spent',usd(spent))+kpi('Balance',usd(bal))+kpi('Favorite cut',favName)+kpi('Last order',latest.date||'-');
     var days = latest.date ? Math.floor((Date.now()-new Date(latest.date).getTime())/86400000) : null;
     var st=''; if(spent>=1500) st+='<span class="chip vip">\u2B50 VIP</span>';
-    if(days!=null && days>30) st+='<span class="chip risk">En riesgo &middot; '+days+'d sin comprar</span>'; else if(days!=null) st+='<span class="chip">Activo &middot; '+days+'d</span>';
+    if(days!=null && days>30) st+='<span class="chip risk">At risk &middot; '+days+'d no order</span>'; else if(days!=null) st+='<span class="chip">Active &middot; '+days+'d</span>';
     document.getElementById('stage').innerHTML=st;
     var rows=all.map(function(o){
       var cuts=CUTS.filter(function(c){return (+o[c[0]]||0)>0;}).map(function(c){return c[1]+' x'+o[c[0]];}).join(', ')||'-';
@@ -116,7 +116,7 @@ function loadIntx(){
     var items=(d.items||[]);
     if(!items.length){ document.getElementById('intx').innerHTML='<div class="muted">No interactions logged yet.</div>'; return; }
     document.getElementById('intx').innerHTML=items.map(function(it){
-      var nx = it.next ? '<div class="nx">Proximo: '+esc(it.next)+'</div>' : '';
+      var nx = it.next ? '<div class="nx">Next: '+esc(it.next)+'</div>' : '';
       var em = emoji(it.rating);
       return '<div class="intx"><div class="ih"><span>'+esc(it.channel||'Note')+' &middot; '+esc(it.date||'')+(em?(' &middot; '+em):'')+'</span><span>'+esc(it.by||'')+'</span></div><div class="ib">'+esc(it.note||'')+'</div>'+nx+'</div>';
     }).join('');
@@ -131,19 +131,19 @@ function loadClientBook(){
   }).catch(function(){});
 }
 document.getElementById('cbSave').addEventListener('click',function(){
-  var btn=this; btn.disabled=true; var msg=document.getElementById('cbMsg'); msg.textContent='Guardando...';
+  var btn=this; btn.disabled=true; var msg=document.getElementById('cbMsg'); msg.textContent='Saving...';
   fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'customer_save',customer:key,name:(document.getElementById('cnm').textContent||''),doneness:document.getElementById('cb-done').value.trim(),occasion:document.getElementById('cb-occ').value.trim(),notes:document.getElementById('cb-notes').value.trim()})})
-  .then(function(r){return r.json();}).then(function(res){ btn.disabled=false; msg.textContent=(res&&res.ok)?'Guardado \u2713':'No se pudo guardar'; setTimeout(function(){msg.textContent='';},2500); })
-  .catch(function(){ btn.disabled=false; msg.textContent='Error de conexion'; });
+  .then(function(r){return r.json();}).then(function(res){ btn.disabled=false; msg.textContent=(res&&res.ok)?'Saved \u2713':'Could not save'; setTimeout(function(){msg.textContent='';},2500); })
+  .catch(function(){ btn.disabled=false; msg.textContent='Connection error'; });
 });
 document.getElementById('addBtn').addEventListener('click',function(){
   var note=document.getElementById('f-note').value.trim();
   var rate=document.getElementById('f-rate').value;
   if(!note && !rate){ document.getElementById('f-note').focus(); return; }
-  var btn=this; btn.disabled=true; btn.textContent='Guardando...';
+  var btn=this; btn.disabled=true; btn.textContent='Saving...';
   fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_add',customer:key,channel:document.getElementById('f-ch').value,note:note,rating:rate,contactDate:document.getElementById('f-cdate').value||TODAY,nextDate:document.getElementById('f-ndate').value,by:document.getElementById('f-by').value.trim()})})
-  .then(function(r){return r.json();}).then(function(){ document.getElementById('f-note').value=''; document.getElementById('f-rate').value=''; document.getElementById('f-ndate').value=''; btn.disabled=false; btn.textContent='Agregar interaccion'; loadIntx(); })
-  .catch(function(){ btn.disabled=false; btn.textContent='Agregar interaccion'; });
+  .then(function(r){return r.json();}).then(function(){ document.getElementById('f-note').value=''; document.getElementById('f-rate').value=''; document.getElementById('f-ndate').value=''; btn.disabled=false; btn.textContent='Add interaction'; loadIntx(); })
+  .catch(function(){ btn.disabled=false; btn.textContent='Add interaction'; });
 });
 if(!key){ document.getElementById('cnm').textContent='No customer selected'; }
 else { document.getElementById('f-cdate').value=TODAY; loadOrders(); loadIntx(); loadClientBook(); }
