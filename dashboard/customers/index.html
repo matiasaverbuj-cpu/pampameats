@@ -4,13 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#000000">
 <title>Pampa Meats · Customers</title>
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0A;color:#F5EFE5;line-height:1.55;-webkit-font-smoothing:antialiased}
@@ -19,9 +15,8 @@ a{color:inherit;text-decoration:none}
 .top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:0.5px solid #242424;background:#000;position:sticky;top:0;z-index:50}
 .top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
 .top .brand span{color:#6E6347;font-weight:400}
-.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500;transition:all .15s}
-.top a.back:hover{background:#C9A55C;color:#1A1208}
-.wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
+.top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500}
+.wrap{max-width:980px;margin:0 auto;padding:24px 18px 80px}
 .hd{margin:4px 0 18px}
 .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
 .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
@@ -43,68 +38,55 @@ td.cust{color:#F5EFE5;font-weight:600}
 td .sub{font-size:11px;color:#6E6347;display:block;margin-top:2px}
 td.owe{color:#E9A8A2;font-variant-numeric:tabular-nums;text-align:right}
 .loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
+.rc{font-size:10.5px;padding:3px 8px;border-radius:12px;white-space:nowrap}
+.rc.due{background:#2a1414;color:#E9A8A2;border:0.5px solid #5a2a2a}
+.rc.never{background:#2a2110;color:#F0C468;border:0.5px solid #5a4a22}
+.rc.lapsed{background:#1c1a12;color:#C9A55C;border:0.5px solid #3a352b}
+.rc.ok{background:#13210f;color:#8fc99a;border:0.5px solid #2c5a2c}
+.wa{font-size:11px;color:#7fc99a;border:0.5px solid #2c5a2c;border-radius:6px;padding:3px 8px}
+.vipstar{color:#F0C468}
 @media(max-width:560px){.kpis{grid-template-columns:1fr 1fr}}
-
-/* ===== PAMPA POLISH ===== */
 html{scroll-behavior:smooth}
 body{background:radial-gradient(1100px 520px at 50% -160px,#16130c 0%,#0A0A0A 60%) no-repeat #0A0A0A;background-attachment:fixed}
-::selection{background:#C9A55C;color:#0A0A0A}
-*::-webkit-scrollbar{width:10px;height:10px}*::-webkit-scrollbar-track{background:transparent}*::-webkit-scrollbar-thumb{background:#2b2b2b;border-radius:8px}*::-webkit-scrollbar-thumb:hover{background:#5a4a22}
-.top{box-shadow:0 1px 0 rgba(201,165,92,.12),0 8px 24px -16px rgba(0,0,0,.9);backdrop-filter:saturate(140%) blur(8px)}
-.card,.kpi,.panel,.ord,.tool,.age{box-shadow:0 14px 34px -22px rgba(0,0,0,.9);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
-.kpi{background:linear-gradient(180deg,#181818,#0f0f0f)}
-.kpi:hover,.ord:hover,.tool:hover{transform:translateY(-2px);border-color:#3a3320}
-.btn,.state-pill,.tabs button,.st{transition:all .18s ease}
-.btn:hover{box-shadow:0 6px 18px -8px rgba(201,165,92,.45)}
-.btn.gold:hover{box-shadow:0 8px 22px -8px rgba(201,165,92,.6)}
 tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(201,165,92,.05)}
-a.back:hover,.top a.back:hover{box-shadow:0 4px 14px -6px rgba(201,165,92,.5)}
-input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12)}
 </style>
 </head>
 <body>
 <div class="top">
 <div class="brand">PAMPA MEATS <span>· Customers</span></div>
-<a class="back" href="/dashboard"><i class="ti ti-arrow-left"></i> Main menu</a>
+<a class="back" href="/dashboard">Main menu</a>
 </div>
 <div class="wrap">
 <div class="hd">
 <div class="eyebrow">CRM · CUSTOMERS</div>
 <h1 class="serif">Customers</h1>
-<p>Your customer base, built automatically from every order — spend, history, and who owes you.</p>
+<p>Tu cartera de clientes, armada desde cada pedido — con seguimiento, feedback y a quien contactar hoy.</p>
 </div>
-
 <div class="kpis">
 <div class="kpi"><div class="l">Customers</div><div class="v" id="k-count">0</div></div>
 <div class="kpi"><div class="l">Total spent</div><div class="v" id="k-spent">$0</div></div>
 <div class="kpi"><div class="l">Avg / customer</div><div class="v" id="k-avg">$0</div></div>
 <div class="kpi due"><div class="l">Owes you</div><div class="v" id="k-owe">$0</div></div>
 </div>
-
 <div class="tabs">
-<button id="t-all" class="sel">All</button>
+<button id="t-followup" class="sel">Para contactar hoy</button>
+<button id="t-all">All</button>
 <button id="t-owe">Owe money</button>
 <button id="t-lapsed">Lapsed (30d+)</button>
 </div>
-
-<div class="card">
-<table>
-<thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th></tr></thead>
-<tbody id="rows"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
-</table>
+<div class="card" id="card"><div class="loading">Loading…</div></div>
 </div>
-</div>
-
 <script>
 (function(){
 var $=function(id){return document.getElementById(id);};
 var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
-var CUST=[], mode='all';
-var DAY=86400000;
-
+var esc=function(s){return String(s==null?'':s);};
+var digits=function(s){return String(s==null?'':s).replace(/[^0-9]/g,'');};
+var CUST=[], FUP=null, mode='followup';
+var DAY=86400000, TODAY=new Date().toISOString().slice(0,10);
 function dt(o){ return o.date||o.deliveryDate||o.created||''; }
 function bal(o){ return (o.balance!=null)?Number(o.balance):(Number(o.total||0)-Number(o.amountPaid||0)); }
-
+function emoji(r){ if(r==='Good')return '\uD83D\uDE0A'; if(r==='Neutral')return '\uD83D\uDE10'; if(r==='Bad')return '\u2639\uFE0F'; return ''; }
 function build(orders){
   var map={};
   orders.forEach(function(o){
@@ -112,9 +94,9 @@ function build(orders){
     if(/test/i.test(nm)) return;
     var email=(o.email||'').trim().toLowerCase();
     if(!nm && !email) return;
-    var key=email||('name:'+nm.toLowerCase());
-    if(!map[key]) map[key]={name:nm||email, email:o.email||'', phone:o.phone||'', orders:0, spent:0, paid:0, owes:0, last:''};
-    var c=map[key];
+    var keyk=email||('name:'+nm.toLowerCase());
+    if(!map[keyk]) map[keyk]={name:nm||email, email:o.email||'', phone:o.phone||'', orders:0, spent:0, paid:0, owes:0, last:''};
+    var c=map[keyk];
     if(nm && !/test/i.test(nm)) c.name=nm;
     if(o.email && !c.email) c.email=o.email;
     if(o.phone && !c.phone) c.phone=o.phone;
@@ -123,46 +105,63 @@ function build(orders){
   });
   return Object.keys(map).map(function(k){return map[k];});
 }
-
-function render(){
-  var list=CUST.slice();
-  var now=Date.now();
+function renderStd(){
+  var list=CUST.slice(); var now=Date.now();
   if(mode==='owe') list=list.filter(function(c){return c.owes>0.005;});
   if(mode==='lapsed') list=list.filter(function(c){ if(!c.last) return true; return (now-new Date(c.last).getTime())>30*DAY; });
   list.sort(function(a,b){return b.spent-a.spent;});
-  var tb=$('rows');
-  if(!list.length){ tb.innerHTML='<tr><td colspan="6" class="loading">No customers'+(mode==='all'?' yet.':' in this view.')+'</td></tr>'; return; }
-  tb.innerHTML=list.map(function(c){
-    var contact=(c.email?c.email:'')+(c.phone?('<span class="sub">'+c.phone+'</span>'):'');
-    if(!c.email&&c.phone) contact=c.phone;
-    return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+(c.name||'—')+'</a></td>'+
+  if(!list.length){ $('card').innerHTML='<div class="loading">No customers'+(mode==='all'?' yet.':' in this view.')+'</div>'; return; }
+  var rows=list.map(function(c){
+    var contact=(c.email?c.email:'')+(c.phone?('<span class="sub">'+c.phone+'</span>'):''); if(!c.email&&c.phone) contact=c.phone;
+    return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+(esc(c.name)||'—')+'</a></td>'+
       '<td>'+(contact||'<span class="sub">no contact</span>')+'</td>'+
-      '<td class="r">'+c.orders+'</td>'+
-      '<td class="r">'+money(c.spent)+'</td>'+
-      '<td class="owe">'+(c.owes>0.005?money(c.owes):'—')+'</td>'+
-      '<td>'+(c.last||'—')+'</td></tr>';
+      '<td class="r">'+c.orders+'</td><td class="r">'+money(c.spent)+'</td>'+
+      '<td class="owe">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last||'—')+'</td></tr>';
   }).join('');
+  $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-
+function classify(c){
+  if(c.nextFollowup){ if(String(c.nextFollowup).slice(0,10)<=TODAY) return {p:0,cls:'due',txt:'Contacto planificado'}; return {p:3,cls:'ok',txt:'Agendado '+String(c.nextFollowup).slice(0,10)}; }
+  if(!c.lastContact) return {p:1,cls:'never',txt:'Sin contactar'};
+  if(c.daysSince!=null && c.daysSince>=30) return {p:2,cls:'lapsed',txt:'Sin comprar '+c.daysSince+'d'};
+  return {p:4,cls:'ok',txt:'Al dia'};
+}
+function renderFollowups(){
+  if(!FUP){ $('card').innerHTML='<div class="loading">Cargando cola…</div>'; return; }
+  var list=FUP.slice();
+  list.forEach(function(c){ c._r=classify(c); });
+  list.sort(function(a,b){ if(a._r.p!==b._r.p) return a._r.p-b._r.p; if(a._r.p===0) return String(a.nextFollowup).localeCompare(String(b.nextFollowup)); return (b.daysSince||0)-(a.daysSince||0); });
+  if(!list.length){ $('card').innerHTML='<div class="loading">No hay clientes con compras aun.</div>'; return; }
+  var rows=list.map(function(c){
+    var wa=digits(c.phone)?('<a class="wa" href="https://wa.me/'+digits(c.phone)+'" target="_blank">WhatsApp</a>'):'';
+    var star=c.vip?'<span class="vipstar">\u2B50</span> ':'';
+    return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+star+(esc(c.name)||'—')+'</a><span class="sub">'+esc(c.phone||'')+'</span></td>'+
+      '<td><span class="rc '+c._r.cls+'">'+c._r.txt+'</span></td>'+
+      '<td>'+(c.lastContact?esc(c.lastContact).slice(0,10):'—')+(c.lastSentiment?(' '+emoji(c.lastSentiment)):'')+'</td>'+
+      '<td>'+(c.nextFollowup?esc(c.nextFollowup).slice(0,10):'—')+'</td>'+
+      '<td class="r">'+(c.daysSince!=null?c.daysSince+'d':'—')+'</td>'+
+      '<td class="r">'+money(c.totalSpent)+'</td>'+
+      '<td>'+wa+'</td></tr>';
+  }).join('');
+  $('card').innerHTML='<table><thead><tr><th>Cliente</th><th>Prioridad</th><th>Ult. contacto</th><th>Proximo</th><th class="r">Dias s/compra</th><th class="r">Gastado</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function render(){ if(mode==='followup') renderFollowups(); else renderStd(); }
+function loadFollowups(){
+  fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'followups_list'})}).then(function(r){return r.json();}).then(function(d){ FUP=(d&&d.items)||[]; if(mode==='followup') renderFollowups(); }).catch(function(){ if(mode==='followup') $('card').innerHTML='<div class="loading">Connection error.</div>'; });
+}
 function load(){
   fetch('/api/orders').then(function(r){return r.json();}).then(function(d){
-    var orders=(d&&d.orders)||[];
-    CUST=build(orders);
-    var spent=0,owe=0;
-    CUST.forEach(function(c){spent+=c.spent;owe+=c.owes;});
-    $('k-count').textContent=CUST.length;
-    $('k-spent').textContent=money(spent);
-    $('k-avg').textContent=money(CUST.length?spent/CUST.length:0);
-    $('k-owe').textContent=money(owe);
-    render();
-  }).catch(function(){ $('rows').innerHTML='<tr><td colspan="6" class="loading">Connection error.</td></tr>'; });
+    var orders=(d&&d.orders)||[]; CUST=build(orders);
+    var spent=0,owe=0; CUST.forEach(function(c){spent+=c.spent;owe+=c.owes;});
+    $('k-count').textContent=CUST.length; $('k-spent').textContent=money(spent);
+    $('k-avg').textContent=money(CUST.length?spent/CUST.length:0); $('k-owe').textContent=money(owe);
+    if(mode!=='followup') render();
+  }).catch(function(){ if(mode!=='followup') $('card').innerHTML='<div class="loading">Connection error.</div>'; });
 }
-
-function tab(id,m){ $(id).addEventListener('click',function(){ mode=m; ['t-all','t-owe','t-lapsed'].forEach(function(x){$(x).classList.toggle('sel',x===id);}); render(); }); }
-tab('t-all','all'); tab('t-owe','owe'); tab('t-lapsed','lapsed');
-load();
+function tab(id,m){ $(id).addEventListener('click',function(){ mode=m; ['t-followup','t-all','t-owe','t-lapsed'].forEach(function(x){$(x).classList.toggle('sel',x===id);}); render(); }); }
+tab('t-followup','followup'); tab('t-all','all'); tab('t-owe','owe'); tab('t-lapsed','lapsed');
+loadFollowups(); load();
 })();
 </script>
-<button id="csvExport" style="position:fixed;right:18px;bottom:18px;z-index:70;background:#C9A55C;color:#1A1208;border:none;border-radius:10px;padding:12px 18px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 8px 22px -8px rgba(201,165,92,.6)">&#8595; Export to Excel</button><script>(function(){var NL=String.fromCharCode(10);function esc(v){v=(v==null?"":String(v));if(/[",]/.test(v)||v.indexOf(NL)>=0){v=String.fromCharCode(34)+v.split(String.fromCharCode(34)).join(String.fromCharCode(34)+String.fromCharCode(34))+String.fromCharCode(34);}return v;}function m(n){return Math.round((Number(n)||0)*100)/100;}var b=document.getElementById("csvExport");b.addEventListener("click",function(){b.disabled=true;fetch("/api/orders").then(function(r){return r.json();}).then(function(d){var o=(d&&d.orders)||[];var map={};o.forEach(function(x){var nm=(x.name||"").trim();if(!nm)return;var key=((x.email||"").trim().toLowerCase())||("n:"+nm.toLowerCase());if(!map[key])map[key]={name:nm,phone:x.phone||"",email:x.email||"",address:x.address||"",zone:x.zone||"",orders:0,spent:0,balance:0,last:""};var c=map[key];c.orders++;c.spent+=Number(x.total)||0;c.balance+=Number(x.balance)||0;if(x.phone)c.phone=x.phone;if(x.email)c.email=x.email;if(x.address)c.address=x.address;if((x.date||"")>c.last)c.last=x.date||"";});var list=Object.keys(map).map(function(k){return map[k];}).sort(function(a,b2){return b2.spent-a.spent;});var head=["Customer","Phone","Email","Address","Zone","# Orders","Total Spent","Balance Due","Last Order"];var rows=[head.map(esc).join(",")];list.forEach(function(c){rows.push([c.name,c.phone,c.email,c.address,c.zone,c.orders,m(c.spent),m(c.balance),c.last].map(esc).join(","));});var csv=rows.join(NL);var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="pampa-customers-"+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);b.disabled=false;}).catch(function(){alert("Could not export. Try again.");b.disabled=false;});});})();</script>
 </body>
 </html>
