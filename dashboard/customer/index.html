@@ -98,7 +98,7 @@ function loadOrders(){
     var spent=0,bal=0,fav={};
     all.forEach(function(o){ spent+=(+o.total||0); bal+=(+o.balance||0); CUTS.forEach(function(c){ fav[c[0]]=(fav[c[0]]||0)+(+o[c[0]]||0); }); });
     var favName='-',favMax=0; CUTS.forEach(function(c){ if(fav[c[0]]>favMax){favMax=fav[c[0]];favName=c[1];} });
-    document.getElementById('cmeta').innerHTML='<b>Phone:</b> '+esc(latest.phone)+' &nbsp; <b>Email:</b> '+esc(latest.email||'-')+'<br><b>Address:</b> '+esc(latest.address||'-')+' ('+esc(latest.zone||'-')+')';
+    document.getElementById('cmeta').innerHTML='<b>Phone:</b> '+esc(latest.phone)+' &nbsp; <b>Email:</b> '+esc(latest.email||'-')+'<br><b>Address:</b> '+esc(latest.address||'-')+' ('+esc(latest.zone||'-')+')'+(String(latest.phone||'').replace(/[^0-9]/g,'')?' &nbsp; <a href="https://wa.me/'+String(latest.phone).replace(/[^0-9]/g,'')+'" target="_blank" style="color:#25D366;border:0.5px solid #2c5a2c;padding:4px 12px;border-radius:6px;font-size:12px;text-decoration:none;white-space:nowrap;">WhatsApp</a>':'');
     document.getElementById('kpis').innerHTML=kpi('Orders',all.length)+kpi('Total spent',usd(spent))+kpi('Balance',usd(bal))+kpi('Favorite cut',favName)+kpi('Last order',latest.date||'-');
     var days = latest.date ? Math.floor((Date.now()-new Date(latest.date).getTime())/86400000) : null;
     var st=''; if(spent>=1500) st+='<span class="chip vip">\u2B50 VIP</span>';
