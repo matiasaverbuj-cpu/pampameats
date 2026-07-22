@@ -52,7 +52,8 @@ export default async function handler(req, res) {
         date: f['Order Date'] || rec.createdTime,
         amountPaid: Number(f['Amount Paid']) || 0,
         balance: Number(f['Balance']) || 0,
-        payStatus: f['Payment Status'] || ''
+        payStatus: f['Payment Status'] || '',
+        delivered: !!f['Delivered']
       };
     });
 
