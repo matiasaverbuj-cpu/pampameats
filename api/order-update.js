@@ -102,11 +102,35 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(API + BASE + '/' + CUST + '?pageSize=100', { headers: auth });
       const d = await r.json();
-      const out = (d.records||[]).map(function(rec){ var f=rec.fields||{}; return {
-        name: f.Name||'', phone: f.Phone||'', key: norm(f.Phone),
+      const byPhone = {};
+      try {
+        let off = '';
+        for (let pg=0; pg<6; pg++){
+          const ou = API + BASE + '/' + TABLE + '?pageSize=100' + (off?('&offset='+off):'');
+          const orr = await fetch(ou, { headers: auth });
+          const oj = await orr.json();
+          (oj.records||[]).forEach(function(rec){ var f=rec.fields||{}; var k=norm(f.Phone); if(!k) return; if(/cancel/i.test(String(f.Status||''))) return; var dt=String(f['Order Date']||f['Delivery Date']||'').slice(0,10); if(!dt) return; (byPhone[k]=byPhone[k]||[]).push(dt); });
+          if (oj.offset) off = oj.offset; else break;
+        }
+      } catch(e){}
+      const DEF = 45;
+      function predict(k, lastOrder){
+        var ds = (byPhone[k]||[]).slice().sort();
+        var cad = DEF, est = true;
+        if (ds.length >= 2){ var tot=0,n=0; for(var i=1;i<ds.length;i++){ var g=(new Date(ds[i]) - new Date(ds[i-1]))/86400000; if(g>0){tot+=g;n++;} } if(n>0){ cad=Math.round(tot/n); est=false; } }
+        var base = ds.length? ds[ds.length-1] : lastOrder;
+        if(!base) return { pred:'', days:null, cad:cad, est:est };
+        var p = new Date(base); p.setDate(p.getDate()+cad);
+        var pred = p.toISOString().slice(0,10);
+        var days = Math.round((p - new Date()) / 86400000);
+        return { pred:pred, days:days, cad:cad, est:est };
+      }
+      const out = (d.records||[]).map(function(rec){ var f=rec.fields||{}; var k=norm(f.Phone); var lo=String(f['Last Order']||'').slice(0,10); var pr=predict(k, lo); return {
+        name: f.Name||'', phone: f.Phone||'', key: k,
         totalSpent: Number(f['Total Spent']||0), numOrders: Number(f['# Orders']||0),
-        lastOrder: String(f['Last Order']||'').slice(0,10), daysSince: (f['Days Since Last Order']!=null? Number(f['Days Since Last Order']): null),
-        vip: !!f.VIP, nextFollowup: f['Next Follow-up']||'', lastContact: f['Last Contact']||'', lastSentiment: f['Last Sentiment']||'', lastFeedback: f['Last Feedback']||''
+        lastOrder: lo, daysSince: (f['Days Since Last Order']!=null? Number(f['Days Since Last Order']): null),
+        vip: !!f.VIP, nextFollowup: f['Next Follow-up']||'', lastContact: f['Last Contact']||'', lastSentiment: f['Last Sentiment']||'', lastFeedback: f['Last Feedback']||'',
+        reorder: pr.pred, reorderDays: pr.days, cadence: pr.cad, cadenceEst: pr.est
       }; }).filter(function(c){ return c.numOrders>0 && !/test|^zz /i.test(c.name); });
       res.status(200).json({ ok:true, items: out });
     } catch(e){ res.status(200).json({ ok:false, reason:String(e) }); }
