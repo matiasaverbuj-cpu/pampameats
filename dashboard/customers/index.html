@@ -16,7 +16,7 @@ a{color:inherit;text-decoration:none}
 .top .brand{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:2.5px;color:#C9A55C}
 .top .brand span{color:#6E6347;font-weight:400}
 .top a.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.5px;color:#C9A55C;border:1px solid #C9A55C;border-radius:8px;padding:7px 14px;font-weight:500}
-.wrap{max-width:980px;margin:0 auto;padding:24px 18px 80px}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px 80px}
 .hd{margin:4px 0 18px}
 .hd .eyebrow{font-size:10px;letter-spacing:3.5px;color:#8A7548;margin-bottom:8px}
 .hd h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:29px;margin:0 0 6px;color:#F5EFE5}
@@ -36,7 +36,6 @@ td{padding:10px 12px;border-bottom:0.5px solid #1E1E1E;color:#B8A985;vertical-al
 td.r{text-align:right;font-variant-numeric:tabular-nums}
 td.cust{color:#F5EFE5;font-weight:600}
 td .sub{font-size:11px;color:#6E6347;display:block;margin-top:2px}
-td.owe{color:#E9A8A2;font-variant-numeric:tabular-nums;text-align:right}
 .loading{color:#8A7548;font-size:13px;padding:20px;text-align:center}
 .rc{font-size:10.5px;padding:3px 8px;border-radius:12px;white-space:nowrap}
 .rc.due{background:#2a1414;color:#E9A8A2;border:0.5px solid #5a2a2a}
@@ -45,6 +44,12 @@ td.owe{color:#E9A8A2;font-variant-numeric:tabular-nums;text-align:right}
 .rc.ok{background:#13210f;color:#8fc99a;border:0.5px solid #2c5a2c}
 .wa{font-size:11px;color:#7fc99a;border:0.5px solid #2c5a2c;border-radius:6px;padding:3px 8px}
 .vipstar{color:#F0C468}
+.tag{font-size:10px;padding:2px 7px;border-radius:10px;border:0.5px solid #3a352b;color:#B8A985}
+.tag.us{background:#141c26;color:#8fb6e9;border-color:#2c4a6a}
+.tag.ko{background:#1c1a12;color:#C9A55C;border-color:#3a352b}
+.note{background:#12100a;border:0.5px solid #3a352b;border-radius:10px;padding:14px 16px;margin:0 4px 12px;font-size:13px;color:#EDE3CC}
+.note b{color:#C9A55C}
+.actrow{background:rgba(240,196,104,.06)}
 @media(max-width:560px){.kpis{grid-template-columns:1fr 1fr}}
 html{scroll-behavior:smooth}
 body{background:radial-gradient(1100px 520px at 50% -160px,#16130c 0%,#0A0A0A 60%) no-repeat #0A0A0A;background-attachment:fixed}
@@ -60,7 +65,7 @@ tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(201,165,
 <div class="hd">
 <div class="eyebrow">CRM · CUSTOMERS</div>
 <h1 class="serif">Customers</h1>
-<p>Your customer base, built from every order — with follow-ups, feedback and who to contact today.</p>
+<p>Your customer base, built from every order — with follow-ups, reorder timing, feedback and who to contact today.</p>
 </div>
 <div class="kpis">
 <div class="kpi"><div class="l">Customers</div><div class="v" id="k-count">0</div></div>
@@ -70,6 +75,7 @@ tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(201,165,
 </div>
 <div class="tabs">
 <button id="t-followup" class="sel">To contact today</button>
+<button id="t-occasions">Occasions</button>
 <button id="t-all">All</button>
 <button id="t-owe">Owe money</button>
 <button id="t-lapsed">Lapsed (30d+)</button>
@@ -87,6 +93,23 @@ var DAY=86400000, TODAY=new Date().toISOString().slice(0,10);
 function dt(o){ return o.date||o.deliveryDate||o.created||''; }
 function bal(o){ return (o.balance!=null)?Number(o.balance):(Number(o.total||0)-Number(o.amountPaid||0)); }
 function emoji(r){ if(r==='Good')return '\uD83D\uDE0A'; if(r==='Neutral')return '\uD83D\uDE10'; if(r==='Bad')return '\u2639\uFE0F'; return ''; }
+var HOLIDAYS=[
+ {n:'Labor Day', d:'2026-09-07', t:'US', big:true},
+ {n:'Rosh Hashanah', d:'2026-09-11', t:'Kosher', big:true},
+ {n:'Yom Kippur (break-fast)', d:'2026-09-20', t:'Kosher', big:false},
+ {n:'Sukkot', d:'2026-09-25', t:'Kosher', big:true},
+ {n:'Thanksgiving', d:'2026-11-26', t:'US', big:false},
+ {n:'Hanukkah', d:'2026-12-04', t:'Kosher', big:false},
+ {n:'Christmas', d:'2026-12-25', t:'US', big:false},
+ {n:"New Year's Day", d:'2027-01-01', t:'US', big:false},
+ {n:'Super Bowl LXI', d:'2027-02-14', t:'US', big:true},
+ {n:'Purim', d:'2027-03-22', t:'Kosher', big:false},
+ {n:'Passover (Pesach)', d:'2027-04-21', t:'Kosher', big:true},
+ {n:'Memorial Day', d:'2027-05-31', t:'US', big:true},
+ {n:'Shavuot', d:'2027-06-10', t:'Kosher', big:false},
+ {n:"Father's Day", d:'2027-06-20', t:'US', big:true},
+ {n:'July 4th', d:'2027-07-04', t:'US', big:true}
+];
 function build(orders){
   var map={};
   orders.forEach(function(o){
@@ -116,15 +139,17 @@ function renderStd(){
     return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+(esc(c.name)||'—')+'</a></td>'+
       '<td>'+(contact||'<span class="sub">no contact</span>')+'</td>'+
       '<td class="r">'+c.orders+'</td><td class="r">'+money(c.spent)+'</td>'+
-      '<td class="owe">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last||'—')+'</td></tr>';
+      '<td class="r" style="color:#E9A8A2">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last||'—')+'</td></tr>';
   }).join('');
   $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function classify(c){
-  if(c.nextFollowup){ if(String(c.nextFollowup).slice(0,10)<=TODAY) return {p:0,cls:'due',txt:'Planned contact due'}; return {p:3,cls:'ok',txt:'Scheduled '+String(c.nextFollowup).slice(0,10)}; }
-  if(!c.lastContact) return {p:1,cls:'never',txt:'Never contacted'};
-  if(c.daysSince!=null && c.daysSince>=30) return {p:2,cls:'lapsed',txt:'No order '+c.daysSince+'d'};
-  return {p:4,cls:'ok',txt:'Up to date'};
+  if(c.nextFollowup){ if(String(c.nextFollowup).slice(0,10)<=TODAY) return {p:0,cls:'due',txt:'Planned contact due'}; return {p:6,cls:'ok',txt:'Scheduled '+String(c.nextFollowup).slice(0,10)}; }
+  if(c.reorderDays!=null && c.reorderDays<=0) return {p:1,cls:'due',txt:'Due for reorder'};
+  if(!c.lastContact) return {p:2,cls:'never',txt:'Never contacted'};
+  if(c.daysSince!=null && c.daysSince>=30) return {p:3,cls:'lapsed',txt:'No order '+c.daysSince+'d'};
+  if(c.reorderDays!=null && c.reorderDays<=14) return {p:4,cls:'never',txt:'Reorder in '+c.reorderDays+'d'};
+  return {p:7,cls:'ok',txt:'Up to date'};
 }
 function renderFollowups(){
   if(!FUP){ $('card').innerHTML='<div class="loading">Loading queue…</div>'; return; }
@@ -135,17 +160,30 @@ function renderFollowups(){
   var rows=list.map(function(c){
     var wa=digits(c.phone)?('<a class="wa" href="https://wa.me/'+digits(c.phone)+'" target="_blank">WhatsApp</a>'):'';
     var star=c.vip?'<span class="vipstar">\u2B50</span> ':'';
+    var ro = c.reorder?(esc(c.reorder)+(c.cadenceEst?' <span class="sub" style="display:inline">est</span>':'')):'—';
     return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+star+(esc(c.name)||'—')+'</a><span class="sub">'+esc(c.phone||'')+'</span></td>'+
       '<td><span class="rc '+c._r.cls+'">'+c._r.txt+'</span></td>'+
       '<td>'+(c.lastContact?esc(c.lastContact).slice(0,10):'—')+(c.lastSentiment?(' '+emoji(c.lastSentiment)):'')+'</td>'+
       '<td>'+(c.nextFollowup?esc(c.nextFollowup).slice(0,10):'—')+'</td>'+
+      '<td>'+ro+'</td>'+
       '<td class="r">'+(c.daysSince!=null?c.daysSince+'d':'—')+'</td>'+
       '<td class="r">'+money(c.totalSpent)+'</td>'+
       '<td>'+wa+'</td></tr>';
   }).join('');
-  $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Priority</th><th>Last contact</th><th>Next</th><th class="r">Days since order</th><th class="r">Spent</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+  $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Priority</th><th>Last contact</th><th>Next</th><th>Reorder ~</th><th class="r">Days</th><th class="r">Spent</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function render(){ if(mode==='followup') renderFollowups(); else renderStd(); }
+function renderOccasions(){
+  var now=new Date(TODAY+'T00:00:00');
+  var list=HOLIDAYS.map(function(h){ var du=Math.round((new Date(h.d+'T00:00:00')-now)/DAY); var ob=new Date(h.d+'T00:00:00'); ob.setDate(ob.getDate()-10); return {h:h,du:du,orderBy:ob.toISOString().slice(0,10)}; }).filter(function(x){return x.du>=-2;}).sort(function(a,b){return a.du-b.du;});
+  var next=null; for(var i=0;i<list.length;i++){ if(list[i].h.big && list[i].du>=0){ next=list[i]; break; } }
+  var cta='';
+  if(next){ cta='<div class="note"><b>Next big one: '+esc(next.h.n)+'</b> in '+next.du+' days ('+esc(next.h.d)+'). Order-by ~'+esc(next.orderBy)+' for frozen delivery. Suggested message:<br><br>"Hi [Name]! '+esc(next.h.n)+' is coming up — make the meal unforgettable with premium Argentine Angus, Glatt kosher, delivered frozen. Order early so we lock in your delivery. Want me to set aside your favorite cuts?"</div>'; }
+  var rows=list.map(function(x){ var h=x.h; var act=(x.du<=21&&x.du>=0)?' actrow':''; var tg=h.t==='US'?'<span class="tag us">US</span>':'<span class="tag ko">Kosher</span>';
+    return '<tr class="'+act.trim()+'"><td class="cust">'+(h.big?'<span class="vipstar">\u2B50</span> ':'')+esc(h.n)+'</td><td>'+tg+'</td><td>'+esc(h.d)+'</td><td class="r">'+(x.du===0?'today':(x.du<0?'passed':x.du+'d'))+'</td><td>'+esc(x.orderBy)+'</td></tr>';
+  }).join('');
+  $('card').innerHTML=cta+'<table><thead><tr><th>Occasion</th><th>Type</th><th>Date</th><th class="r">In</th><th>Order by</th></tr></thead><tbody>'+rows+'</tbody></table><div class="note" style="margin-top:12px">Plus <b>every Shabbat</b> (Friday) — the weekly meat moment. \u2B50 = biggest for premium beef.</div>';
+}
+function render(){ if(mode==='followup') renderFollowups(); else if(mode==='occasions') renderOccasions(); else renderStd(); }
 function loadFollowups(){
   fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'followups_list'})}).then(function(r){return r.json();}).then(function(d){ FUP=(d&&d.items)||[]; if(mode==='followup') renderFollowups(); }).catch(function(){ if(mode==='followup') $('card').innerHTML='<div class="loading">Connection error.</div>'; });
 }
@@ -155,11 +193,11 @@ function load(){
     var spent=0,owe=0; CUST.forEach(function(c){spent+=c.spent;owe+=c.owes;});
     $('k-count').textContent=CUST.length; $('k-spent').textContent=money(spent);
     $('k-avg').textContent=money(CUST.length?spent/CUST.length:0); $('k-owe').textContent=money(owe);
-    if(mode!=='followup') render();
-  }).catch(function(){ if(mode!=='followup') $('card').innerHTML='<div class="loading">Connection error.</div>'; });
+    if(mode!=='followup'&&mode!=='occasions') render();
+  }).catch(function(){ if(mode!=='followup'&&mode!=='occasions') $('card').innerHTML='<div class="loading">Connection error.</div>'; });
 }
-function tab(id,m){ $(id).addEventListener('click',function(){ mode=m; ['t-followup','t-all','t-owe','t-lapsed'].forEach(function(x){$(x).classList.toggle('sel',x===id);}); render(); }); }
-tab('t-followup','followup'); tab('t-all','all'); tab('t-owe','owe'); tab('t-lapsed','lapsed');
+function tab(id,m){ $(id).addEventListener('click',function(){ mode=m; ['t-followup','t-occasions','t-all','t-owe','t-lapsed'].forEach(function(x){$(x).classList.toggle('sel',x===id);}); render(); }); }
+tab('t-followup','followup'); tab('t-occasions','occasions'); tab('t-all','all'); tab('t-owe','owe'); tab('t-lapsed','lapsed');
 loadFollowups(); load();
 })();
 </script>
