@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       const key = norm(body.customer);
       const r = await fetch(API + BASE + '/' + INT + '?pageSize=100&sort%5B0%5D%5Bfield%5D=Date&sort%5B0%5D%5Bdirection%5D=desc', { headers: auth });
       const d = await r.json();
-      const items = (d.records||[]).filter(function(rec){ return norm(rec.fields && rec.fields.CustomerKey) === key; }).map(function(rec){ var f=rec.fields||{}; return { id:rec.id, date:f.Date||'', channel:f.Channel||'', note:f.Note||'', by:f.By||'', rating:f.Rating||'', next:f['Next Contact']||'' }; });
+      const items = (d.records||[]).filter(function(rec){ var f=rec.fields||{}; return norm(f.CustomerKey) === key && !f.Voided; }).map(function(rec){ var f=rec.fields||{}; return { id:rec.id, date:f.Date||'', channel:f.Channel||'', note:f.Note||'', by:f.By||'', rating:f.Rating||'', next:f['Next Contact']||'', type:f.Type||'', status:f.Status||'' }; });
       res.status(200).json({ ok:true, items: items });
     } catch(e){ res.status(200).json({ ok:false, reason:String(e) }); }
     return;
@@ -51,6 +51,8 @@ export default async function handler(req, res) {
       const fields = { Summary: channel + ' - ' + cDate, CustomerKey: key, Date: cDate, Channel: channel, Note: note, By: by };
       if (rating) fields.Rating = rating;
       if (nDate) fields['Next Contact'] = nDate;
+      if (body.type) fields.Type = String(body.type);
+      if (body.status) fields.Status = String(body.status);
       const rr = await fetch(API + BASE + '/' + INT, { method:'POST', headers:auth, body: JSON.stringify({ fields: fields, typecast:true }) });
       const dd = await rr.json();
       try {
@@ -68,12 +70,41 @@ export default async function handler(req, res) {
     return;
   }
 
+  if (action === 'interaction_update') {
+    try {
+      const id = String(body.intId||'').trim();
+      if(!/^rec[A-Za-z0-9]{14}$/.test(id)) { res.status(200).json({ ok:false, reason:'bad_id' }); return; }
+      const cf = {};
+      if (body.note != null) cf.Note = String(body.note);
+      if (body.channel) cf.Channel = String(body.channel);
+      if (body.rating != null) cf.Rating = String(body.rating);
+      if (body.type != null) cf.Type = String(body.type);
+      if (body.status != null) cf.Status = String(body.status);
+      if (body.nextDate != null) cf['Next Contact'] = String(body.nextDate);
+      const rr = await fetch(API + BASE + '/' + INT + '/' + id, { method:'PATCH', headers:auth, body: JSON.stringify({ fields: cf, typecast:true }) });
+      const dd = await rr.json();
+      res.status(200).json({ ok: !!dd.id, id: dd.id||null });
+    } catch(e){ res.status(200).json({ ok:false, reason:String(e) }); }
+    return;
+  }
+
+  if (action === 'interaction_delete') {
+    try {
+      const id = String(body.intId||'').trim();
+      if(!/^rec[A-Za-z0-9]{14}$/.test(id)) { res.status(200).json({ ok:false, reason:'bad_id' }); return; }
+      const rr = await fetch(API + BASE + '/' + INT + '/' + id, { method:'PATCH', headers:auth, body: JSON.stringify({ fields: { Voided: true }, typecast:true }) });
+      const dd = await rr.json();
+      res.status(200).json({ ok: !!dd.id });
+    } catch(e){ res.status(200).json({ ok:false, reason:String(e) }); }
+    return;
+  }
+
   if (action === 'customer_get') {
     try {
       const cust = await findCustomer(auth, body.customer);
       if (!cust) { res.status(200).json({ ok:true, found:false, prefs:{} }); return; }
       const f = cust.fields || {};
-      res.status(200).json({ ok:true, found:true, id:cust.id, prefs:{ name:f.Name||'', doneness:f.Doneness||'', occasion:f.Occasion||'', notes:f.Notes||'', nextFollowup:f['Next Follow-up']||'', lastContact:f['Last Contact']||'', lastFeedback:f['Last Feedback']||'', lastSentiment:f['Last Sentiment']||'' } });
+      res.status(200).json({ ok:true, found:true, id:cust.id, prefs:{ name:f.Name||'', doneness:f.Doneness||'', occasion:f.Occasion||'', notes:f.Notes||'', avoids:f.Avoids||'', preferredChannel:f['Preferred Channel']||'', nextFollowup:f['Next Follow-up']||'', lastContact:f['Last Contact']||'', lastFeedback:f['Last Feedback']||'', lastSentiment:f['Last Sentiment']||'' } });
     } catch(e){ res.status(200).json({ ok:false, reason:String(e) }); }
     return;
   }
@@ -85,6 +116,8 @@ export default async function handler(req, res) {
       if (body.doneness != null) cf.Doneness = String(body.doneness);
       if (body.occasion != null) cf.Occasion = String(body.occasion);
       if (body.notes != null) cf.Notes = String(body.notes);
+      if (body.avoids != null) cf.Avoids = String(body.avoids);
+      if (body.preferredChannel != null) cf['Preferred Channel'] = String(body.preferredChannel);
       if (cust) {
         await fetch(API + BASE + '/' + CUST + '/' + cust.id, { method:'PATCH', headers:auth, body: JSON.stringify({ fields: cf, typecast:true }) });
         res.status(200).json({ ok:true, id:cust.id });
