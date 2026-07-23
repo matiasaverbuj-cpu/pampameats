@@ -54,6 +54,7 @@ td{padding:10px;border-bottom:0.5px solid #1c1c1c;color:#EDE3CC}
 <div><label>Preferred doneness</label><input id="cb-done" placeholder="ej. Medium rare"></div>
 <div><label>Typical occasion</label><input id="cb-occ" placeholder="ej. Shabbat, fiestas"></div>
 </div>
+<div class="row2"><div><label>Avoids / not consumed</label><input id="cb-avoid" placeholder="e.g. no filet"></div><div><label>Preferred channel</label><select id="cb-chan"><option value=""></option><option>WhatsApp</option><option>Call</option><option>Email</option></select></div></div>
 <label>Personal notes (family, preferences, allergies, delivery)</label>
 <textarea id="cb-notes" placeholder="Anything that helps deliver a personal touch..."></textarea>
 <div style="display:flex;align-items:center;gap:12px"><button class="btn" id="cbSave">Save Client Book</button><span class="muted" id="cbMsg"></span></div>
@@ -68,6 +69,7 @@ td{padding:10px;border-bottom:0.5px solid #1c1c1c;color:#EDE3CC}
 <div><label>Channel</label><select id="f-ch"><option>WhatsApp</option><option>Call</option><option>Email</option><option>Note</option></select></div>
 <div><label>Mood / feedback</label><select id="f-rate"><option value="">&mdash;</option><option value="Good">Good</option><option value="Neutral">Neutral</option><option value="Bad">Bad</option></select></div>
 </div>
+<div class="row2"><div><label>Type</label><select id="f-type"><option value=""></option><option>Note</option><option>Question</option><option>Complaint</option><option>Suggestion</option><option>Support</option></select></div><div><label>Case status</label><select id="f-status"><option value=""></option><option>Open</option><option>Pending</option><option>Closed</option></select></div></div>
 <label>Feedback / note</label>
 <textarea id="f-note" placeholder="What happened? (e.g. Loved the picanha, wants to reorder for the next asado)"></textarea>
 <div class="row2">
@@ -77,6 +79,9 @@ td{padding:10px;border-bottom:0.5px solid #1c1c1c;color:#EDE3CC}
 <div class="row2"><div><label>Logged by</label><input id="f-by" placeholder="Your name"></div><div style="display:flex;align-items:flex-end"><button class="btn" id="addBtn" style="width:100%">Add interaction</button></div></div>
 </div>
 <div id="intx"><div class="muted">Loading...</div></div>
+<div id="intxEditor" style="display:none;margin-top:10px" class="form"></div>
+<div class="sec-t">Timeline</div>
+<div id="timeline"><div class="muted">Loading...</div></div>
 </div>
 <script>
 (function(){
@@ -114,15 +119,47 @@ function openDelEditor(ix){
   };
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+function openIntxEditor(ix){
+  var it=(window.__INTX__||[])[ix]; if(!it) return;
+  var box=document.getElementById('intxEditor'); if(!box) return;
+  function e2(s){return String(s==null?'':s).replace(/"/g,'&quot;');}
+  function opt(list,cur){ return list.map(function(s){return '<option '+(s===cur?'selected':'')+'>'+s+'</option>';}).join(''); }
+  box.innerHTML='<div class="sec-t" style="margin-top:0">Edit interaction</div>'+
+    '<div class="row2"><div><label>Type</label><select id="ie-type"><option value=""></option>'+opt(['Note','Question','Complaint','Suggestion','Support'],it.type||'')+'</select></div>'+
+    '<div><label>Case status</label><select id="ie-status"><option value=""></option>'+opt(['Open','Pending','Closed'],it.status||'')+'</select></div></div>'+
+    '<label>Note</label><textarea id="ie-note">'+e2(it.note||'')+'</textarea>'+
+    '<div style="display:flex;gap:12px;align-items:center"><button class="btn" id="ie-save">Save</button><button class="btn" id="ie-cancel" style="background:#2a2a2a;color:#C9A55C">Cancel</button><span class="muted" id="ie-msg"></span></div>';
+  box.style.display='block';
+  document.getElementById('ie-cancel').onclick=function(){ box.style.display='none'; };
+  document.getElementById('ie-save').onclick=function(){
+    var btn=this; btn.disabled=true; document.getElementById('ie-msg').textContent='Saving...';
+    fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_update',intId:it.id,note:document.getElementById('ie-note').value,type:document.getElementById('ie-type').value,status:document.getElementById('ie-status').value})}).then(function(r){return r.json();}).then(function(res){ btn.disabled=false; if(res&&res.ok){ box.style.display='none'; loadIntx(); } else { document.getElementById('ie-msg').textContent='Could not save'; } }).catch(function(){ btn.disabled=false; document.getElementById('ie-msg').textContent='Connection error'; });
+  };
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function renderTimeline(){
+  var tl=document.getElementById('timeline'); if(!tl) return;
+  var ev=[];
+  (window.__ORD__||[]).forEach(function(o){ if(o.date) ev.push({d:String(o.date).slice(0,10), t:'Order placed ('+usd(o.total)+')'}); if(o.deliveryStatus||o.delivered){ ev.push({d:String(o.deliveryDate||o.date).slice(0,10), t:'Delivery: '+(o.deliveryStatus||'Delivered')}); } });
+  (window.__INTX__||[]).forEach(function(it){ ev.push({d:String(it.date||'').slice(0,10), t:(it.type||it.channel||'Note')+(it.note?': '+String(it.note).slice(0,60):'')+(it.status?' ['+it.status+']':'')}); });
+  ev=ev.filter(function(x){return x.d;}).sort(function(a,b){return String(b.d).localeCompare(String(a.d));});
+  if(!ev.length){ tl.innerHTML='<div class="muted">No activity yet.</div>'; return; }
+  tl.innerHTML=ev.map(function(x){ return '<div style="display:flex;gap:12px;padding:6px 0;border-bottom:0.5px solid #1c1c1c;font-size:13px"><span style="color:#8A7548;min-width:92px">'+esc(x.d)+'</span><span style="color:#EDE3CC">'+esc(x.t)+'</span></div>'; }).join('');
+}
 function loadOrders(){
-  fetch('/api/orders',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-    var all=(d.orders||[]).filter(function(o){return norm(o.phone)===norm(key);});
-    if(!all.length){ document.getElementById('cnm').textContent='Customer not found'; document.getElementById('orders').innerHTML='<div class="muted">No orders for this phone.</div>'; return; }
-    all.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''));});
-    var latest=all[0];
-    document.getElementById('cnm').textContent=latest.name||'Customer';
-    var spent=0,bal=0,fav={};
-    all.forEach(function(o){ spent+=(+o.total||0); bal+=(+o.balance||0); CUTS.forEach(function(c){ fav[c[0]]=(fav[c[0]]||0)+(+o[c[0]]||0); }); });
+      var items=(d.items||[]);
+    window.__INTX__ = items;
+    if(!items.length){ document.getElementById('intx').innerHTML='<div class="muted">No interactions logged yet.</div>'; renderTimeline(); return; }
+    document.getElementById('intx').innerHTML=items.map(function(it,ix){
+      var nx = it.next ? '<div class="nx">Next: '+esc(it.next)+'</div>' : '';
+      var em = emoji(it.rating);
+      var tags = (it.type?'<span class="pill">'+esc(it.type)+'</span> ':'')+(it.status?'<span class="pill">'+esc(it.status)+'</span>':'');
+      return '<div class="intx"><div class="ih"><span>'+esc(it.channel||'Note')+' &middot; '+esc(it.date||'')+(em?(' &middot; '+em):'')+'</span><span>'+esc(it.by||'')+'</span></div>'+(tags?'<div style="margin:2px 0 4px">'+tags+'</div>':'')+'<div class="ib">'+esc(it.note||'')+'</div>'+nx+'<div style="margin-top:6px"><a href="#" class="iedit" data-ix="'+ix+'" style="color:#C9A55C;font-size:11px">Edit</a> &middot; <a href="#" class="idel" data-ix="'+ix+'" style="color:#8A7548;font-size:11px">Delete</a></div></div>';
+    }).join('');
+    document.querySelectorAll('#intx .iedit').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); openIntxEditor(parseInt(a.getAttribute('data-ix'),10)); }); });
+    document.querySelectorAll('#intx .idel').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); var it=(window.__INTX__||[])[parseInt(a.getAttribute('data-ix'),10)]; if(!it||!it.id) return; if(!confirm('Delete this interaction?')) return; fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_delete',intId:it.id})}).then(function(r){return r.json();}).then(function(){ loadIntx(); }); }); });
+    renderTimeline();
+orEach(function(o){ spent+=(+o.total||0); bal+=(+o.balance||0); CUTS.forEach(function(c){ fav[c[0]]=(fav[c[0]]||0)+(+o[c[0]]||0); }); });
     var favName='-',favMax=0; CUTS.forEach(function(c){ if(fav[c[0]]>favMax){favMax=fav[c[0]];favName=c[1];} });
     document.getElementById('cmeta').innerHTML='<b>Phone:</b> '+esc(latest.phone)+' &nbsp; <b>Email:</b> '+esc(latest.email||'-')+'<br><b>Address:</b> '+esc(latest.address||'-')+' ('+esc(latest.zone||'-')+')'+(String(latest.phone||'').replace(/[^0-9]/g,'')?' &nbsp; <a href="https://wa.me/'+String(latest.phone).replace(/[^0-9]/g,'')+'" target="_blank" style="color:#25D366;border:0.5px solid #2c5a2c;padding:4px 12px;border-radius:6px;font-size:12px;text-decoration:none;white-space:nowrap;">WhatsApp</a>':'');
     document.getElementById('kpis').innerHTML=kpi('Orders',all.length)+kpi('Total spent',usd(spent))+kpi('Balance',usd(bal))+kpi('Favorite cut',favName)+kpi('Last order',latest.date||'-');
@@ -139,6 +176,7 @@ function loadOrders(){
     document.getElementById('orders').innerHTML='<table><thead><tr><th>Date</th><th>Cuts</th><th>Total</th><th>Status</th><th>Delivery</th><th>Delivered</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div id="delEditor" style="display:none;margin-top:14px" class="form"></div>';
     document.querySelectorAll('#orders .dlv').forEach(function(cb){ cb.addEventListener('change',function(){ var id=cb.getAttribute('data-id'); cb.disabled=true; fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,delivered:cb.checked})}).then(function(r){return r.json();}).then(function(res){ cb.disabled=false; if(!res||!res.ok){ cb.checked=!cb.checked; } }).catch(function(){ cb.disabled=false; cb.checked=!cb.checked; }); }); });
     document.querySelectorAll('#orders .dedit').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); openDelEditor(parseInt(a.getAttribute('data-ix'),10)); }); });
+    renderTimeline();
   }).catch(function(){ document.getElementById('orders').innerHTML='<div class="muted">Connection error.</div>'; });
 }
 function loadIntx(){
@@ -158,11 +196,12 @@ function loadClientBook(){
     document.getElementById('cb-done').value=p.doneness||'';
     document.getElementById('cb-occ').value=p.occasion||'';
     document.getElementById('cb-notes').value=p.notes||'';
+    document.getElementById('cb-avoid').value=p.avoids||''; document.getElementById('cb-chan').value=p.preferredChannel||'';
   }).catch(function(){});
 }
 document.getElementById('cbSave').addEventListener('click',function(){
   var btn=this; btn.disabled=true; var msg=document.getElementById('cbMsg'); msg.textContent='Saving...';
-  fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'customer_save',customer:key,name:(document.getElementById('cnm').textContent||''),doneness:document.getElementById('cb-done').value.trim(),occasion:document.getElementById('cb-occ').value.trim(),notes:document.getElementById('cb-notes').value.trim()})})
+  fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'customer_save',customer:key,name:(document.getElementById('cnm').textContent||''),doneness:document.getElementById('cb-done').value.trim(),occasion:document.getElementById('cb-occ').value.trim(),notes:document.getElementById('cb-notes').value.trim(),avoids:document.getElementById('cb-avoid').value.trim(),preferredChannel:document.getElementById('cb-chan').value})})
   .then(function(r){return r.json();}).then(function(res){ btn.disabled=false; msg.textContent=(res&&res.ok)?'Saved \u2713':'Could not save'; setTimeout(function(){msg.textContent='';},2500); })
   .catch(function(){ btn.disabled=false; msg.textContent='Connection error'; });
 });
@@ -171,8 +210,8 @@ document.getElementById('addBtn').addEventListener('click',function(){
   var rate=document.getElementById('f-rate').value;
   if(!note && !rate){ document.getElementById('f-note').focus(); return; }
   var btn=this; btn.disabled=true; btn.textContent='Saving...';
-  fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_add',customer:key,channel:document.getElementById('f-ch').value,note:note,rating:rate,contactDate:document.getElementById('f-cdate').value||TODAY,nextDate:document.getElementById('f-ndate').value,by:document.getElementById('f-by').value.trim()})})
-  .then(function(r){return r.json();}).then(function(){ document.getElementById('f-note').value=''; document.getElementById('f-rate').value=''; document.getElementById('f-ndate').value=''; btn.disabled=false; btn.textContent='Add interaction'; loadIntx(); })
+  fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_add',customer:key,channel:document.getElementById('f-ch').value,note:note,rating:rate,contactDate:document.getElementById('f-cdate').value||TODAY,nextDate:document.getElementById('f-ndate').value,by:document.getElementById('f-by').value.trim(),type:document.getElementById('f-type').value,status:document.getElementById('f-status').value})})
+  .then(function(r){return r.json();}).then(function(){ document.getElementById('f-note').value=''; document.getElementById('f-rate').value=''; document.getElementById('f-ndate').value=''; document.getElementById('f-type').value=''; document.getElementById('f-status').value=''; btn.disabled=false; btn.textContent='Add interaction'; loadIntx(); })
   .catch(function(){ btn.disabled=false; btn.textContent='Add interaction'; });
 });
 if(!key){ document.getElementById('cnm').textContent='No customer selected'; }
