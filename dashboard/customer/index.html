@@ -88,6 +88,32 @@ function esc(s){return String(s==null?'':s);}
 function kpi(k,v){return '<div class="kpi"><div class="k">'+k+'</div><div class="v serif">'+v+'</div></div>';}
 function emoji(r){ if(r==='Good')return '\uD83D\uDE0A'; if(r==='Neutral')return '\uD83D\uDE10'; if(r==='Bad')return '\u2639\uFE0F'; return ''; }
 var TODAY=new Date().toISOString().slice(0,10);
+function openDelEditor(ix){
+  var o=(window.__ORD__||[])[ix]; if(!o) return;
+  var box=document.getElementById('delEditor'); if(!box) return;
+  var sel=['Preparing','In transit','Delivered','Delayed','Cancelled'];
+  var cur=o.deliveryStatus||(o.delivered?'Delivered':'');
+  function esc2(s){return String(s==null?'':s).replace(/"/g,'&quot;');}
+  var opts='<option value=""></option>'+sel.map(function(s){return '<option '+(s===cur?'selected':'')+'>'+s+'</option>';}).join('');
+  box.innerHTML='<div class="sec-t" style="margin-top:0">Delivery</div>'+
+    '<div class="row2"><div><label>Delivery status</label><select id="de-st">'+opts+'</select></div>'+
+    '<div><label>Delivery date</label><input id="de-date" type="date" value="'+esc2((o.deliveryDate||'').slice(0,10))+'"></div></div>'+
+    '<div class="row2"><div><label>Courier</label><input id="de-cou" value="'+esc2(o.courier||'')+'"></div>'+
+    '<div><label>Tracking</label><input id="de-trk" value="'+esc2(o.tracking||'')+'"></div></div>'+
+    '<label>Order notes / observations</label><textarea id="de-notes">'+esc2(o.csNotes||'')+'</textarea>'+
+    '<div style="display:flex;gap:12px;align-items:center"><button class="btn" id="de-save">Save delivery</button><button class="btn" id="de-cancel" style="background:#2a2a2a;color:#C9A55C">Cancel</button><span class="muted" id="de-msg"></span></div>';
+  box.style.display='block';
+  document.getElementById('de-cancel').onclick=function(){ box.style.display='none'; };
+  document.getElementById('de-save').onclick=function(){
+    var btn=this; btn.disabled=true; document.getElementById('de-msg').textContent='Saving...';
+    var st=document.getElementById('de-st').value;
+    var body={id:o.id, deliveryStatus:st, deliveryDate:document.getElementById('de-date').value, courier:document.getElementById('de-cou').value.trim(), tracking:document.getElementById('de-trk').value.trim(), csNotes:document.getElementById('de-notes').value};
+    if(st==='Delivered') body.delivered=true;
+    if(st==='Cancelled') body.delivered=false;
+    fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(res){ btn.disabled=false; if(res&&res.ok){ document.getElementById('de-msg').textContent='Saved'; loadOrders(); setTimeout(function(){ if(box) box.style.display='none'; },700);} else { document.getElementById('de-msg').textContent='Could not save'; } }).catch(function(){ btn.disabled=false; document.getElementById('de-msg').textContent='Connection error'; });
+  };
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 function loadOrders(){
   fetch('/api/orders',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
     var all=(d.orders||[]).filter(function(o){return norm(o.phone)===norm(key);});
@@ -104,11 +130,15 @@ function loadOrders(){
     var st=''; if(spent>=1500) st+='<span class="chip vip">\u2B50 VIP</span>';
     if(days!=null && days>30) st+='<span class="chip risk">At risk &middot; '+days+'d no order</span>'; else if(days!=null) st+='<span class="chip">Active &middot; '+days+'d</span>';
     document.getElementById('stage').innerHTML=st;
-    var rows=all.map(function(o){
+    window.__ORD__ = all;
+    var rows=all.map(function(o,ix){
       var cuts=CUTS.filter(function(c){return (+o[c[0]]||0)>0;}).map(function(c){return c[1]+' x'+o[c[0]];}).join(', ')||'-';
-      return '<tr><td>'+esc(o.date||'')+'</td><td>'+cuts+'</td><td>'+usd(o.total)+'</td><td><span class="pill">'+esc(o.status||'-')+'</span></td><td style="text-align:center"><input type="checkbox" class="dlv" data-id="'+esc(o.id||'')+'" '+(o.delivered?'checked':'')+'></td></tr>';
+      var dst=o.deliveryStatus||(o.delivered?'Delivered':'');
+      return '<tr><td>'+esc(o.date||'')+'</td><td>'+cuts+'</td><td>'+usd(o.total)+'</td><td><span class="pill">'+esc(o.status||'-')+'</span></td><td>'+(dst?esc(dst):'-')+'</td><td style="text-align:center"><input type="checkbox" class="dlv" data-id="'+esc(o.id||'')+'" '+(o.delivered?'checked':'')+'></td><td><a href="#" class="dedit" data-ix="'+ix+'" style="color:#C9A55C;font-size:12px">Edit</a></td></tr>';
     }).join('');
-    document.getElementById('orders').innerHTML='<table><tr><th>Date</th><th>Cuts</th><th>Total</th><th>Status</th><th>Delivered</th></tr>'+rows+'</table>'; document.querySelectorAll('#orders .dlv').forEach(function(cb){ cb.addEventListener('change',function(){ var id=cb.getAttribute('data-id'); cb.disabled=true; fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,delivered:cb.checked})}).then(function(r){return r.json();}).then(function(res){ cb.disabled=false; if(!res||!res.ok){ cb.checked=!cb.checked; } }).catch(function(){ cb.disabled=false; cb.checked=!cb.checked; }); }); });
+    document.getElementById('orders').innerHTML='<table><thead><tr><th>Date</th><th>Cuts</th><th>Total</th><th>Status</th><th>Delivery</th><th>Delivered</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div id="delEditor" style="display:none;margin-top:14px" class="form"></div>';
+    document.querySelectorAll('#orders .dlv').forEach(function(cb){ cb.addEventListener('change',function(){ var id=cb.getAttribute('data-id'); cb.disabled=true; fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,delivered:cb.checked})}).then(function(r){return r.json();}).then(function(res){ cb.disabled=false; if(!res||!res.ok){ cb.checked=!cb.checked; } }).catch(function(){ cb.disabled=false; cb.checked=!cb.checked; }); }); });
+    document.querySelectorAll('#orders .dedit').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); openDelEditor(parseInt(a.getAttribute('data-ix'),10)); }); });
   }).catch(function(){ document.getElementById('orders').innerHTML='<div class="muted">Connection error.</div>'; });
 }
 function loadIntx(){
