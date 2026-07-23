@@ -53,7 +53,12 @@ export default async function handler(req, res) {
         amountPaid: Number(f['Amount Paid']) || 0,
         balance: Number(f['Balance']) || 0,
         payStatus: f['Payment Status'] || '',
-        delivered: !!f['Delivered']
+        delivered: !!f['Delivered'],
+        deliveryStatus: f['Delivery Status'] || '',
+        deliveryDate: f['Delivery Date'] || '',
+        courier: f['Courier'] || '',
+        tracking: f['Tracking'] || '',
+        csNotes: f['CS Notes'] || ''
       };
     });
 
