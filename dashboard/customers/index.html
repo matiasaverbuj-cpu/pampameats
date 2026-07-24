@@ -88,6 +88,7 @@ var $=function(id){return document.getElementById(id);};
 var money=function(n){return '$'+(Math.round((Number(n)||0)*100)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});};
 var esc=function(s){return String(s==null?'':s);};
 var digits=function(s){return String(s==null?'':s).replace(/[^0-9]/g,'');};
+var fmtDate=function(d){ if(!d) return ''; var x=new Date(d); if(isNaN(x.getTime())) return String(d).slice(0,10); return x.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); };
 var CUST=[], FUP=null, mode='followup';
 var DAY=86400000, TODAY=new Date().toISOString().slice(0,10);
 function dt(o){ return o.date||o.deliveryDate||o.created||''; }
@@ -139,7 +140,7 @@ function renderStd(){
     return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+(esc(c.name)||'—')+'</a></td>'+
       '<td>'+(contact||'<span class="sub">no contact</span>')+'</td>'+
       '<td class="r">'+c.orders+'</td><td class="r">'+money(c.spent)+'</td>'+
-      '<td class="r" style="color:#E9A8A2">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last||'—')+'</td><td>'+(digits(c.phone)?('<a class="wa" href="https://wa.me/'+digits(c.phone)+'" target="_blank">WhatsApp</a>'):'')+'</td></tr>';
+      '<td class="r" style="color:#E9A8A2">'+(c.owes>0.005?money(c.owes):'—')+'</td><td>'+(c.last?fmtDate(c.last):'—')+'</td><td>'+(digits(c.phone)?('<a class="wa" href="https://wa.me/'+digits(c.phone)+'" target="_blank">WhatsApp</a>'):'')+'</td></tr>';
   }).join('');
   $('card').innerHTML='<table><thead><tr><th>Customer</th><th>Contact</th><th class="r">Orders</th><th class="r">Spent</th><th class="r">Owes</th><th>Last order</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
@@ -163,8 +164,8 @@ function renderFollowups(){
     var ro = c.reorder?(esc(c.reorder)+(c.cadenceEst?' <span class="sub" style="display:inline">est</span>':'')):'—';
     return '<tr><td class="cust"><a href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'" style="color:#C9A55C">'+star+(esc(c.name)||'—')+'</a><span class="sub">'+esc(c.phone||'')+'</span></td>'+
       '<td><span class="rc '+c._r.cls+'">'+c._r.txt+'</span></td>'+
-      '<td>'+(c.lastContact?esc(c.lastContact).slice(0,10):'—')+(c.lastSentiment?(' '+emoji(c.lastSentiment)):'')+'</td>'+
-      '<td>'+(c.nextFollowup?esc(c.nextFollowup).slice(0,10):'—')+'</td>'+
+      '<td>'+(c.lastContact?fmtDate(c.lastContact):'—')+(c.lastSentiment?(' '+emoji(c.lastSentiment)):'')+'</td>'+
+      '<td>'+(c.nextFollowup?fmtDate(c.nextFollowup):'—')+'</td>'+
       '<td>'+ro+'</td>'+
       '<td class="r">'+(c.daysSince!=null?c.daysSince+'d':'—')+'</td>'+
       '<td class="r">'+money(c.totalSpent)+'</td>'+
