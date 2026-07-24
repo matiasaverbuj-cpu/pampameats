@@ -147,21 +147,17 @@ function renderTimeline(){
   tl.innerHTML=ev.map(function(x){ return '<div style="display:flex;gap:12px;padding:6px 0;border-bottom:0.5px solid #1c1c1c;font-size:13px"><span style="color:#8A7548;min-width:92px">'+esc(x.d)+'</span><span style="color:#EDE3CC">'+esc(x.t)+'</span></div>'; }).join('');
 }
 function loadOrders(){
-      var items=(d.items||[]);
-    window.__INTX__ = items;
-    if(!items.length){ document.getElementById('intx').innerHTML='<div class="muted">No interactions logged yet.</div>'; renderTimeline(); return; }
-    document.getElementById('intx').innerHTML=items.map(function(it,ix){
-      var nx = it.next ? '<div class="nx">Next: '+esc(it.next)+'</div>' : '';
-      var em = emoji(it.rating);
-      var tags = (it.type?'<span class="pill">'+esc(it.type)+'</span> ':'')+(it.status?'<span class="pill">'+esc(it.status)+'</span>':'');
-      return '<div class="intx"><div class="ih"><span>'+esc(it.channel||'Note')+' &middot; '+esc(it.date||'')+(em?(' &middot; '+em):'')+'</span><span>'+esc(it.by||'')+'</span></div>'+(tags?'<div style="margin:2px 0 4px">'+tags+'</div>':'')+'<div class="ib">'+esc(it.note||'')+'</div>'+nx+'<div style="margin-top:6px"><a href="#" class="iedit" data-ix="'+ix+'" style="color:#C9A55C;font-size:11px">Edit</a> &middot; <a href="#" class="idel" data-ix="'+ix+'" style="color:#8A7548;font-size:11px">Delete</a></div></div>';
-    }).join('');
-    document.querySelectorAll('#intx .iedit').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); openIntxEditor(parseInt(a.getAttribute('data-ix'),10)); }); });
-    document.querySelectorAll('#intx .idel').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); var it=(window.__INTX__||[])[parseInt(a.getAttribute('data-ix'),10)]; if(!it||!it.id) return; if(!confirm('Delete this interaction?')) return; fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'interaction_delete',intId:it.id})}).then(function(r){return r.json();}).then(function(){ loadIntx(); }); }); });
-    renderTimeline();
-orEach(function(o){ spent+=(+o.total||0); bal+=(+o.balance||0); CUTS.forEach(function(c){ fav[c[0]]=(fav[c[0]]||0)+(+o[c[0]]||0); }); });
+  fetch('/api/orders',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    var all=(d.orders||[]).filter(function(o){return norm(o.phone)===norm(key);});
+    if(!all.length){ document.getElementById('cnm').textContent='Customer not found'; document.getElementById('orders').innerHTML='<div class="muted">No orders for this phone.</div>'; return; }
+    all.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''));});
+    var latest=all[0];
+    document.getElementById('cnm').textContent=latest.name||'Customer';
+    var spent=0,bal=0,fav={};
+    all.forEach(function(o){ spent+=(+o.total||0); bal+=(+o.balance||0); CUTS.forEach(function(c){ fav[c[0]]=(fav[c[0]]||0)+(+o[c[0]]||0); }); });
     var favName='-',favMax=0; CUTS.forEach(function(c){ if(fav[c[0]]>favMax){favMax=fav[c[0]];favName=c[1];} });
-    document.getElementById('cmeta').innerHTML='<b>Phone:</b> '+esc(latest.phone)+' &nbsp; <b>Email:</b> '+esc(latest.email||'-')+'<br><b>Address:</b> '+esc(latest.address||'-')+' ('+esc(latest.zone||'-')+')'+(String(latest.phone||'').replace(/[^0-9]/g,'')?' &nbsp; <a href="https://wa.me/'+String(latest.phone).replace(/[^0-9]/g,'')+'" target="_blank" style="color:#25D366;border:0.5px solid #2c5a2c;padding:4px 12px;border-radius:6px;font-size:12px;text-decoration:none;white-space:nowrap;">WhatsApp</a>':'');
+    var waLink=String(latest.phone||'').replace(/[^0-9]/g,'');
+    document.getElementById('cmeta').innerHTML='<b>Phone:</b> '+esc(latest.phone)+' &nbsp; <b>Email:</b> '+esc(latest.email||'-')+'<br><b>Address:</b> '+esc(latest.address||'-')+' ('+esc(latest.zone||'-')+')'+(waLink?' &nbsp; <a href="https://wa.me/'+waLink+'" target="_blank" style="color:#25D366;border:0.5px solid #2c5a2c;padding:4px 12px;border-radius:6px;font-size:12px;text-decoration:none;white-space:nowrap;">WhatsApp</a>':'');
     document.getElementById('kpis').innerHTML=kpi('Orders',all.length)+kpi('Total spent',usd(spent))+kpi('Balance',usd(bal))+kpi('Favorite cut',favName)+kpi('Last order',latest.date||'-');
     var days = latest.date ? Math.floor((Date.now()-new Date(latest.date).getTime())/86400000) : null;
     var st=''; if(spent>=1500) st+='<span class="chip vip">\u2B50 VIP</span>';
