@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center — Pampa Kosher Meats</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{--bg:#0f1115;--panel:#171a21;--panel2:#1e222b;--line:#2a2f3a;--txt:#eceff4;--mut:#9aa4b2;--gold:#C9A55C;--green:#25D366;--red:#e5544b;--amber:#e0a63c;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--txt);padding:22px;max-width:1180px;margin:0 auto}
+  a{color:var(--gold);text-decoration:none}
+  .top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px}
+  .brand{font-size:12px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:bold}
+  h1{font-size:26px;margin:2px 0 2px}
+  .sub{color:var(--mut);font-size:13px}
+  .nav a{display:inline-block;background:var(--panel2);border:1px solid var(--line);padding:7px 12px;border-radius:8px;font-size:13px;margin-left:8px}
+  .nav a:hover{border-color:var(--gold)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--mut)}
+  .kpi .val{font-size:26px;font-weight:bold;margin-top:6px}
+  .kpi .val.gold{color:var(--gold)}
+  .kpi .foot{font-size:12px;color:var(--mut);margin-top:4px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card h2{font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .card h2 .tag{font-size:11px;color:var(--mut);font-weight:normal}
+  canvas{max-height:280px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .rank{width:26px;height:26px;border-radius:50%;background:var(--panel2);display:inline-flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px}
+  .rank.g1{background:var(--gold);color:#111}
+  .rank.g2{background:#c0c6d0;color:#111}
+  .rank.g3{background:#cd7f4d;color:#111}
+  .cname{font-weight:bold}
+  .money{font-weight:bold;color:var(--gold)}
+  .badge{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;font-weight:bold}
+  .b-due{background:rgba(229,84,75,.15);color:#ff8a82;border:1px solid rgba(229,84,75,.4)}
+  .b-soon{background:rgba(224,166,60,.15);color:var(--amber);border:1px solid rgba(224,166,60,.4)}
+  .b-ok{background:rgba(37,211,102,.12);color:#4ee88a;border:1px solid rgba(37,211,102,.35)}
+  .wa{display:inline-flex;align-items:center;gap:5px;background:var(--green);color:#062d16;font-weight:bold;padding:6px 11px;border-radius:8px;font-size:12px}
+  .wa:hover{filter:brightness(1.08)}
+  .lnk{font-size:12px;color:var(--mut)}
+  .lnk:hover{color:var(--gold)}
+  .rowact{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+  .full{grid-column:1/3}
+  .loading{color:var(--mut);padding:30px;text-align:center}
+  .err{background:rgba(229,84,75,.12);border:1px solid rgba(229,84,75,.4);color:#ff8a82;padding:14px;border-radius:10px}
+  .mixleg{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12px}
+  .mixleg span{display:inline-flex;align-items:center;gap:6px;color:var(--mut)}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  @media(max-width:860px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <div class="brand">Pampa Kosher Meats</div>
+      <h1>Command Center</h1>
+      <div class="sub" id="sub">Loading live data…</div>
+    </div>
+    <div class="nav">
+      <a href="/dashboard/customers">Customers</a>
+      <a href="/dashboard">Main menu</a>
+    </div>
+  </div>
+
+  <div id="content"><div class="loading">Loading live data…</div></div>
+
+<script>
+var GOLD='#C9A55C';
+var CUTCOLORS=['#C9A55C','#e5544b','#4ea1e5','#4ee88a','#b07de8','#e0a63c'];
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function norm(p){return String(p||'').replace(/[^0-9]/g,'').slice(-10);}
+function waNum(p){var d=String(p||'').replace(/[^0-9]/g,'');if(d.length===10)d='1'+d;return d;}
+function fmtDate(s){if(!s)return '—';var d=new Date(s);if(isNaN(d))return '—';return d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});}
+function daysSince(s){if(!s)return null;var d=new Date(s);if(isNaN(d))return null;return Math.floor((Date.now()-d.getTime())/86400000);}
+
+function isTest(name){return /test|^zz|systemcheck|e2e|borrar|\bmatias\b/i.test(String(name||''));}
+
+function cutsSummary(o){
+  var parts=[];
+  if(o.picanha)parts.push(o.picanha+'x Picanha');
+  if(o.topSirloin)parts.push(o.topSirloin+'x Top Sirloin');
+  if(o.nyStrip)parts.push(o.nyStrip+'x NY Strip');
+  if(o.tenderloin)parts.push(o.tenderloin+'x Tenderloin');
+  return parts.join(', ');
+}
+
+fetch('/api/orders').then(function(r){return r.json();}).then(function(data){
+  if(!data||!data.ok){throw new Error((data&&data.reason)||'no data');}
+  var orders=(data.orders||[]).filter(function(o){
+    if(String(o.status||'').toLowerCase()==='cancelled')return false;
+    if(isTest(o.name))return false;
+    return true;
+  });
+  render(orders);
+}).catch(function(e){
+  document.getElementById('content').innerHTML='<div class="err">Could not load live data: '+esc(e.message||e)+'. Make sure you are logged into the dashboard.</div>';
+  document.getElementById('sub').textContent='Data unavailable';
+});
+
+function render(orders){
+  // aggregate by customer (normalized phone; fall back to name)
+  var byCust={};
+  orders.forEach(function(o){
+    var key=norm(o.phone)||('name:'+String(o.name||'').trim().toLowerCase());
+    if(!byCust[key])byCust[key]={name:o.name,phone:o.phone,orders:[],total:0,units:0,cuts:{Picanha:0,'Top Sirloin':0,'NY Strip':0,Tenderloin:0},last:null};
+    var c=byCust[key];
+    c.orders.push(o);
+    c.total+=Number(o.total)||0;
+    c.units+=Number(o.units)||0;
+    c.cuts.Picanha+=Number(o.picanha)||0;
+    c.cuts['Top Sirloin']+=Number(o.topSirloin)||0;
+    c.cuts['NY Strip']+=Number(o.nyStrip)||0;
+    c.cuts.Tenderloin+=Number(o.tenderloin)||0;
+    var d=new Date(o.date);
+    if(!c.last||(!isNaN(d)&&d>new Date(c.last)))c.last=o.date;
+    if(o.name&&o.name.length>(c.name||'').length)c.name=o.name; // prefer fuller name
+    if(o.phone)c.phone=o.phone;
+  });
+  var custs=Object.keys(byCust).map(function(k){return byCust[k];});
+
+  var totalRev=orders.reduce(function(s,o){return s+(Number(o.total)||0);},0);
+  var nCust=custs.length;
+  var nOrders=orders.length;
+  var aov=nOrders?totalRev/nOrders:0;
+
+  // reorder logic
+  custs.forEach(function(c){
+    c.days=daysSince(c.last);
+    c.repeat=c.orders.length>1;
+    // favorite cut
+    var best=null,bestv=-1;
+    Object.keys(c.cuts).forEach(function(cut){if(c.cuts[cut]>bestv){bestv=c.cuts[cut];best=cut;}});
+    c.fav=bestv>0?best:'—';
+    // last order object (most recent)
+    c.lastOrder=c.orders.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);})[0];
+  });
+
+  var DUE=45, SOON=30;
+  function tier(d){if(d==null)return 'ok';if(d>=DUE)return 'due';if(d>=SOON)return 'soon';return 'ok';}
+  var dueCount=custs.filter(function(c){return tier(c.days)==='due';}).length;
+
+  // product mix totals
+  var mix={Picanha:0,'Top Sirloin':0,'NY Strip':0,Tenderloin:0};
+  orders.forEach(function(o){mix.Picanha+=Number(o.picanha)||0;mix['Top Sirloin']+=Number(o.topSirloin)||0;mix['NY Strip']+=Number(o.nyStrip)||0;mix.Tenderloin+=Number(o.tenderloin)||0;});
+
+  // leaderboard
+  var vips=custs.slice().sort(function(a,b){return b.total-a.total;});
+  var repeatCount=custs.filter(function(c){return c.repeat;}).length;
+
+  // reorder call list: sort by days desc (most overdue first), then by value
+  var callList=custs.slice().sort(function(a,b){
+    var da=a.days==null?-1:a.days, db=b.days==null?-1:b.days;
+    if(db!==da)return db-da;
+    return b.total-a.total;
+  });
+
+  document.getElementById('sub').textContent=nCust+' customers · '+nOrders+' orders · live from Airtable';
+
+  var html='';
+  // KPIs
+  html+='<div class="kpis">';
+  html+='<div class="kpi"><div class="lbl">Booked Revenue</div><div class="val gold">'+money(totalRev)+'</div><div class="foot">across '+nOrders+' orders</div></div>';
+  html+='<div class="kpi"><div class="lbl">Customers</div><div class="val">'+nCust+'</div><div class="foot">'+repeatCount+' repeat buyers</div></div>';
+  html+='<div class="kpi"><div class="lbl">Avg Order Value</div><div class="val">'+money(aov)+'</div><div class="foot">per order</div></div>';
+  html+='<div class="kpi"><div class="lbl">Reorders Due</div><div class="val" style="color:'+(dueCount?'#ff8a82':'#4ee88a')+'">'+dueCount+'</div><div class="foot">45+ days since last order</div></div>';
+  html+='</div>';
+
+  // charts row
+  html+='<div class="grid2">';
+  html+='<div class="card"><h2>Product Mix <span class="tag">packages sold, by cut</span></h2><canvas id="mixChart"></canvas><div class="mixleg" id="mixLeg"></div></div>';
+  html+='<div class="card"><h2>Revenue by Customer <span class="tag">top 8</span></h2><canvas id="revChart"></canvas></div>';
+  html+='</div>';
+
+  // VIP leaderboard
+  html+='<div class="card full" style="margin-bottom:14px"><h2>&#9733; VIP Leaderboard <span class="tag">by lifetime spend</span></h2>';
+  html+='<table><thead><tr><th>#</th><th>Customer</th><th>Orders</th><th>Favorite cut</th><th>Last order</th><th style="text-align:right">Lifetime</th><th></th></tr></thead><tbody>';
+  vips.forEach(function(c,i){
+    var rc=i===0?'g1':i===1?'g2':i===2?'g3':'';
+    html+='<tr>'+
+      '<td><span class="rank '+rc+'">'+(i+1)+'</span></td>'+
+      '<td><a class="cname" href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'">'+esc(c.name)+'</a></td>'+
+      '<td>'+c.orders.length+'</td>'+
+      '<td>'+esc(c.fav)+'</td>'+
+      '<td>'+fmtDate(c.last)+'</td>'+
+      '<td style="text-align:right" class="money">'+money(c.total)+'</td>'+
+      '<td class="rowact"><a class="wa" target="_blank" href="'+waHref(c)+'">WhatsApp</a></td>'+
+    '</tr>';
+  });
+  html+='</tbody></table></div>';
+
+  // reorder call list
+  html+='<div class="card full"><h2>&#128222; Reorder Call List <span class="tag">who to contact, most overdue first</span></h2>';
+  html+='<table><thead><tr><th>Customer</th><th>Status</th><th>Last order</th><th>Suggested reorder</th><th style="text-align:right">Value</th><th></th></tr></thead><tbody>';
+  callList.forEach(function(c){
+    var t=tier(c.days);
+    var badge=t==='due'?'<span class="badge b-due">Due'+(c.days!=null?' · '+c.days+'d':'')+'</span>':t==='soon'?'<span class="badge b-soon">Soon · '+c.days+'d</span>':'<span class="badge b-ok">OK'+(c.days!=null?' · '+c.days+'d':'')+'</span>';
+    var sugg=c.lastOrder?cutsSummary(c.lastOrder):'';
+    html+='<tr>'+
+      '<td><a class="cname" href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'">'+esc(c.name)+'</a><div class="lnk">'+esc(c.phone||'')+'</div></td>'+
+      '<td>'+badge+'</td>'+
+      '<td>'+fmtDate(c.last)+'</td>'+
+      '<td style="max-width:220px">'+esc(sugg||'—')+'</td>'+
+      '<td style="text-align:right" class="money">'+money(c.total)+'</td>'+
+      '<td class="rowact"><a class="lnk" href="/dashboard/customer?c='+encodeURIComponent(c.phone||'')+'">Profile</a><a class="wa" target="_blank" href="'+waReorderHref(c)+'">Reorder</a></td>'+
+    '</tr>';
+  });
+  html+='</tbody></table></div>';
+
+  document.getElementById('content').innerHTML=html;
+
+  drawMix(mix);
+  drawRev(vips.slice(0,8));
+}
+
+function waHref(c){
+  var num=waNum(c.phone);
+  var msg='Hi '+(String(c.name||'').split(' ')[0]||'')+', this is Pampa Kosher Meats.';
+  return 'https://wa.me/'+num+'?text='+encodeURIComponent(msg);
+}
+function waReorderHref(c){
+  var num=waNum(c.phone);
+  var first=String(c.name||'').split(' ')[0]||'';
+  var sugg=c.lastOrder?cutsSummary(c.lastOrder):'';
+  var msg='Hi '+first+', this is Pampa Kosher Meats. It has been a little while since your last order'+(sugg?(' ('+sugg+')'):'')+' — would you like us to prepare the same again for delivery this week?';
+  return 'https://wa.me/'+num+'?text='+encodeURIComponent(msg);
+}
+
+function drawMix(mix){
+  var labels=Object.keys(mix), vals=labels.map(function(k){return mix[k];});
+  var leg=document.getElementById('mixLeg');
+  leg.innerHTML=labels.map(function(l,i){return '<span><span class="dot" style="background:'+CUTCOLORS[i]+'"></span>'+esc(l)+' — '+vals[i]+'</span>';}).join('');
+  new Chart(document.getElementById('mixChart'),{
+    type:'doughnut',
+    data:{labels:labels,datasets:[{data:vals,backgroundColor:CUTCOLORS,borderColor:'#171a21',borderWidth:2}]},
+    options:{plugins:{legend:{display:false}},cutout:'62%'}
+  });
+}
+function drawRev(top){
+  new Chart(document.getElementById('revChart'),{
+    type:'bar',
+    data:{labels:top.map(function(c){return c.name;}),datasets:[{data:top.map(function(c){return c.total;}),backgroundColor:GOLD,borderRadius:5}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#9aa4b2',callback:function(v){return '$'+v;}},grid:{color:'#2a2f3a'}},y:{ticks:{color:'#eceff4'},grid:{display:false}}}}
+  });
+}
+</script>
+</body>
+</html>
