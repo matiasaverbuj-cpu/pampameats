@@ -373,7 +373,7 @@ export default async function middleware(req) {
   const key = process.env.DASH_PASS;
   const atoken = process.env.AIRTABLE_TOKEN;
 
-  if (pathname === '/api/order-create' || pathname === '/api/daily-digest') return;
+  if (pathname === '/api/order-create' || pathname === '/api/daily-digest' || pathname === '/api/crm-digest') return;
 
   if (pathname === '/api/wa-webhook') { if (req.method === 'GET') return waVerify(req); if (req.method === 'POST') return waIncoming(req); }
 
