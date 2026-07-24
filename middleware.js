@@ -440,7 +440,7 @@ export default async function middleware(req) {
           return new Response(JSON.stringify({ ok: false, reason: 'forbidden' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
         }
         const _p = pathname.replace(/\/+$/, '');
-        if (_p === '/dashboard/customers' || _p === '/dashboard/customer') return;
+        if (_p === '/dashboard/customers' || _p === '/dashboard/customer' || _p === '/dashboard/crm') return;
         return Response.redirect(new URL('/dashboard/customers', req.url), 302);
       }
     } catch (e) {}
