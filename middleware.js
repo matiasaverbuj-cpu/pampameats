@@ -8,6 +8,7 @@ const USERS = 'tblcwjfmxGhzCDd0g';
 const AT = 'https://api.airtable.com/v0/';
 const enc = new TextEncoder();
 const CRM_USERS = ['ivillarreal@klagroupinc.com'];
+const DEALER_USERS = ['info@levincompany.com'];
 
 export const config = {
   matcher: ['/dashboard', '/dashboard/(.*)', '/api/(.*)']
@@ -434,6 +435,16 @@ export default async function middleware(req) {
     try {
       const _tok = getCookie(req, 'pm_session');
       const _em = (_tok ? sessionEmailOf(_tok) : '').toLowerCase();
+      if (DEALER_USERS.indexOf(_em) >= 0) {
+        if (pathname.indexOf('/api/') === 0) {
+          if (pathname === '/api/philly-orders') return;
+          return new Response(JSON.stringify({ ok: false, reason: 'forbidden' }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+        }
+        var _pd = pathname;
+        if (_pd.length > 1 && _pd.charAt(_pd.length - 1) === '/') _pd = _pd.slice(0, -1);
+        if (_pd === '/dashboard/philly') return;
+        return Response.redirect(new URL('/dashboard/philly', req.url), 302);
+      }
       if (CRM_USERS.indexOf(_em) >= 0) {
         if (pathname.indexOf('/api/') === 0) {
           if (pathname === '/api/orders' || pathname === '/api/order-update') return;
