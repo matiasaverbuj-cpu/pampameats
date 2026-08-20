@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philadelphia Orders - Pampa Kosher Meats</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1e222b;--line:#2a2f3a;--txt:#eceff4;--mut:#9aa4b2;--gold:#C9A55C;--green:#25D366;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--txt);padding:22px;max-width:1040px;margin:0 auto}
+a{color:var(--gold);text-decoration:none}
+.top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.brand{font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:bold}
+h1{font-size:24px;margin:2px 0}
+.sub{color:var(--mut);font-size:13px}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:7px 12px;border-radius:8px;font-size:13px;cursor:pointer}
+.btn:hover{border-color:var(--gold)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--mut)}
+.kpi .val{font-size:24px;font-weight:bold;margin-top:5px;color:var(--gold)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 9px;border-bottom:1px solid var(--line)}
+td{padding:10px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.cust{font-weight:bold}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--mut)}
+.wa{display:inline-block;background:var(--green);color:#062d16;font-weight:bold;padding:5px 10px;border-radius:7px;font-size:12px}
+.note{border-left:4px solid var(--gold);background:rgba(201,165,92,.08);padding:10px 13px;border-radius:5px;color:#d9c39a;font-size:13px;margin-bottom:14px}
+.loading,.empty{color:var(--mut);padding:26px;text-align:center}
+@media(max-width:720px){.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">
+<div>
+<div class="brand">Pampa Kosher Meats</div>
+<h1>Philadelphia Orders</h1>
+<div class="sub" id="sub">Loading your orders...</div>
+</div>
+<div><button class="btn" onclick="load()">Refresh</button> <a class="btn" href="/login">Log out</a></div>
+</div>
+<div class="note">You are viewing <b>Philadelphia orders only</b>. Customers pay you in-store. Use the WhatsApp button to reach a customer about their order.</div>
+<div class="kpis">
+<div class="kpi"><div class="lbl">Open orders</div><div class="val" id="kOpen">-</div></div>
+<div class="kpi"><div class="lbl">Packages (total)</div><div class="val" id="kPkg">-</div></div>
+<div class="kpi"><div class="lbl">Latest order</div><div class="val" id="kLast" style="font-size:16px">-</div></div>
+</div>
+<div class="card"><div id="list"><div class="loading">Loading...</div></div></div>
+<script>
+function esc(s){return String(s==null?"":s).replace(/[&<>\"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+function fmt(s){if(!s)return "-";var d=new Date(s);if(isNaN(d))return "-";return d.toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"});}
+function waNum(p){var d=String(p||"").replace(/[^0-9]/g,"");if(d.length===10)d="1"+d;return d;}
+function cuts(o){var p=[];if(o.picanha)p.push(o.picanha+"x Picanha");if(o.topSirloin)p.push(o.topSirloin+"x Top Sirloin");if(o.nyStrip)p.push(o.nyStrip+"x NY Strip");if(o.tenderloin)p.push(o.tenderloin+"x Tenderloin");return p.join(", ");}
+function load(){
+  document.getElementById("list").innerHTML='<div class="loading">Loading...</div>';
+  fetch("/api/philly-orders").then(function(r){return r.json();}).then(function(data){
+    if(!data||!data.ok){throw new Error((data&&data.reason)||"no data");}
+    var o=(data.orders||[]).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+    document.getElementById("sub").textContent=o.length+" order"+(o.length===1?"":"s")+" - live";
+    var pkg=o.reduce(function(s,x){return s+(Number(x.units)||0);},0);
+    document.getElementById("kOpen").textContent=o.length;
+    document.getElementById("kPkg").textContent=pkg;
+    document.getElementById("kLast").textContent=o.length?fmt(o[0].date):"-";
+    if(!o.length){document.getElementById("list").innerHTML='<div class="empty">No Philadelphia orders yet. New orders will appear here automatically.</div>';return;}
+    var h='<table><thead><tr><th>Date</th><th>Customer</th><th>Order</th><th>Pkgs</th><th>Delivery</th><th>Status</th><th></th></tr></thead><tbody>';
+    o.forEach(function(x){
+      var wa=waNum(x.phone);
+      var msg="Hi "+(String(x.name||"").split(" ")[0]||"")+", this is Pampa Kosher Meats (Philadelphia) about your order.";
+      h+="<tr>"+
+        "<td>"+fmt(x.date)+"</td>"+
+        "<td><span class=\"cust\">"+esc(x.name)+"</span><br><span style=\"color:#9aa4b2;font-size:12px\">"+esc(x.phone||"")+(x.address?("<br>"+esc(x.address)):"")+"</span></td>"+
+        "<td>"+esc(cuts(x)||"-")+(x.notes?("<br><span style=\"color:#9aa4b2;font-size:12px\">"+esc(x.notes)+"</span>"):"")+"</td>"+
+        "<td>"+(Number(x.units)||0)+"</td>"+
+        "<td>"+fmt(x.deliveryDate)+"</td>"+
+        "<td><span class=\"badge\">"+esc(x.deliveryStatus||x.status||"New")+"</span></td>"+
+        "<td>"+(wa?("<a class=\"wa\" target=\"_blank\" href=\"https://wa.me/"+wa+"?text="+encodeURIComponent(msg)+"\">WhatsApp</a>"):"")+"</td>"+
+      "</tr>";
+    });
+    h+="</tbody></table>";
+    document.getElementById("list").innerHTML=h;
+  }).catch(function(e){
+    document.getElementById("list").innerHTML='<div class="empty">Could not load orders: '+esc(e.message||e)+'</div>';
+    document.getElementById("sub").textContent="Data unavailable";
+  });
+}
+load();
+</script>
+</body>
+</html>
