@@ -5,6 +5,9 @@
 
 const BASE = 'app1muH8br0JSsvOa';
 const TABLE = 'tbli7bDbuXmjnp02M';
+const JACK = { name: 'Jack', email: 'info@levincompany.com', wa: '16102036175' };
+const PHILLY_NOTIFY = (process.env.ORDER_NOTIFY_TO ? process.env.ORDER_NOTIFY_TO.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : [JACK.email, 'orders@pampameats.com', 'matias.averbuj@gmail.com']);
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]; }); }
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -31,7 +34,7 @@ export default async function handler(req, res) {
   const address = clean(body.address, 300);
   const stateRaw = clean(body.state, 8).toUpperCase();
   const deliveryDate = clean(body.deliveryDate, 30);
-  const notes = clean(body.notes, 2000);
+  let notes = clean(body.notes, 2000);
 
   const q = body.qty || {};
   const num = v => Math.max(0, Math.min(999, parseInt(v, 10) || 0));
@@ -40,8 +43,10 @@ export default async function handler(req, res) {
   if (!name || !phone) { res.status(400).json({ ok: false, reason: 'missing_contact' }); return; }
   if ((picanha + topSirloin + nyStrip + tenderloin) <= 0) { res.status(400).json({ ok: false, reason: 'empty_order' }); return; }
 
-  const stateName = stateRaw === 'NJ' ? 'New Jersey (NJ)' : (stateRaw === 'NY' ? 'New York (NY)' : '');
-  const zone = (stateRaw === 'NJ' || stateRaw === 'NY') ? stateRaw : '';
+  const stateName = stateRaw === 'NJ' ? 'New Jersey (NJ)' : (stateRaw === 'NY' ? 'New York (NY)' : ((stateRaw === 'PHL' || stateRaw === 'PHILLY' || stateRaw.indexOf('PHL') === 0) ? 'Philadelphia (PA)' : ''));
+  const isPhilly = (stateRaw === 'PHL' || stateRaw === 'PHILLY' || stateRaw.indexOf('PHL') === 0);
+  const zone = (stateRaw === 'NJ' || stateRaw === 'NY') ? stateRaw : (isPhilly ? 'Philadelphia' : '');
+  if (isPhilly) { if (!stateName) { /* set below */ } notes = ('[DEALER: Jack - Philadelphia. Customer pays in-store.] ' + notes).slice(0, 2000); }
 
   const fields = {
     'Name': name,
@@ -86,8 +91,35 @@ export default async function handler(req, res) {
         }
       }
     } catch(e){}
+    if (isPhilly) { try { await notifyJack({ name: name, phone: phone, email: email, address: address, deliveryDate: deliveryDate, notes: clean(body.notes, 2000), picanha: picanha, topSirloin: topSirloin, nyStrip: nyStrip, tenderloin: tenderloin }); } catch (e2) {} }
     res.status(200).json({ ok: true, id: data.id });
   } catch (e) {
     res.status(200).json({ ok: false, reason: String(e) });
   }
 }
+
+function cutLines(o){ var p=[]; if(o.picanha)p.push(o.picanha+'x Picanha'); if(o.topSirloin)p.push(o.topSirloin+'x Top Sirloin'); if(o.nyStrip)p.push(o.nyStrip+'x NY Strip'); if(o.tenderloin)p.push(o.tenderloin+'x Tenderloin'); return p; }
+async function notifyJack(o){
+  var resendKey = process.env.RESEND_API_KEY; if(!resendKey) return;
+  var cuts = cutLines(o);
+  var lines = [o.name + ' - ' + o.phone].concat(cuts);
+  if(o.address) lines.push('Address: ' + o.address);
+  if(o.deliveryDate) lines.push('Delivery: ' + o.deliveryDate);
+  if(o.notes) lines.push('Notes: ' + o.notes);
+  lines.push('Customer pays in-store.');
+  var waText = 'New Philadelphia order (Pampa):\n' + lines.join('\n');
+  var waHref = 'https://wa.me/' + JACK.wa + '?text=' + encodeURIComponent(waText);
+  var rowsHtml = cuts.map(function(c){ return '<tr><td style="padding:6px 10px;border-bottom:1px solid #eee;">' + esc(c) + '</td></tr>'; }).join('');
+  var infoHtml = lines.slice(0, lines.length-1).map(function(l){ return '<div style="padding:3px 0;color:#2b2b2b;">' + esc(l) + '</div>'; }).join('');
+  var html = '<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#f0ede8;">'
+    + '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;">'
+    + '<tr><td bgcolor="#1a1a2e" style="padding:18px 22px;"><div style="color:#f5a623;font-size:11px;letter-spacing:2px;font-weight:bold;">PAMPA KOSHER MEATS - PHILADELPHIA</div><div style="color:#ffffff;font-size:20px;font-weight:bold;margin-top:4px;">New Philadelphia order</div></td></tr>'
+    + '<tr><td bgcolor="#ffffff" style="padding:16px 22px;">'
+    + '<div style="border-left:4px solid #f5a623;background:#fff8ed;padding:9px 13px;border-radius:4px;color:#7a5a1e;font-size:13px;">Philadelphia dealer channel (Jack). Customer pays in-store - no online payment.</div>'
+    + '<div style="margin-top:12px;font-size:14px;">' + infoHtml + '</div>'
+    + '<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;font-size:14px;color:#2b2b2b;border:1px solid #eee;border-radius:6px;">' + rowsHtml + '</table>'
+    + '<div style="text-align:center;margin-top:16px;"><a href="' + waHref + '" style="display:inline-block;background:#25D366;color:#062d16;text-decoration:none;font-weight:bold;padding:11px 20px;border-radius:8px;font-size:15px;">Send this order to Jack on WhatsApp</a></div>'
+    + '</td></tr></table></div>';
+  await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: 'Bearer ' + resendKey, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: 'Pampa Meats <reports@pampameats.com>', to: PHILLY_NOTIFY, subject: 'New Philadelphia order - ' + o.name, html: html, text: waText }) });
+}
+
