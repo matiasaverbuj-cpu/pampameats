@@ -228,19 +228,24 @@ function render(orders){
   const trs=sorted.map(o=>{
     const sc=STATUS_COLORS[o.status||"No status"]||STATUS_COLORS["No status"];
     const d=new Date(o.date); const ds=isNaN(d)?"":(d.getMonth()+1)+"/"+d.getDate();
+    var _wa=(function(p){var x=String(p||'').replace(/[^0-9]/g,'');return x.length===10?('1'+x):x;})(o.phone);
+    var _mail='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(o.email||'')+'&su='+encodeURIComponent('Pampa Kosher Meats - Your order');
+    var act='';
+    if(o.email)act+='<a href="'+_mail+'" target="_blank" onclick="event.stopPropagation()" title="Email (opens Pampa Gmail)" style="background:#1e2a44;color:#8ab4f8;text-decoration:none;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:bold;margin-right:5px">Email</a>';
+    if(o.phone)act+='<a href="https://wa.me/'+_wa+'" target="_blank" onclick="event.stopPropagation()" title="WhatsApp" style="background:#123d28;color:#4ee88a;text-decoration:none;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:bold">WhatsApp</a>';
     return `<tr class="orow" data-id="${esc(o.id)}" style="cursor:pointer"><td class="name">${esc(o.name||"—")}</td>`+
       `<td><span class="pill adv" data-oid="${esc(o.id)}" data-ost="${esc(o.status||'')}" style="background:${sc[0]};color:${sc[1]};cursor:pointer" title="Click para avanzar el estado">${esc(o.status||"No status")} &rsaquo;</span></td>`+
       `<td class="num">${o.picanha||"·"}</td><td class="num">${o.topSirloin||"·"}</td>`+
       `<td class="num">${o.nyStrip||"·"}</td><td class="num">${o.tenderloin||"·"}</td>`+
-      `<td class="num tot">${o.units||"·"}</td><td>${esc(o.zone||"")}</td><td>${ds}</td></tr>`;
+      `<td class="num tot">${o.units||"·"}</td><td>${esc(o.zone||"")}</td><td>${ds}</td><td class="actcell" style="white-space:nowrap">${act}</td></tr>`;
   }).join("");
   html+='<div class="card"><h3>Orders</h3><div class="ch">'+orders.length+' in this view</div><div style="overflow-x:auto"><table>'+
-    '<thead><tr><th>Customer</th><th>Status</th><th>Pic</th><th>Top</th><th>NY</th><th>Ten/Filet</th><th>Pkgs</th><th>Zone</th><th>Date</th></tr></thead><tbody>'+
+    '<thead><tr><th>Customer</th><th>Status</th><th>Pic</th><th>Top</th><th>NY</th><th>Ten/Filet</th><th>Pkgs</th><th>Zone</th><th>Date</th><th>Contact</th></tr></thead><tbody>'+
     (trs||'<tr><td colspan="9" style="text-align:center;color:#8A7548;padding:24px">No orders match these filters.</td></tr>')+
     '<tr class="totrow"><td>TOTAL</td><td></td>'+
       `<td class="num">${cutTotals.picanha}</td><td class="num">${cutTotals.topSirloin}</td>`+
       `<td class="num">${cutTotals.nyStrip}</td><td class="num">${cutTotals.tenderloin}</td>`+
-      `<td class="num">${totalPkgs}</td><td></td><td></td></tr>`+
+      `<td class="num">${totalPkgs}</td><td></td><td></td><td></td></tr>`+
     '</tbody></table></div></div>';
   document.getElementById('content').innerHTML=html;
   document.getElementById('upd').textContent='Updated '+new Date().toLocaleString();
@@ -262,9 +267,7 @@ setInterval(load, 120000);
 <div id="odWrap" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6)"><div id="odCard" style="position:absolute;top:0;right:0;height:100%;width:420px;max-width:92vw;background:#12141a;color:#eceff4;border-left:1px solid #2a2f3a;box-shadow:-8px 0 30px rgba(0,0,0,.5);overflow:auto;padding:22px 22px 40px;font-family:Arial,Helvetica,sans-serif"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:11px;letter-spacing:2px;color:#C9A55C;font-weight:bold">ORDER DETAIL</div><button onclick="closeOD()" style="background:#1e222b;border:1px solid #2a2f3a;color:#eceff4;border-radius:8px;padding:6px 12px;cursor:pointer">Close</button></div><div id="odBody"></div></div></div>
 <script>(function(){
 function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function money(n){return '
-</html>
-+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
 function fdate(s){if(!s)return '-';var d=new Date(s);return isNaN(d)?'-':d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});}
 function waNum(p){var x=String(p||'').replace(/[^0-9]/g,'');if(x.length===10)x='1'+x;return x;}
 window.closeOD=function(){document.getElementById('odWrap').style.display='none';};
