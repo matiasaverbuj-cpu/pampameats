@@ -106,6 +106,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(201,165,92,.12
       </div>
     </header>
 <div class="hubnav">
+<a class="hb" href="/dashboard">&larr; Main menu</a>
 <a class="hb gold" href="/dashboard/po">+ Place PO</a>
 <a class="hb" href="/dashboard/intake">New order</a>
 <a class="hb" href="/dashboard/quote">Quote / Invoice</a>
@@ -223,10 +224,11 @@ function render(orders){
     '<div class="card"><h3>Pipeline by status</h3><div class="ch">Where orders stand</div><div class="chartbox"><canvas id="statusChart"></canvas></div></div>'+
   '</div>';
   const sorted=orders.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  window.__ODMAP={}; sorted.forEach(function(o){ window.__ODMAP[o.id]=o; });
   const trs=sorted.map(o=>{
     const sc=STATUS_COLORS[o.status||"No status"]||STATUS_COLORS["No status"];
     const d=new Date(o.date); const ds=isNaN(d)?"":(d.getMonth()+1)+"/"+d.getDate();
-    return `<tr><td class="name">${esc(o.name||"—")}</td>`+
+    return `<tr class="orow" data-id="${esc(o.id)}" style="cursor:pointer"><td class="name">${esc(o.name||"—")}</td>`+
       `<td><span class="pill adv" data-oid="${esc(o.id)}" data-ost="${esc(o.status||'')}" style="background:${sc[0]};color:${sc[1]};cursor:pointer" title="Click para avanzar el estado">${esc(o.status||"No status")} &rsaquo;</span></td>`+
       `<td class="num">${o.picanha||"·"}</td><td class="num">${o.topSirloin||"·"}</td>`+
       `<td class="num">${o.nyStrip||"·"}</td><td class="num">${o.tenderloin||"·"}</td>`+
@@ -257,5 +259,42 @@ load();
 setInterval(load, 120000);
 </script>
 <button id="csvExport" style="position:fixed;right:18px;bottom:18px;z-index:70;background:#C9A55C;color:#1A1208;border:none;border-radius:10px;padding:12px 18px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 8px 22px -8px rgba(201,165,92,.6)">&#8595; Export to Excel</button><script>(function(){var NL=String.fromCharCode(10);function esc(v){v=(v==null?"":String(v));if(/[",]/.test(v)||v.indexOf(NL)>=0){v=String.fromCharCode(34)+v.split(String.fromCharCode(34)).join(String.fromCharCode(34)+String.fromCharCode(34))+String.fromCharCode(34);}return v;}function m(n){return Math.round((Number(n)||0)*100)/100;}var b=document.getElementById("csvExport");b.addEventListener("click",function(){b.disabled=true;fetch("/api/orders").then(function(r){return r.json();}).then(function(d){var o=(d&&d.orders)||[];var head=["Date","First/Name","Phone","Email","Address","Zone","Picanha","Top Sirloin","NY Strip","Tenderloin","Units","Total","Amount Paid","Balance","Pay Status","Status"];var rows=[head.map(esc).join(",")];o.forEach(function(x){rows.push([x.date||"",x.name||"",x.phone||"",x.email||"",x.address||"",x.zone||"",x.picanha||0,x.topSirloin||0,x.nyStrip||0,x.tenderloin||0,x.units||0,m(x.total),m(x.amountPaid),m(x.balance),x.payStatus||"",x.status||""].map(esc).join(","));});var csv=rows.join(NL);var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="pampa-sales-"+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);b.disabled=false;}).catch(function(){alert("Could not export. Try again.");b.disabled=false;});});})();</script>
+<div id="odWrap" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6)"><div id="odCard" style="position:absolute;top:0;right:0;height:100%;width:420px;max-width:92vw;background:#12141a;color:#eceff4;border-left:1px solid #2a2f3a;box-shadow:-8px 0 30px rgba(0,0,0,.5);overflow:auto;padding:22px 22px 40px;font-family:Arial,Helvetica,sans-serif"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:11px;letter-spacing:2px;color:#C9A55C;font-weight:bold">ORDER DETAIL</div><button onclick="closeOD()" style="background:#1e222b;border:1px solid #2a2f3a;color:#eceff4;border-radius:8px;padding:6px 12px;cursor:pointer">Close</button></div><div id="odBody"></div></div></div>
+<script>(function(){
+function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function money(n){return '
+</html>
++Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fdate(s){if(!s)return '-';var d=new Date(s);return isNaN(d)?'-':d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});}
+function waNum(p){var x=String(p||'').replace(/[^0-9]/g,'');if(x.length===10)x='1'+x;return x;}
+window.closeOD=function(){document.getElementById('odWrap').style.display='none';};
+window.openOD=function(id){var m=window.__ODMAP||{};var o=m[id];if(!o)return;
+var cuts=[];if(o.picanha)cuts.push(o.picanha+'x Picanha');if(o.topSirloin)cuts.push(o.topSirloin+'x Top Sirloin');if(o.nyStrip)cuts.push(o.nyStrip+'x NY Strip');if(o.tenderloin)cuts.push(o.tenderloin+'x Tenderloin');
+var amount=Number(o.total)||0;var amtLabel='Order total';
+if(!amount && Number(o.authHold)){amount=Number(o.authHold);amtLabel='Authorized (Stripe hold, not captured)';}
+else if(!amount && Number(o.estimatedTotal)){amount=Number(o.estimatedTotal);amtLabel='Estimated total';}
+var wa=waNum(o.phone);
+function r(l,val){return val?('<tr><td style="padding:5px 0;color:#9aa4b2;width:120px;vertical-align:top">'+l+'</td><td style="padding:5px 0">'+val+'</td></tr>'):'';}
+var h='<h2 style="font-size:20px;margin:2px 0 2px">'+e(o.name||'-')+'</h2>';
+h+='<div style="color:#9aa4b2;font-size:13px;margin-bottom:14px">'+e(o.status||'')+' - '+fdate(o.date)+'</div>';
+h+='<table style="width:100%;border-collapse:collapse;font-size:14px">';
+h+=r('Phone', o.phone?(e(o.phone)+(wa?' &nbsp;<a href="https://wa.me/'+wa+'" target="_blank" style="color:#25D366;font-weight:bold">WhatsApp</a>':'')):'');
+h+=r('Email', o.email?e(o.email):'');
+h+=r('Address', o.address?e(o.address):'');
+h+=r('Zone', o.zone?e(o.zone):'');
+h+=r('Delivery', o.deliveryDate?fdate(o.deliveryDate):'');
+h+=r('Order', cuts.length?(e(cuts.join(', '))+' &nbsp;('+(o.units||0)+' pkgs)'):'');
+h+=r('Notes', o.notes?e(o.notes):'');
+h+='</table>';
+h+='<div style="margin-top:16px;border-top:1px solid #2a2f3a;padding-top:12px">';
+h+='<div style="font-size:11px;letter-spacing:1px;color:#9aa4b2;text-transform:uppercase;margin-bottom:6px">Payment</div>';
+h+='<div style="font-size:22px;font-weight:bold;color:#C9A55C">'+money(amount)+' <span style="font-size:12px;color:#9aa4b2;font-weight:normal">'+amtLabel+'</span></div>';
+if(o.stripeStatus)h+='<div style="font-size:13px;color:#9aa4b2;margin-top:4px">Stripe: '+e(o.stripeStatus)+((o.payStatus&&o.payStatus!=='-')?(' - '+e(o.payStatus)):'')+'</div>';
+if(Number(o.amountPaid))h+='<div style="font-size:13px;color:#4ee88a;margin-top:2px">Paid: '+money(o.amountPaid)+'</div>';
+if(Number(o.balance))h+='<div style="font-size:13px;color:#ff8a82;margin-top:2px">Balance: '+money(o.balance)+'</div>';
+h+='</div>';
+document.getElementById('odBody').innerHTML=h;document.getElementById('odWrap').style.display='block';};
+document.addEventListener('click',function(ev){var w=document.getElementById('odWrap');if(ev.target===w){closeOD();return;}if(ev.target.closest&&ev.target.closest('.pill.adv'))return;var tr=ev.target.closest?ev.target.closest('tr.orow'):null;if(tr&&tr.getAttribute('data-id')){openOD(tr.getAttribute('data-id'));}});
+})();</script>
 </body>
 </html>
